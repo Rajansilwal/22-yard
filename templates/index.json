@@ -24,7 +24,7 @@
             "subheading": "Premium cricket gear, built for the middle",
             "button_label": "Shop the collection",
             "link": "",
-            "button_style_secondary": false,
+            "button_style": "primary",
             "show_text_box": true,
             "box_align": "middle-center",
             "text_alignment": "center",
@@ -44,7 +44,7 @@
             "subheading": "Bats, balls & apparel ready for match day",
             "button_label": "Shop new arrivals",
             "link": "",
-            "button_style_secondary": false,
+            "button_style": "primary",
             "show_text_box": true,
             "box_align": "middle-center",
             "text_alignment": "center",
@@ -135,6 +135,7 @@
         "columns_desktop": 3,
         "color_scheme": "",
         "show_view_all": false,
+        "button_style": "primary",
         "columns_mobile": "1",
         "swipe_on_mobile": false,
         "padding_top": 36,
@@ -164,7 +165,7 @@
         "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
-        "view_all_style": "solid",
+        "button_style": "primary",
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
@@ -256,12 +257,240 @@
         "padding_top_mobile": 28,
         "padding_bottom_mobile": 28
       }
+    },
+    "testimonials_LzjeBG": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_MBQArP": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Add a customer review here to build trust with new visitors.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        },
+        "testimonial_reH6NK": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Highlight a quote that shows the value of your products.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        },
+        "testimonial_P6NAw3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Use real feedback to tell your brand's story through your customers.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_MBQArP",
+        "testimonial_reH6NK",
+        "testimonial_P6NAw3"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "layout": "multi",
+        "per_desktop": 3,
+        "per_tablet": 2,
+        "per_mobile": 1,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "show_pagination_desktop": true,
+        "show_pagination_mobile": true,
+        "dots_per_page": true,
+        "loop": false,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "heading": "What our customers say",
+        "highlight_text": "",
+        "subheading": "<p>Real feedback from people who love what we do.</p>",
+        "background_color": "#ffffff",
+        "text_color": "#121212",
+        "heading_color": "#121212",
+        "highlight_color": "#1773b0",
+        "card_background": "#f7f7f7",
+        "card_border_color": "#e3e3e3",
+        "arrow_background": "#121212",
+        "arrow_icon_color": "#ffffff",
+        "container_width": 1200,
+        "padding_top": 56,
+        "padding_bottom": 56,
+        "card_radius": 8,
+        "heading_size": 34,
+        "mobile_heading_size": 26,
+        "text_size": 17,
+        "quote_size": 16,
+        "name_size": 16,
+        "role_size": 13,
+        "custom_class": ""
+      }
+    },
+    "newsletter_RbBrfM": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_YFQC7F": {
+          "type": "heading",
+          "settings": {
+            "heading": "Subscribe to our emails",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph_WNkBTC": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Be the first to know about new collections and exclusive offers.</p>"
+          }
+        },
+        "email_form_LhLC4q": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading_YFQC7F",
+        "paragraph_WNkBTC",
+        "email_form_LhLC4q"
+      ],
+      "name": "t:sections.newsletter.presets.name",
+      "settings": {
+        "label_layout": "top_bottom",
+        "color_scheme": "",
+        "full_width": true,
+        "custom_class": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "featured_blog_hmfing": {
+      "type": "featured-blog",
+      "name": "t:sections.featured-blog.presets.name",
+      "settings": {
+        "blog": "",
+        "post_limit": 3,
+        "heading": "Blog posts",
+        "heading_size": "h1",
+        "columns_desktop": 3,
+        "show_view_all": true,
+        "show_image": true,
+        "show_date": true,
+        "show_author": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "custom_class": ""
+      }
+    },
+    "custom_multicolumn_F4xGRE": {
+      "type": "custom-multicolumn",
+      "blocks": {
+        "column_LttxFm": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column one",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "primary"
+          }
+        },
+        "column_wETt4P": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column two",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "secondary"
+          }
+        },
+        "column_kVPPTe": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column three",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "primary-outline"
+          }
+        }
+      },
+      "block_order": [
+        "column_LttxFm",
+        "column_wETt4P",
+        "column_kVPPTe"
+      ],
+      "name": "Custom Multicolumn",
+      "settings": {
+        "layout": "swiper",
+        "grid_columns": 3,
+        "grid_columns_tablet": 2,
+        "grid_columns_mobile": 1,
+        "slides_desktop": 3,
+        "slides_tablet": 2,
+        "slides_mobile": 1,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "show_pagination_desktop": true,
+        "show_pagination_mobile": true,
+        "dots_per_page": true,
+        "loop": true,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "heading": "Section heading",
+        "highlight_text": "",
+        "intro_text": "<p>Add a short introduction to describe what this section is about.</p>",
+        "footer_text": "",
+        "background_color": "#ffffff",
+        "text_color": "#121212",
+        "heading_color": "#121212",
+        "highlight_color": "#1773b0",
+        "card_background": "#ffffff",
+        "card_border_color": "#e3e3e3",
+        "arrow_background": "#121212",
+        "arrow_icon_color": "#ffffff",
+        "placeholder_url": "",
+        "image_ratio": "4/3",
+        "container_width": 1200,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "card_radius": 8,
+        "heading_size": 32,
+        "mobile_heading_size": 26,
+        "text_size": 18,
+        "mobile_text_size": 16,
+        "card_heading_size": 20,
+        "card_text_size": 16,
+        "custom_class": ""
+      }
     }
   },
   "order": [
     "slideshow_E34qgP",
     "collection_list_KDQnYf",
     "featured_collection",
-    "flexible_content_grid_aAaC9W"
+    "flexible_content_grid_aAaC9W",
+    "custom_multicolumn_F4xGRE",
+    "testimonials_LzjeBG",
+    "featured_blog_hmfing",
+    "newsletter_RbBrfM"
   ]
 }
