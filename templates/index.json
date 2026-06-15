@@ -1,1 +1,267 @@
-{"sections":{"slideshow_E34qgP":{"type":"slideshow","blocks":{"slide_PcLfhD":{"type":"slide","settings":{"media_type":"video","image":"shopify:\/\/shop_images\/florence-nightingale-birthday-classic-cat-ezen-gca6-cla776-EF-GCA6-CLA776.png","video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/eef733628a7d4f24b597cdba93df99f1.mp4","mobile_video_url":"","overlay_opacity":0,"heading":"Slide heading","heading_size":"h1","subheading":"Tell your story","button_label":"Shop now","link":"","show_text_box":true,"box_align":"middle-center","text_alignment":"center","text_alignment_mobile":"center","color_scheme":""}},"slide_fn7bi7":{"type":"slide","settings":{"media_type":"image","image":"shopify:\/\/shop_images\/photo_2023-06-02_20-17-33.jpg","video_url":"","mobile_video_url":"","overlay_opacity":0,"heading":"Slide heading","heading_size":"h1","subheading":"Tell your story","button_label":"Shop now","link":"","show_text_box":true,"box_align":"middle-center","text_alignment":"center","text_alignment_mobile":"center","color_scheme":""}}},"block_order":["slide_PcLfhD","slide_fn7bi7"],"name":"Slideshow","settings":{"layout":"full_bleed","slide_height":"medium","color_scheme":"","transition":"slide","loop":true,"auto_rotate":false,"change_slides_speed":5,"advance_on_video_end":false,"show_arrows_desktop":true,"show_arrows_mobile":false,"pagination_type":"bullets","show_pagination_desktop":true,"show_pagination_mobile":true,"padding_top":0,"padding_bottom":0}},"collection_list_KDQnYf":{"type":"collection-list","blocks":{"featured_collection_tVEmHV":{"type":"featured_collection","settings":{"collection":"sale"}},"featured_collection_jiLpJc":{"type":"featured_collection","settings":{"collection":"frontpage"}},"featured_collection_rNY6fF":{"type":"featured_collection","settings":{"collection":"test-1"}},"featured_collection_dg8m3Q":{"type":"featured_collection","settings":{"collection":"test-2"}},"featured_collection_QN4bQB":{"type":"featured_collection","settings":{"collection":"new"}}},"block_order":["featured_collection_tVEmHV","featured_collection_jiLpJc","featured_collection_rNY6fF","featured_collection_dg8m3Q","featured_collection_QN4bQB"],"name":"t:sections.collection-list.presets.name","settings":{"title":"Collections","heading_size":"h1","layout_mode":"slider","enable_swiper_desktop":true,"enable_swiper_mobile":true,"image_ratio":"square","columns_desktop":3,"color_scheme":"","show_view_all":false,"columns_mobile":"1","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36}},"featured_collection":{"type":"featured-collection","settings":{"collection":"frontpage","products_to_show":8,"layout_mode":"slider","enable_swiper_desktop":true,"enable_swiper_mobile":true,"title":"Featured products","heading_size":"h2","description":"","show_description":false,"description_style":"body","columns_desktop":4,"enable_desktop_slider":false,"full_width":false,"show_view_all":true,"color_scheme":"scheme-1","image_ratio":"adapt","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"quick_add":"none","columns_mobile":"2","swipe_on_mobile":false,"padding_top":44,"padding_bottom":36}}},"order":["slideshow_E34qgP","collection_list_KDQnYf","featured_collection"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_E34qgP": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_PcLfhD": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "video_url": "#",
+            "mobile_video_url": "",
+            "overlay_opacity": 30,
+            "heading": "Own the 22 Yards",
+            "heading_size": "h1",
+            "subheading": "Premium cricket gear, built for the middle",
+            "button_label": "Shop the collection",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_fn7bi7": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "video_url": "",
+            "mobile_video_url": "",
+            "overlay_opacity": 30,
+            "heading": "New Season Kit Has Landed",
+            "heading_size": "h1",
+            "subheading": "Bats, balls & apparel ready for match day",
+            "button_label": "Shop new arrivals",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_PcLfhD",
+        "slide_fn7bi7"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "medium",
+        "color_scheme": "",
+        "transition": "slide",
+        "loop": true,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "advance_on_video_end": false,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "arrow_position": "left_right",
+        "pagination_type": "bullets",
+        "show_pagination_desktop": true,
+        "show_pagination_mobile": true,
+        "custom_class": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "collection_list_KDQnYf": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_tVEmHV": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "sale"
+          }
+        },
+        "featured_collection_jiLpJc": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "frontpage"
+          }
+        },
+        "featured_collection_rNY6fF": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "test-1"
+          }
+        },
+        "featured_collection_dg8m3Q": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "test-2"
+          }
+        },
+        "featured_collection_QN4bQB": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "new"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_tVEmHV",
+        "featured_collection_jiLpJc",
+        "featured_collection_rNY6fF",
+        "featured_collection_dg8m3Q",
+        "featured_collection_QN4bQB"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Shop by Category",
+        "heading_size": "h1",
+        "layout_mode": "slider",
+        "enable_swiper_desktop": true,
+        "enable_swiper_mobile": true,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "arrow_position": "left_right",
+        "show_pagination_desktop": false,
+        "show_pagination_mobile": true,
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "custom_class": ""
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "frontpage",
+        "products_to_show": 8,
+        "layout_mode": "slider",
+        "enable_swiper_desktop": true,
+        "enable_swiper_mobile": true,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "arrow_position": "left_right",
+        "show_pagination_desktop": false,
+        "show_pagination_mobile": true,
+        "title": "Best Sellers",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 44,
+        "padding_bottom": 36,
+        "custom_class": ""
+      }
+    },
+    "flexible_content_grid_aAaC9W": {
+      "type": "flexible-content-grid",
+      "blocks": {
+        "item_RkCWFQ": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_3dX8UV": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_8npQ9h": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_fG93VX": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_RkCWFQ",
+        "item_3dX8UV",
+        "item_8npQ9h",
+        "item_fG93VX"
+      ],
+      "name": "Flexible Content Grid",
+      "settings": {
+        "display_mode": "grid",
+        "content_layout": "card",
+        "alignment": "top",
+        "text_align": "center",
+        "heading": "Our Brand",
+        "section_heading_size": "h1",
+        "subheading": "",
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "columns_mobile": 2,
+        "grid_gap": 16,
+        "icon_size": 64,
+        "heading_size": 1.8,
+        "logo_style": false,
+        "logo_max_width": 160,
+        "logo_grayscale": false,
+        "slides_desktop": 0,
+        "slides_tablet": 0,
+        "slides_mobile": 0,
+        "arrow_gutter": 56,
+        "loop": true,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "arrows_desktop": true,
+        "arrows_mobile": false,
+        "pagination_desktop": false,
+        "pagination_mobile": true,
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 28
+      }
+    }
+  },
+  "order": [
+    "slideshow_E34qgP",
+    "collection_list_KDQnYf",
+    "featured_collection",
+    "flexible_content_grid_aAaC9W"
+  ]
+}

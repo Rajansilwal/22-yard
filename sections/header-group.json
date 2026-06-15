@@ -1,1 +1,99 @@
-{"name":"t:sections.header.name","type":"header","sections":{"announcement-bar":{"type":"announcement-bar","blocks":{"announcement-bar-0":{"type":"announcement","settings":{"text":"Welcome to our store","link":""}}},"block_order":["announcement-bar-0"],"settings":{"auto_rotate":false,"change_slides_speed":5,"color_scheme":"scheme-1","show_line_separator":true,"show_social":false,"enable_country_selector":false,"enable_language_selector":false}},"header":{"type":"header","settings":{"mobile_logo_position":"center","menu":"main-menu","menu_type_desktop":"dropdown","sticky_header_type":"on-scroll-up","show_line_separator":true,"color_scheme":"scheme-1","menu_color_scheme":"scheme-1","enable_country_selector":true,"enable_language_selector":true,"enable_customer_avatar":true,"margin_bottom":0,"padding_top":20,"padding_bottom":20}}},"order":["announcement-bar","header"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "New season cricket gear has dropped — free shipping on orders over $99",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0"
+      ],
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-1",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "custom_class": ""
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "menu_item_override_e3V9GT": {
+          "type": "menu_item_override",
+          "settings": {
+            "menu_item_handle": "",
+            "menu_type": "default",
+            "mega_layout": "columns",
+            "mega_columns": 4,
+            "mega_featured_heading": "",
+            "mega_featured_link": "",
+            "mega_show_description": false
+          }
+        },
+        "menu_item_override_wYwgtV": {
+          "type": "menu_item_override",
+          "settings": {
+            "menu_item_handle": "",
+            "menu_type": "default",
+            "mega_layout": "columns",
+            "mega_columns": 4,
+            "mega_featured_heading": "",
+            "mega_featured_link": "",
+            "mega_show_description": false
+          }
+        }
+      },
+      "block_order": [
+        "menu_item_override_e3V9GT",
+        "menu_item_override_wYwgtV"
+      ],
+      "settings": {
+        "logo_position": "left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_position": "center",
+        "menu_type_desktop": "mega",
+        "search_style": "inline",
+        "search_open_by_default": true,
+        "search_max_width": 720,
+        "header_max_width": "",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "custom_class": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}
