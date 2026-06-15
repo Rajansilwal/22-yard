@@ -31,6 +31,31 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* ---- Pre-init slide sizing to prevent FOUC ---- */
+  {%- if section.settings.layout_mode == 'slider' -%}
+    .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper {
+      overflow: hidden;
+    }
+    .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+      flex-shrink: 0;
+      box-sizing: border-box;
+      width: calc((100% - ({{ section.settings.columns_mobile | minus: 1 }} * 16px)) / {{ section.settings.columns_mobile }});
+    }
+    @media screen and (min-width: 750px) {
+      .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+        width: calc((100% - ({{ section.settings.columns_desktop | minus: 1 }} * 20px)) / {{ section.settings.columns_desktop }});
+      }
+    }
+    /* Smooth reveal after Swiper takes over */
+    .cl-swiper-section[data-section-id="{{ section.id }}"]:not([data-swiper-ready]) {
+      opacity: 1;
+    }
+  {%- endif -%}
 {%- endstyle -%}
 
 {%- liquid
@@ -42,7 +67,7 @@
 -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
-  <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false or section.blocks.size > collections.size %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
+  <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
 
     {%- unless section.settings.title == blank -%}
       <div class="title-wrapper-with-link{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
@@ -84,8 +109,8 @@
           <button type="button" class="cl-swiper-btn cl-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
-          <div class="swiper cl-swiper-{{ section.id }}">
-            <div class="swiper-wrapper">
+          <div class="swiper cl-swiper-{{ section.id }}" style="overflow: hidden;">
+            <div class="swiper-wrapper" style="display: flex; flex-wrap: nowrap;">
               {%- liquid
                 assign columns = section.blocks.size
                 if columns > 3
@@ -149,6 +174,7 @@
               el.classList.add('cl-swiper--grid');
               el.style.setProperty('--cl-cols-desktop', colsDesktop);
               el.style.setProperty('--cl-cols-mobile', colsMobile);
+              el.setAttribute('data-swiper-ready', 'true');
               return;
             }
 
@@ -198,12 +224,17 @@
               on: {
                 init: function (swiper) {
                   if (!showArrows) {
-                    el.querySelector('.cl-swiper-btn-prev-{{ section.id }}').style.display = 'none';
-                    el.querySelector('.cl-swiper-btn-next-{{ section.id }}').style.display = 'none';
+                    var prevEl = el.querySelector('.cl-swiper-btn-prev-{{ section.id }}');
+                    var nextEl = el.querySelector('.cl-swiper-btn-next-{{ section.id }}');
+                    if (prevEl) prevEl.style.display = 'none';
+                    if (nextEl) nextEl.style.display = 'none';
                   }
                   if (!showPagination) {
-                    el.querySelector('.cl-swiper-pagination-{{ section.id }}').style.display = 'none';
+                    var pagEl = el.querySelector('.cl-swiper-pagination-{{ section.id }}');
+                    if (pagEl) pagEl.style.display = 'none';
                   }
+                  /* Mark ready — Swiper has taken over layout */
+                  el.setAttribute('data-swiper-ready', 'true');
                 },
               },
               breakpoints: {
@@ -214,7 +245,12 @@
               },
             });
           }
-          document.addEventListener('DOMContentLoaded', initClSwiper);
+          /* Run as early as possible — don't wait for DOMContentLoaded if Swiper is already loaded */
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initClSwiper);
+          } else {
+            initClSwiper();
+          }
         })();
       </script>
 
@@ -272,14 +308,14 @@
       </slider-component>
     {%- endif -%}
 
-    {%- if section.settings.show_view_all and section.blocks.size < collections.size -%}
+    {%- if section.settings.show_view_all -%}
       <div
         class="center collection-list-view-all{% if show_mobile_slider %} small-hide medium-hide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
         {% if settings.animations_reveal_on_scroll %}data-cascade{% endif %}
       >
         <a
           href="{{ routes.collections_url }}"
-          class="button"
+          class="btn btn--{{ section.settings.button_style }}"
           id="ViewAllButton-{{ section.id }}"
           aria-labelledby="ViewAllButton-{{ section.id }} SectionHeading-{{ section.id }}"
         >
@@ -514,9 +550,22 @@
     {
       "type": "checkbox",
       "id": "show_view_all",
-      "default": false,
+      "default": true,
       "label": "t:sections.collection-list.settings.show_view_all.label",
       "info": "t:sections.collection-list.settings.show_view_all.info"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "View all button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "primary-outline", "label": "Primary outline" },
+        { "value": "secondary-outline", "label": "Secondary outline" },
+        { "value": "link", "label": "Link" }
+      ],
+      "default": "primary"
     },
     {
       "type": "header",

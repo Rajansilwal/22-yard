@@ -1,0 +1,622 @@
+{%- comment -%}
+  Missionary Grid Section
+  Layout types:
+    1) Product Grid (select a collection)
+    2) Blog Posts (select a blog)
+    3) Image Gallery (add image blocks)
+
+  Masonry / grid styles:
+    - uniform   : equal-height grid (classic Dawn look)
+    - masonry   : true masonry, cards flow by natural image height
+    - mixed     : masonry with alternating tall/short cards
+    - brick     : offset columns (every other card nudged down)
+    - pinterest : tight masonry, varied heights, small gap
+    - featured  : grid where the first card spans 2 columns / 2 rows
+    - diagonal  : stair-step cascade offsets across columns
+    - rows      : horizontal flex rows with varied widths
+  Extras:
+    - hero      : optional larger first card (works with masonry/pinterest/diagonal/rows)
+    - overlay   : optional hover caption overlay on images
+  Uses Dawn theme default color schemes & settings.
+{%- endcomment -%}
+
+{%- liquid
+  assign cols_d = section.settings.columns_desktop
+  assign cols_m = section.settings.columns_mobile
+  assign gap = section.settings.grid_gap
+  assign gap_m = gap | times: 0.6 | round
+  assign style = section.settings.masonry_style
+  assign use_hero = section.settings.enable_hero
+  assign use_overlay = section.settings.enable_overlay
+-%}
+
+<style>
+  /* ---------- Shared card styling ---------- */
+  .missionary-card {
+    position: relative;
+    background-color: rgb(var(--color-background));
+    border-radius: var(--media-radius, 0);
+    overflow: hidden;
+  }
+
+  .missionary-card__media {
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(var(--color-foreground), 0.04);
+  }
+
+  .missionary-card__media img {
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .missionary-card:hover .missionary-card__media img {
+    transform: scale(1.04);
+  }
+
+  .missionary-card__content {
+    padding: 1.2rem 0.2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .missionary-card__heading {
+    margin: 0 0 0.6rem;
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  .missionary-card__heading a {
+    text-decoration: none;
+    color: rgb(var(--color-foreground));
+  }
+
+  .missionary-card__heading a:hover { text-decoration: underline; }
+
+  .missionary-card__text {
+    margin: 0 0 0.8rem;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: rgba(var(--color-foreground), 0.75);
+  }
+
+  .missionary-card__price {
+    font-size: 1.5rem;
+    color: rgb(var(--color-foreground));
+    margin-top: 0.4rem;
+  }
+
+  .missionary-card__price s {
+    color: rgba(var(--color-foreground), 0.6);
+    margin-left: 0.5rem;
+  }
+
+  .missionary-card__meta {
+    font-size: 1.2rem;
+    color: rgba(var(--color-foreground), 0.6);
+    margin: 0 0 0.6rem;
+  }
+
+  .missionary-card__badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    background-color: rgb(var(--color-base-accent-1, 18 18 18));
+    color: rgb(var(--color-base-solid-button-labels, 255 255 255));
+    font-size: 1.1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--badge-corner-radius, 4px);
+  }
+
+  .missionary-grid__view-all { text-align: center; margin-top: 3rem; }
+
+  .missionary-grid__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(var(--color-foreground), 0.6);
+  }
+
+  /* ---------- Optional hover overlay ---------- */
+  {%- if use_overlay -%}
+  .missionary-card--overlay .missionary-card__content {
+    position: absolute;
+    inset: 0;
+    justify-content: flex-end;
+    padding: 1.4rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 60%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 2;
+  }
+  .missionary-card--overlay:hover .missionary-card__content { opacity: 1; }
+  .missionary-card--overlay .missionary-card__heading a,
+  .missionary-card--overlay .missionary-card__heading,
+  .missionary-card--overlay .missionary-card__text,
+  .missionary-card--overlay .missionary-card__price,
+  .missionary-card--overlay .missionary-card__meta { color: #fff; }
+  .missionary-card--overlay .missionary-card__price s { color: rgba(255,255,255,0.7); }
+  {%- endif -%}
+
+  /* =====================================================
+     STYLE: UNIFORM (equal-height grid)
+     ===================================================== */
+  .missionary-grid--uniform {
+    display: grid;
+    gap: {{ gap_m }}px;
+    grid-template-columns: repeat({{ cols_m }}, minmax(0, 1fr));
+  }
+  .missionary-grid--uniform .missionary-card {
+    display: flex; flex-direction: column; height: 100%;
+  }
+  .missionary-grid--uniform .missionary-card__media { aspect-ratio: {{ section.settings.image_ratio }}; }
+  .missionary-grid--uniform .missionary-card__media img { height: 100%; object-fit: cover; }
+  .missionary-grid--uniform .missionary-card__content { flex-grow: 1; }
+  .missionary-grid--uniform .missionary-card__price { margin-top: auto; }
+
+  /* =====================================================
+     COLUMN-FLOW STYLES: masonry / mixed / brick / pinterest / diagonal
+     ===================================================== */
+  .missionary-grid--masonry,
+  .missionary-grid--mixed,
+  .missionary-grid--brick,
+  .missionary-grid--pinterest,
+  .missionary-grid--diagonal {
+    column-count: {{ cols_m }};
+    column-gap: {{ gap_m }}px;
+  }
+  .missionary-grid--masonry .missionary-card,
+  .missionary-grid--mixed .missionary-card,
+  .missionary-grid--brick .missionary-card,
+  .missionary-grid--pinterest .missionary-card,
+  .missionary-grid--diagonal .missionary-card {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: {{ gap_m }}px;
+  }
+  .missionary-grid--masonry .missionary-card__media img,
+  .missionary-grid--pinterest .missionary-card__media img,
+  .missionary-grid--diagonal .missionary-card__media img { height: auto; }
+
+  /* MIXED — alternating aspect ratios for staggered look */
+  .missionary-grid--mixed .missionary-card__media { aspect-ratio: 3 / 4; }
+  .missionary-grid--mixed .missionary-card:nth-child(3n+2) .missionary-card__media { aspect-ratio: 1 / 1; }
+  .missionary-grid--mixed .missionary-card:nth-child(3n+3) .missionary-card__media { aspect-ratio: 4 / 5; }
+  .missionary-grid--mixed .missionary-card:nth-child(4n+1) .missionary-card__media { aspect-ratio: 9 / 16; }
+  .missionary-grid--mixed .missionary-card__media img { height: 100%; object-fit: cover; }
+
+  /* BRICK — fixed ratio, every other card offset down */
+  .missionary-grid--brick .missionary-card__media { aspect-ratio: {{ section.settings.image_ratio }}; }
+  .missionary-grid--brick .missionary-card__media img { height: 100%; object-fit: cover; }
+  .missionary-grid--brick .missionary-card:nth-child(even) { margin-top: 2.4rem; }
+
+  /* PINTEREST — tight gaps, natural heights, more columns feel */
+  .missionary-grid--pinterest { column-gap: {{ gap_m | divided_by: 2 }}px; }
+  .missionary-grid--pinterest .missionary-card {
+    margin-bottom: {{ gap_m | divided_by: 2 }}px;
+    border-radius: 1.2rem;
+  }
+  .missionary-grid--pinterest .missionary-card__content { padding: 0.9rem 0.4rem; }
+
+  /* DIAGONAL — stair-step cascade: each column nudged progressively down */
+  .missionary-grid--diagonal .missionary-card:nth-child(4n+2) { margin-top: 1.6rem; }
+  .missionary-grid--diagonal .missionary-card:nth-child(4n+3) { margin-top: 3.2rem; }
+  .missionary-grid--diagonal .missionary-card:nth-child(4n+0) { margin-top: 4.8rem; }
+
+  /* =====================================================
+     STYLE: FEATURED (CSS grid, first card spans 2x2)
+     ===================================================== */
+  .missionary-grid--featured {
+    display: grid;
+    gap: {{ gap_m }}px;
+    grid-template-columns: repeat({{ cols_m }}, minmax(0, 1fr));
+    grid-auto-flow: dense;
+  }
+  .missionary-grid--featured .missionary-card { display: flex; flex-direction: column; height: 100%; }
+  .missionary-grid--featured .missionary-card__media { aspect-ratio: {{ section.settings.image_ratio }}; }
+  .missionary-grid--featured .missionary-card__media img { height: 100%; object-fit: cover; }
+  .missionary-grid--featured .missionary-card__content { flex-grow: 1; }
+  .missionary-grid--featured .missionary-card__price { margin-top: auto; }
+  @media screen and (min-width: 750px) {
+    .missionary-grid--featured .missionary-card:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .missionary-grid--featured .missionary-card:first-child .missionary-card__media { aspect-ratio: auto; height: 100%; }
+    .missionary-grid--featured .missionary-card:first-child .missionary-card__heading { font-size: 2.2rem; }
+  }
+
+  /* =====================================================
+     STYLE: ROWS (flex rows, varied widths)
+     ===================================================== */
+  .missionary-grid--rows {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ gap_m }}px;
+  }
+  .missionary-grid--rows .missionary-card {
+    flex: 1 1 calc((100% - {{ gap_m }}px) / 2);
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+  }
+  .missionary-grid--rows .missionary-card__media { aspect-ratio: 4 / 3; }
+  .missionary-grid--rows .missionary-card__media img { height: 100%; object-fit: cover; }
+  /* Varied widths: some cards grow more for an organic editorial row */
+  .missionary-grid--rows .missionary-card:nth-child(3n+1) { flex-grow: 2; }
+  .missionary-grid--rows .missionary-card:nth-child(3n+2) { flex-grow: 1; }
+  .missionary-grid--rows .missionary-card:nth-child(3n+3) { flex-grow: 1.5; }
+
+  /* =====================================================
+     HERO — larger first card (column-flow + rows styles)
+     ===================================================== */
+  {%- if use_hero -%}
+  .missionary-grid--masonry .missionary-card:first-child .missionary-card__heading,
+  .missionary-grid--mixed .missionary-card:first-child .missionary-card__heading,
+  .missionary-grid--pinterest .missionary-card:first-child .missionary-card__heading,
+  .missionary-grid--diagonal .missionary-card:first-child .missionary-card__heading {
+    font-size: 2rem;
+  }
+  /* In column layouts a true span isn't possible, so the hero
+     gets visual emphasis via a full-width band above the columns */
+  .missionary-grid--has-hero { position: relative; }
+  .missionary-hero {
+    margin-bottom: {{ gap }}px;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media screen and (min-width: 750px) {
+    .missionary-hero { grid-template-columns: 1.4fr 1fr; gap: {{ gap }}px; align-items: center; }
+  }
+  .missionary-hero .missionary-card__media { aspect-ratio: 16 / 9; }
+  .missionary-hero .missionary-card__media img { height: 100%; object-fit: cover; }
+  .missionary-hero .missionary-card__heading { font-size: 2.6rem; }
+  .missionary-grid--rows .missionary-card:first-child { flex: 1 1 100%; flex-grow: 1; }
+  .missionary-grid--rows .missionary-card:first-child .missionary-card__media { aspect-ratio: 21 / 9; }
+  {%- endif -%}
+
+  /* ---------- Desktop column counts ---------- */
+  @media screen and (min-width: 750px) {
+    .missionary-grid--uniform,
+    .missionary-grid--featured {
+      grid-template-columns: repeat({{ cols_d }}, minmax(0, 1fr));
+      gap: {{ gap }}px;
+    }
+    .missionary-grid--masonry,
+    .missionary-grid--mixed,
+    .missionary-grid--brick,
+    .missionary-grid--diagonal {
+      column-count: {{ cols_d }};
+      column-gap: {{ gap }}px;
+    }
+    .missionary-grid--pinterest {
+      column-count: {{ cols_d | plus: 1 }};
+      column-gap: {{ gap | divided_by: 2 }}px;
+    }
+    .missionary-grid--masonry .missionary-card,
+    .missionary-grid--mixed .missionary-card,
+    .missionary-grid--brick .missionary-card,
+    .missionary-grid--diagonal .missionary-card {
+      margin-bottom: {{ gap }}px;
+    }
+    .missionary-grid--rows { gap: {{ gap }}px; }
+  }
+</style>
+
+{%- comment -%} Reusable card snippet via capture is not possible; inline per layout. {%- endcomment -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    {%- if section.settings.heading != blank -%}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-tablet-down title-wrapper--no-top-margin">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.heading }}
+        </h2>
+        {%- if section.settings.subheading != blank -%}
+          <div class="subtitle">{{ section.settings.subheading }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- assign grid_class = 'missionary-grid--' | append: style -%}
+    {%- assign card_class = 'missionary-card' -%}
+    {%- if use_overlay -%}{%- assign card_class = 'missionary-card missionary-card--overlay' -%}{%- endif -%}
+
+    {%- case section.settings.layout_type -%}
+
+    {%- comment -%} ============ 1) PRODUCT GRID ============ {%- endcomment -%}
+    {%- when 'product' -%}
+      {%- assign products_collection = section.settings.collection -%}
+      {%- if products_collection != blank and products_collection.products_count > 0 -%}
+        <div class="missionary-grid {{ grid_class }}">
+          {%- for product in products_collection.products limit: section.settings.products_limit -%}
+            <div class="{{ card_class }}">
+              <div class="missionary-card__media">
+                {%- if product.compare_at_price > product.price and section.settings.show_sale_badge -%}
+                  <span class="missionary-card__badge">Sale</span>
+                {%- endif -%}
+                <a href="{{ product.url }}">
+                  {%- if product.featured_media -%}
+                    {{ product.featured_media | image_url: width: 800 | image_tag:
+                      loading: 'lazy', sizes: '(min-width: 750px) 25vw, 50vw', widths: '300, 400, 600, 800' }}
+                  {%- else -%}
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </a>
+              </div>
+              <div class="missionary-card__content">
+                <h3 class="missionary-card__heading"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+                <div class="missionary-card__price">
+                  {%- if product.compare_at_price > product.price -%}
+                    {{ product.price | money }} <s>{{ product.compare_at_price | money }}</s>
+                  {%- else -%}
+                    {{ product.price | money }}
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.show_view_all -%}
+          <div class="missionary-grid__view-all">
+            <a href="{{ products_collection.url }}" class="button button--secondary">View all</a>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="missionary-grid__empty">Select a collection to display products.</div>
+      {%- endif -%}
+
+    {%- comment -%} ============ 2) BLOG POSTS ============ {%- endcomment -%}
+    {%- when 'blog' -%}
+      {%- assign selected_blog = blogs[section.settings.blog] -%}
+      {%- if selected_blog != blank and selected_blog.articles_count > 0 -%}
+        <div class="missionary-grid {{ grid_class }}">
+          {%- for article in selected_blog.articles limit: section.settings.posts_limit -%}
+            <div class="{{ card_class }}">
+              <div class="missionary-card__media">
+                <a href="{{ article.url }}">
+                  {%- if article.image -%}
+                    {{ article.image | image_url: width: 800 | image_tag:
+                      loading: 'lazy', sizes: '(min-width: 750px) 25vw, 50vw', widths: '300, 400, 600, 800' }}
+                  {%- else -%}
+                    {{ 'blog-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </a>
+              </div>
+              <div class="missionary-card__content">
+                {%- if section.settings.show_date -%}
+                  <div class="missionary-card__meta">
+                    {{ article.published_at | time_tag: format: 'date' }}
+                    {%- if section.settings.show_author and article.author != blank -%} &middot; {{ article.author }}{%- endif -%}
+                  </div>
+                {%- endif -%}
+                <h3 class="missionary-card__heading"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                {%- if section.settings.show_excerpt -%}
+                  <p class="missionary-card__text">
+                    {%- if article.excerpt.size > 0 -%}{{ article.excerpt | strip_html | truncatewords: 20 }}
+                    {%- else -%}{{ article.content | strip_html | truncatewords: 20 }}{%- endif -%}
+                  </p>
+                {%- endif -%}
+                {%- if section.settings.show_read_more -%}
+                  <a href="{{ article.url }}" class="link missionary-card__readmore">Read more</a>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.show_view_all -%}
+          <div class="missionary-grid__view-all">
+            <a href="{{ selected_blog.url }}" class="button button--secondary">View all</a>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="missionary-grid__empty">Select a blog to display posts.</div>
+      {%- endif -%}
+
+    {%- comment -%} ============ 3) IMAGE GALLERY ============ {%- endcomment -%}
+    {%- when 'gallery' -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="missionary-grid {{ grid_class }}">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'image' -%}
+              <div class="{{ card_class }}" {{ block.shopify_attributes }}>
+                <div class="missionary-card__media">
+                  {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+                  {%- if block.settings.image -%}
+                    {{ block.settings.image | image_url: width: 800 | image_tag:
+                      loading: 'lazy', sizes: '(min-width: 750px) 25vw, 50vw', widths: '300, 400, 600, 800' }}
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                  {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                </div>
+                {%- if block.settings.caption != blank or block.settings.text != blank -%}
+                  <div class="missionary-card__content">
+                    {%- if block.settings.caption != blank -%}
+                      <h3 class="missionary-card__heading">
+                        {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.caption }}</a>
+                        {%- else -%}{{ block.settings.caption }}{%- endif -%}
+                      </h3>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}<p class="missionary-card__text">{{ block.settings.text }}</p>{%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="missionary-grid__empty">Add image blocks to build your gallery.</div>
+      {%- endif -%}
+
+    {%- endcase -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Masonry Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "Layout type",
+      "options": [
+        { "value": "product", "label": "Product grid" },
+        { "value": "blog", "label": "Blog posts" },
+        { "value": "gallery", "label": "Image gallery" }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "select",
+      "id": "masonry_style",
+      "label": "Grid / masonry style",
+      "options": [
+        { "value": "uniform", "label": "Uniform (equal height grid)" },
+        { "value": "masonry", "label": "Masonry (natural image height)" },
+        { "value": "mixed", "label": "Mixed (auto staggered sizes)" },
+        { "value": "brick", "label": "Brick (offset columns)" },
+        { "value": "pinterest", "label": "Pinterest (tight, varied heights)" },
+        { "value": "featured", "label": "Featured (1st card spans 2 cols)" },
+        { "value": "diagonal", "label": "Diagonal cascade (stair-step)" },
+        { "value": "rows", "label": "Horizontal rows (varied widths)" }
+      ],
+      "default": "masonry",
+      "info": "Masonry, Mixed, Pinterest & Diagonal flow by height. Uniform, Brick, Featured & Rows use fixed ratios."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hero",
+      "label": "Highlight first card (hero)",
+      "info": "Adds a larger banner-style first card. Works with Masonry, Mixed, Pinterest, Diagonal & Rows. (Featured already enlarges the first card.)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Hover caption overlay on images",
+      "info": "Title/price/caption fade in over the image on hover.",
+      "default": false
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Missionary Grid"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1"
+    },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "header", "content": "Product grid settings" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    {
+      "type": "range", "id": "products_limit", "min": 2, "max": 24, "step": 1,
+      "label": "Maximum products", "default": 8
+    },
+    { "type": "checkbox", "id": "show_sale_badge", "label": "Show sale badge", "default": true },
+    { "type": "header", "content": "Blog settings" },
+    { "type": "blog", "id": "blog", "label": "Blog" },
+    {
+      "type": "range", "id": "posts_limit", "min": 2, "max": 24, "step": 1,
+      "label": "Maximum posts", "default": 6
+    },
+    { "type": "checkbox", "id": "show_date", "label": "Show date", "default": true },
+    { "type": "checkbox", "id": "show_author", "label": "Show author", "default": false },
+    { "type": "checkbox", "id": "show_excerpt", "label": "Show excerpt", "default": true },
+    { "type": "checkbox", "id": "show_read_more", "label": "Show 'Read more' link", "default": true },
+    { "type": "header", "content": "Layout & appearance" },
+    {
+      "type": "range", "id": "columns_desktop", "min": 1, "max": 6, "step": 1,
+      "label": "Columns on desktop", "default": 4
+    },
+    {
+      "type": "select", "id": "columns_mobile", "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range", "id": "grid_gap", "min": 0, "max": 40, "step": 2, "unit": "px",
+      "label": "Grid gap", "default": 16
+    },
+    {
+      "type": "select", "id": "image_ratio", "label": "Image ratio",
+      "info": "Used by Uniform, Brick & Featured styles.",
+      "options": [
+        { "value": "1", "label": "Square (1:1)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "16 / 9", "label": "Wide (16:9)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox", "id": "show_view_all", "label": "Show 'View all' button",
+      "info": "Applies to Product grid and Blog layouts.", "default": true
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Section padding" },
+    {
+      "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Padding top", "default": 36
+    },
+    {
+      "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Padding bottom", "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "caption", "label": "Caption / title" },
+        { "type": "text", "id": "text", "label": "Description" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Masonry Grid",
+      "blocks": [
+        { "type": "image" }, { "type": "image" }, { "type": "image" },
+        { "type": "image" }, { "type": "image" }, { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

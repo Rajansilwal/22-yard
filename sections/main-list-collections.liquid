@@ -147,7 +147,7 @@
                         {{ 'sections.collection_list.view_all' | t | default: 'View all' }}
                       </a>
                     {%- else -%}
-                      <a href="{{ collection.url }}" class="btn-ui {% if section.settings.button_style == 'primary' %}btn-ui--primary{% else %}btn-ui--secondary{% endif %}">
+                      <a href="{{ collection.url }}" class="btn btn--{{ section.settings.button_style }}">
                         {{ 'sections.collection_list.view_all' | t | default: 'View all' }}
                       </a>
                     {%- endif -%}
@@ -211,6 +211,8 @@
       "options": [
         { "value": "primary", "label": "Primary Theme Button" },
         { "value": "secondary", "label": "Secondary Theme Button" },
+        { "value": "primary-outline", "label": "Primary Outline Button" },
+        { "value": "secondary-outline", "label": "Secondary Outline Button" },
         { "value": "link", "label": "Plain Anchor Link Only" }
       ],
       "default": "primary"

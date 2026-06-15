@@ -14,7 +14,7 @@
   }
 {%- endstyle -%}
 
-<div class="customer account section-{{ section.id }}-padding {{ section.settings.custom_class }}">
+<div class="customer account section-{{ section.id }}-padding">
   <div>
     <h1 class="customer__title">{{ 'customer.account.title' | t }}</h1>
     <a href="{{ routes.account_logout_url }}">
@@ -154,16 +154,6 @@
 {
   "name": "t:sections.main-account.name",
   "settings": [
-    {
-      "type": "header",
-      "content": "Custom CSS"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper."
-    },
     {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"

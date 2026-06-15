@@ -5,6 +5,7 @@
     - "swiper" : Swiper.js carousel with arrows, pagination, and
                  slides-per-view limits per breakpoint
   Fully responsive. All copy, colors, and columns are editable.
+  Each card supports an optional button (uses theme button styles).
 {% endcomment %}
 
 {%- liquid
@@ -71,7 +72,12 @@
   .multicolumn-{{ sid }} .multicolumn__placeholder-svg {
     width: 45%; height: 45%; opacity: 0.45; fill: {{ s.highlight_color }};
   }
-  .multicolumn-{{ sid }} .multicolumn__content { padding: 16px; }
+  .multicolumn-{{ sid }} .multicolumn__content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
   .multicolumn-{{ sid }} .multicolumn__title {
     color: {{ s.heading_color }};
     font-size: {{ s.card_heading_size }}px;
@@ -80,6 +86,7 @@
   .multicolumn-{{ sid }} .multicolumn__text {
     margin: 0; font-size: {{ s.card_text_size }}px; line-height: 1.5;
   }
+  .multicolumn-{{ sid }} .multicolumn__button-wrap { margin-top: auto; padding-top: 16px; }
 
   /* ---------- GRID layout ---------- */
   .multicolumn-{{ sid }} .multicolumn__grid {
@@ -246,6 +253,16 @@
               {%- if bs.card_text != blank -%}
                 <div class="multicolumn__text">{{ bs.card_text }}</div>
               {%- endif -%}
+              {%- if bs.button_label != blank -%}
+                <div class="multicolumn__button-wrap">
+                  <a
+                    {% if bs.button_link != blank %}href="{{ bs.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                    class="{% if bs.button_style == 'link' %}link underlined-link{% else %}btn btn--{{ bs.button_style }} button button--{{ bs.button_style }}{% endif %}"
+                  >
+                    {{- bs.button_label | escape -}}
+                  </a>
+                </div>
+              {%- endif -%}
             </div>
           </div>
         {%- endfor -%}
@@ -286,6 +303,16 @@
                       {%- endif -%}
                       {%- if bs.card_text != blank -%}
                         <div class="multicolumn__text">{{ bs.card_text }}</div>
+                      {%- endif -%}
+                      {%- if bs.button_label != blank -%}
+                        <div class="multicolumn__button-wrap">
+                          <a
+                            {% if bs.button_link != blank %}href="{{ bs.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                            class="{% if bs.button_style == 'link' %}link underlined-link{% else %}btn btn--{{ bs.button_style }} button button--{{ bs.button_style }}{% endif %}"
+                          >
+                            {{- bs.button_label | escape -}}
+                          </a>
+                        </div>
                       {%- endif -%}
                     </div>
                   </div>
@@ -466,7 +493,23 @@
         { "type": "text", "id": "external_image_url", "label": "External image URL", "info": "Used only if no Shopify image is selected." },
         { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Column image" },
         { "type": "text", "id": "card_heading", "label": "Heading", "default": "Column heading" },
-        { "type": "richtext", "id": "card_text", "label": "Text", "default": "<p>Add a short description for this column.</p>" }
+        { "type": "richtext", "id": "card_text", "label": "Text", "default": "<p>Add a short description for this column.</p>" },
+        { "type": "header", "content": "Button" },
+        { "type": "text", "id": "button_label", "label": "Button label", "info": "Leave blank to hide the button." },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "primary", "label": "Primary" },
+            { "value": "secondary", "label": "Secondary" },
+            { "value": "primary-outline", "label": "Primary outline" },
+            { "value": "secondary-outline", "label": "Secondary outline" },
+            { "value": "link", "label": "Link" }
+          ],
+          "default": "primary"
+        }
       ]
     }
   ],
@@ -474,9 +517,9 @@
     {
       "name": "Custom Multicolumn",
       "blocks": [
-        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column one", "card_text": "<p>Add a short description for this column.</p>" } },
-        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column two", "card_text": "<p>Add a short description for this column.</p>" } },
-        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column three", "card_text": "<p>Add a short description for this column.</p>" } }
+        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column one", "card_text": "<p>Add a short description for this column.</p>", "button_label": "Learn more", "button_style": "primary" } },
+        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column two", "card_text": "<p>Add a short description for this column.</p>", "button_label": "Learn more", "button_style": "secondary" } },
+        { "type": "column", "settings": { "image_alt": "Column image", "card_heading": "Column three", "card_text": "<p>Add a short description for this column.</p>", "button_label": "Learn more", "button_style": "primary-outline" } }
       ]
     }
   ]

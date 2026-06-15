@@ -153,7 +153,7 @@
                 <div class="ss-slide__buttons">
                   <a
                     {% if block.settings.link %}href="{{ block.settings.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
-                    class="button {% if block.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+                    class="{% if block.settings.button_style == 'link' %}link underlined-link{% else %}btn btn--{{ block.settings.button_style }}{% endif %}"
                   >
                     {{- block.settings.button_label | escape -}}
                   </a>
@@ -591,10 +591,17 @@
           "label": "Button link"
         },
         {
-          "type": "checkbox",
-          "id": "button_style_secondary",
-          "label": "Use secondary button style",
-          "default": false
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "primary", "label": "Primary" },
+            { "value": "secondary", "label": "Secondary" },
+            { "value": "primary-outline", "label": "Primary outline" },
+            { "value": "secondary-outline", "label": "Secondary outline" },
+            { "value": "link", "label": "Link" }
+          ],
+          "default": "primary"
         },
         {
           "type": "header",

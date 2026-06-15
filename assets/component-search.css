@@ -86,7 +86,7 @@ input::-webkit-search-decoration {
 
 .header-search-inline {
   width: 100%;
-  max-width: var(--search-max-width, 72rem);
+  max-width: var(--search-max-width, 30rem);
   position: relative;
 }
 
@@ -132,6 +132,9 @@ input::-webkit-search-decoration {
   line-height: 1.5;
   outline: none;
 }
+.header-search-inline__input::placeholder {
+    opacity: 0.8;
+}
 
 /* hide the default field__label float since we have placeholder */
 .header-search-inline__field .field__label {
@@ -142,9 +145,11 @@ input::-webkit-search-decoration {
 .header-search-inline .predictive-search {
   position: absolute;
   top: calc(100% + 0.4rem);
-  left: 0;
+  left: -300px;
   right: 0;
   z-index: 200;
+  width: max-content;
+  min-width: 600px;
 }
 
 /* mobile: hide inline bar, show icon+popup via header-search snippet */

@@ -9,13 +9,21 @@
   onload="this.media='all'"
 >
 
-
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
 {%- if section.settings.menu_type_desktop == 'mega' or section.blocks.size > 0 -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+  {%- comment -%} Load Swiper if any override block uses a layout that may need it {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- assign _ml = block.settings.mega_layout -%}
+    {%- if _ml == 'slider' or _ml == 'collection-list' or _ml == 'featured-collection' -%}
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
 {%- endif -%}
 
 <style>
@@ -119,9 +127,12 @@
 -%}
 
 {%- liquid
-  assign logo_position = section.settings.logo_position | default: 'left'
-  assign menu_position = section.settings.menu_position | default: 'left'
-  assign search_style  = section.settings.search_style  | default: 'icon_popup'
+  assign header_layout = section.settings.header_layout | default: 'logo-left'
+  # Determine whether to show inline search based on layout
+  assign has_inline_search = false
+  if header_layout == 'logo-left-search' or header_layout == 'logo-top'
+    assign has_inline_search = true
+  endif
 -%}
 
 {% liquid
@@ -152,49 +163,45 @@
   -%}
 
   <header
-    class="header header--logo-{{ logo_position }} header--menu-{{ menu_position }} header--search-{{ search_style }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}"
+    class="header header--layout-{{ header_layout }} header--mobile-{{ section.settings.mobile_logo_position }}{% if has_inline_search %} header--has-inline-search{% endif %} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}"
   >
     {%- liquid
       if section.settings.menu != blank
         render 'header-drawer'
       endif
 
-      unless search_style == 'inline'
+      unless has_inline_search
         render 'header-search', input_id: 'Search-In-Modal-1'
       endunless
     -%}
 
-    {%- comment -%} Logo {%- endcomment -%}
-    {%- if request.page_type == 'index' -%}
-      <h1 class="header__heading">
-    {%- endif -%}
-    <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
-      {%- if settings.logo != blank -%}
-        <div class="header__heading-logo-wrapper">
-          {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
-          {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
-          {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
-          {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
-          {{
-            settings.logo
-            | image_url: width: 600
-            | image_tag:
-              class: 'header__heading-logo motion-reduce',
-              widths: widths,
-              height: logo_height,
-              width: settings.logo_width,
-              alt: logo_alt,
-              sizes: sizes,
-              preload: true
-          }}
-        </div>
-      {%- else -%}
-        <span class="h2">{{ shop.name }}</span>
-      {%- endif -%}
-    </a>
-    {%- if request.page_type == 'index' -%}
-      </h1>
-    {%- endif -%}
+    {%- comment -%} Logo — always wrapped in .header__heading so it's a grid child {%- endcomment -%}
+    <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="header__heading">
+      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+        {%- if settings.logo != blank -%}
+          <div class="header__heading-logo-wrapper">
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+            {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+            {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+            {{
+              settings.logo
+              | image_url: width: 600
+              | image_tag:
+                class: 'header__heading-logo motion-reduce',
+                widths: widths,
+                height: logo_height,
+                width: settings.logo_width,
+                alt: logo_alt,
+                sizes: sizes,
+                preload: true
+            }}
+          </div>
+        {%- else -%}
+          <span class="h2">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
 
     {%- comment -%} Desktop navigation {%- endcomment -%}
     {%- liquid
@@ -207,8 +214,8 @@
       endif
     %}
 
-    {%- comment -%} Inline search bar (desktop only, shown between nav/logo and icons) {%- endcomment -%}
-    {%- if search_style == 'inline' -%}
+    {%- comment -%} Inline search bar (two-row layouts only) {%- endcomment -%}
+    {%- if has_inline_search -%}
       <div class="header__search-inline small-hide">
         {%- render 'header-search-inline', input_id: 'Search-Inline-Header' -%}
       </div>
@@ -238,11 +245,11 @@
           </localization-form>
         {%- endif -%}
       </div>
-      {%- unless search_style == 'inline' -%}
+      {%- unless has_inline_search -%}
         {% render 'header-search', input_id: 'Search-In-Modal' %}
       {%- endunless -%}
-      {%- if search_style == 'inline' -%}
-        {%- comment -%} Mobile: show popup search icon; inline bar is hidden on mobile {%- endcomment -%}
+      {%- if has_inline_search -%}
+        {%- comment -%} Mobile: always show popup search icon {%- endcomment -%}
         <div class="large-up-hide">
           {% render 'header-search', input_id: 'Search-In-Modal-Mobile' %}
         </div>
@@ -469,7 +476,7 @@
 {
   "name": "t:sections.header.name",
   "class": "section-header",
-  "max_blocks": 10,
+  "max_blocks": 20,
   "settings": [
     {
       "type": "header",
@@ -477,14 +484,16 @@
     },
     {
       "type": "select",
-      "id": "logo_position",
+      "id": "header_layout",
+      "label": "Header layout",
       "options": [
-        { "value": "left",   "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right",  "label": "Right" }
+        { "value": "logo-left",        "label": "Logo left" },
+        { "value": "logo-left-search", "label": "Logo left + Search open" },
+        { "value": "logo-top",         "label": "Logo top (search + logo + menu row)" },
+        { "value": "logo-center",      "label": "Logo center" }
       ],
-      "default": "left",
-      "label": "Logo position (desktop)"
+      "default": "logo-left",
+      "info": "Controls the position of logo, navigation menu, and search bar."
     },
     {
       "type": "select",
@@ -508,17 +517,6 @@
     },
     {
       "type": "select",
-      "id": "menu_position",
-      "options": [
-        { "value": "left",   "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right",  "label": "Right" }
-      ],
-      "default": "left",
-      "label": "Menu position (desktop)"
-    },
-    {
-      "type": "select",
       "id": "menu_type_desktop",
       "options": [
         { "value": "dropdown", "label": "t:sections.header.settings.menu_type_desktop.options__1.label" },
@@ -534,23 +532,6 @@
       "content": "Search"
     },
     {
-      "type": "select",
-      "id": "search_style",
-      "label": "Search style",
-      "options": [
-        { "value": "icon_popup", "label": "Icon → popup modal" },
-        { "value": "inline",     "label": "Inline bar (always visible)" }
-      ],
-      "default": "icon_popup",
-      "info": "Inline shows the search input directly in the header. On mobile the popup is always used."
-    },
-    {
-      "type": "checkbox",
-      "id": "search_open_by_default",
-      "default": false,
-      "label": "Show search bar open by default"
-    },
-    {
       "type": "range",
       "id": "search_max_width",
       "min": 300,
@@ -558,7 +539,8 @@
       "step": 20,
       "unit": "px",
       "label": "Search bar max width",
-      "default": 720
+      "default": 720,
+      "info": "Applies to the inline search bar in 'Logo left + Search' and 'Logo top' layouts."
     },
     {
       "type": "header",
@@ -687,10 +669,34 @@
       "name": "Menu item override",
       "settings": [
         {
+          "type": "paragraph",
+          "content": "Match this block to a top-level nav item by entering its handle below. The handle is the link title lowercased with spaces replaced by hyphens — e.g. 'Shop All' → 'shop-all'. You can also use the last segment of the link URL."
+        },
+        {
           "type": "text",
           "id": "menu_item_handle",
           "label": "Menu item handle",
-          "info": "Enter the exact handle of the top-level menu item (e.g. 'collections', 'about'). Find it in your navigation link URL."
+          "info": "e.g. 'catalog', 'shop-all', 'collections'. Must match the top-level menu item."
+        },
+        {
+          "type": "header",
+          "content": "Nav item appearance"
+        },
+        {
+          "type": "checkbox",
+          "id": "item_show_icon",
+          "label": "Show icon next to label",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "item_icon_image",
+          "label": "Nav item icon image",
+          "info": "Small image shown beside the menu item label (24×24px recommended)."
+        },
+        {
+          "type": "header",
+          "content": "Submenu type"
         },
         {
           "type": "select",
@@ -705,14 +711,24 @@
           "default": "default"
         },
         {
+          "type": "header",
+          "content": "Mega menu layout"
+        },
+        {
           "type": "select",
           "id": "mega_layout",
           "label": "Mega menu layout",
           "options": [
-            { "value": "columns",    "label": "Columns (default)" },
-            { "value": "grid",       "label": "Grid with images" },
-            { "value": "featured",   "label": "Featured — image + links" },
-            { "value": "fullwidth",  "label": "Full-width banner" }
+            { "value": "columns",             "label": "Columns" },
+            { "value": "grid",                "label": "Grid with images" },
+            { "value": "icon-links",          "label": "Icon + label links" },
+            { "value": "image-links",         "label": "Image cards + label" },
+            { "value": "slider",              "label": "Swiper slider" },
+            { "value": "featured-product",    "label": "Featured product panel" },
+            { "value": "featured-collection", "label": "Featured collection products" },
+            { "value": "collection-list",     "label": "Collection cards list" },
+            { "value": "featured",            "label": "Featured image + links" },
+            { "value": "fullwidth",           "label": "Full-width banner" }
           ],
           "default": "columns",
           "info": "Only applies when menu type is Mega menu."
@@ -723,32 +739,77 @@
           "min": 2,
           "max": 6,
           "step": 1,
-          "label": "Columns count",
+          "label": "Columns / slides count",
           "default": 4,
-          "info": "Applies to Columns and Grid layouts."
-        },
-        {
-          "type": "image_picker",
-          "id": "mega_featured_image",
-          "label": "Featured image",
-          "info": "Used in 'Featured' and 'Grid with images' layouts."
-        },
-        {
-          "type": "text",
-          "id": "mega_featured_heading",
-          "label": "Featured heading",
-          "info": "Optional heading shown in featured layout."
-        },
-        {
-          "type": "url",
-          "id": "mega_featured_link",
-          "label": "Featured image link"
+          "info": "Number of columns (Columns, Grid, Image cards, Collection list) or slides per view (Slider)."
         },
         {
           "type": "checkbox",
           "id": "mega_show_description",
           "label": "Show link descriptions",
-          "default": false
+          "default": false,
+          "info": "Shows truncated description from the linked object (collection/product)."
+        },
+        {
+          "type": "header",
+          "content": "Featured product (for 'Featured product panel')"
+        },
+        {
+          "type": "product",
+          "id": "mega_product_handle",
+          "label": "Featured product"
+        },
+        {
+          "type": "header",
+          "content": "Featured collection panel"
+        },
+        {
+          "type": "collection",
+          "id": "mega_collection_handle",
+          "label": "Featured collection"
+        },
+        {
+          "type": "header",
+          "content": "Promo panel (Columns layout)"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image",
+          "label": "Promo image"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading",
+          "label": "Promo heading"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "promo_text",
+          "label": "Promo text"
+        },
+        {
+          "type": "url",
+          "id": "promo_link",
+          "label": "Promo image link"
+        },
+        {
+          "type": "header",
+          "content": "Featured image (Featured / Fullwidth)"
+        },
+        {
+          "type": "image_picker",
+          "id": "mega_featured_image",
+          "label": "Featured image"
+        },
+        {
+          "type": "text",
+          "id": "mega_featured_heading",
+          "label": "Featured heading"
+        },
+        {
+          "type": "url",
+          "id": "mega_featured_link",
+          "label": "Featured image link"
         }
       ]
     }

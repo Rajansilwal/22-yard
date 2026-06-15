@@ -94,7 +94,7 @@
                   {% else %}
                     href="{{ block.settings.button_link }}"
                   {% endif %}
-                  class="button button--{{ section.settings.button_style }}"
+                  class="btn btn--{{ section.settings.button_style }}"
                 >
                   {{ block.settings.button_label | escape }}
                 </a>
@@ -246,6 +246,18 @@
         {
           "value": "secondary",
           "label": "t:sections.multirow.settings.button_style.options__2.label"
+        },
+        {
+          "value": "primary-outline",
+          "label": "Primary outline"
+        },
+        {
+          "value": "secondary-outline",
+          "label": "Secondary outline"
+        },
+        {
+          "value": "link",
+          "label": "Link"
         }
       ],
       "default": "secondary",

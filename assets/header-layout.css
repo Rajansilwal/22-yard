@@ -1,15 +1,19 @@
 /*
   Header Layout
-  Supports logo position: left / center / right
-           menu position: left / center / right
-           search style:  icon_popup / inline
+  4 layouts driven by .header--layout-{name} class:
 
-  Uses flexbox with order + absolute centering tricks for center cases.
-  Mobile always: hamburger | logo(centred or left) | icons
+  logo-left         Single row: [Logo][Nav]............[Icons]
+  logo-left-search  Two rows:   row1: [Logo][Search]...[Icons]
+                                row2: [Nav centred]
+  logo-top          Two rows:   row1: [Search][Logo][Icons]
+                                row2: [Nav centred]
+  logo-center       Single row: [Nav left][Logo centred][Icons]
+
+  Mobile always: [Drawer][Logo centred or left][Icons]
 */
 
 /* ============================================================
-   MOBILE (< 990px)
+   BASE — shared reset
    ============================================================ */
 .header {
   display: grid;
@@ -19,20 +23,20 @@
   position: relative;
 }
 
-header-drawer          { grid-area: drawer; }
-.header__heading,
-.header__heading-link  { grid-area: heading; text-align: center; justify-self: center; }
-.header__icons         { grid-area: icons;   justify-self: end; }
+header-drawer         { grid-area: drawer; }
+.header__heading      { grid-area: heading; text-align: center; justify-self: center; margin-block-start: 0; margin-block-end: 0; }
+.header__icons        { grid-area: icons;  justify-self: end; }
 
-.header--mobile-left .header__heading,
-.header--mobile-left .header__heading-link {
+/* mobile-left logo */
+.header--mobile-left .header__heading {
   text-align: left;
   justify-self: start;
 }
 
-/* hide desktop-only elements on mobile */
+/* hide desktop elements on mobile */
 .header__inline-menu,
-.header__search-inline {
+.header__search-inline,
+.header__nav-row {
   display: none !important;
 }
 
@@ -41,35 +45,24 @@ header-drawer          { grid-area: drawer; }
    ============================================================ */
 @media screen and (min-width: 990px) {
 
-  .header {
-    display: flex !important;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0;
-    position: relative; /* needed for absolute-centred children */
-  }
-
-  /* hide mobile drawer unless drawer-menu mode */
-  header-drawer { display: none; }
+  /* hide mobile drawer (unless drawer-menu mode) */
+  header-drawer              { display: none; }
   .drawer-menu header-drawer { display: flex; }
 
-  /* logo */
-  .header__heading,
+  /* heading link fills its container */
   .header__heading-link {
-    flex: 0 0 auto;
-    text-align: left;
-    justify-self: unset;
+    display: flex;
+    align-items: center;
   }
 
-  /* nav */
+  /* show inline nav */
   .header__inline-menu {
     display: flex !important;
     flex: 0 0 auto;
     align-items: center;
   }
 
-  /* inline search bar */
+  /* inline search */
   .header__search-inline {
     display: flex !important;
     flex: 1 1 auto;
@@ -78,171 +71,220 @@ header-drawer          { grid-area: drawer; }
     padding: 0 1.5rem;
   }
 
-  /* icons — always last, pushed right */
+  /* icons */
   .header__icons {
     flex: 0 0 auto;
     margin-left: auto;
   }
 
-  /* sticky reduce-logo handled by section inline style */
-
-  /* ===========================================================
-     LOGO LEFT
-     =========================================================== */
-
-  /* logo-left + menu-left:  [Logo][Nav]......[Search?][Icons] */
-  .header--logo-left.header--menu-left .header__heading,
-  .header--logo-left.header--menu-left .header__heading-link {
-    order: 1; margin-right: 2rem;
-  }
-  .header--logo-left.header--menu-left .header__inline-menu { order: 2; }
-  .header--logo-left.header--menu-left .header__search-inline { order: 3; }
-  .header--logo-left.header--menu-left .header__icons { order: 4; }
-
-  /* logo-left + menu-center: [Logo]....[Nav centred]....[Icons] */
-  .header--logo-left.header--menu-center .header__heading,
-  .header--logo-left.header--menu-center .header__heading-link {
-    order: 1; margin-right: 0;
-  }
-  .header--logo-left.header--menu-center .header__inline-menu {
-    order: 3;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    pointer-events: auto;
-  }
-  .header--logo-left.header--menu-center .header__search-inline { order: 3; flex: 1 1 auto; }
-  .header--logo-left.header--menu-center .header__icons { order: 4; }
-
-  /* logo-left + menu-right: [Logo]......[Search?][Nav][Icons] */
-  .header--logo-left.header--menu-right .header__heading,
-  .header--logo-left.header--menu-right .header__heading-link {
-    order: 1;
-  }
-  .header--logo-left.header--menu-right .header__search-inline { order: 2; }
-  .header--logo-left.header--menu-right .header__inline-menu   { order: 3; margin-left: auto; }
-  .header--logo-left.header--menu-right .header__icons         { order: 4; margin-left: 2rem; }
-
-  /* When menu-right and no inline search, still push nav right */
-  .header--logo-left.header--menu-right:not(.header--search-inline) .header__inline-menu {
-    margin-left: auto;
-  }
-
-  /* ===========================================================
-     LOGO CENTER
-     =========================================================== */
-
-  /* logo-center + menu-left: [Nav]....[Logo centred]....[Icons] */
-  .header--logo-center.header--menu-left .header__inline-menu {
-    order: 1; flex: 0 0 auto;
-  }
-  .header--logo-center.header--menu-left .header__heading,
-  .header--logo-center.header--menu-left .header__heading-link {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    order: 2;
-    text-align: center;
-  }
-  .header--logo-center.header--menu-left .header__search-inline { order: 3; flex: 1 1 auto; }
-  .header--logo-center.header--menu-left .header__icons         { order: 4; }
-
-  /* logo-center + menu-center: use a centred wrapper via justify-content */
-  .header--logo-center.header--menu-center {
-    justify-content: center;
-  }
-  .header--logo-center.header--menu-center .header__heading,
-  .header--logo-center.header--menu-center .header__heading-link {
-    order: 2; flex: 0 0 auto; text-align: center;
-  }
-  .header--logo-center.header--menu-center .header__inline-menu {
-    order: 1; flex: 0 0 auto;
-  }
-  .header--logo-center.header--menu-center .header__search-inline {
-    position: absolute;
-    right: 0;
-    width: auto;
-    max-width: 32rem;
-    flex: none;
-    order: 3;
-  }
-  .header--logo-center.header--menu-center .header__icons {
-    position: absolute;
-    right: 0;
-    order: 4;
-    margin-left: 0;
-  }
-
-  /* logo-center + menu-right: [spacer]....[Logo centred]....[Nav][Icons] */
-  .header--logo-center.header--menu-right .header__heading,
-  .header--logo-center.header--menu-right .header__heading-link {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    order: 2; text-align: center;
-  }
-  .header--logo-center.header--menu-right .header__search-inline { order: 2; flex: 1 1 auto; }
-  .header--logo-center.header--menu-right .header__inline-menu   { order: 3; margin-left: auto; flex: 0 0 auto; }
-  .header--logo-center.header--menu-right .header__icons         { order: 4; margin-left: 2rem; }
-  .header--logo-center.header--menu-right:not(.header--search-inline) .header__inline-menu {
-    margin-left: auto;
-  }
-
-  /* ===========================================================
-     LOGO RIGHT
-     =========================================================== */
-
-  /* logo-right + menu-left: [Nav]......[Search?][Logo][Icons] */
-  .header--logo-right.header--menu-left .header__inline-menu  { order: 1; }
-  .header--logo-right.header--menu-left .header__search-inline{ order: 2; flex: 1 1 auto; }
-  .header--logo-right.header--menu-left .header__heading,
-  .header--logo-right.header--menu-left .header__heading-link  { order: 3; margin-left: auto; text-align: right; }
-  .header--logo-right.header--menu-left .header__icons         { order: 4; margin-left: 0; }
-
-  /* logo-right + menu-center: [spacer]....[Nav centred]....[Logo][Icons] */
-  .header--logo-right.header--menu-center .header__inline-menu {
-    order: 2;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .header--logo-right.header--menu-center .header__search-inline{ order: 1; flex: 1 1 auto; }
-  .header--logo-right.header--menu-center .header__heading,
-  .header--logo-right.header--menu-center .header__heading-link  { order: 3; margin-left: auto; text-align: right; }
-  .header--logo-right.header--menu-center .header__icons         { order: 4; margin-left: 0; }
-
-  /* logo-right + menu-right: [spacer]......[Nav][Logo][Icons] */
-  .header--logo-right.header--menu-right .header__search-inline { order: 1; flex: 1 1 auto; }
-  .header--logo-right.header--menu-right .header__inline-menu   { order: 2; margin-left: auto; }
-  .header--logo-right.header--menu-right .header__heading,
-  .header--logo-right.header--menu-right .header__heading-link   { order: 3; margin-left: 2rem; text-align: right; }
-  .header--logo-right.header--menu-right .header__icons          { order: 4; margin-left: 2rem; }
-  .header--logo-right.header--menu-right:not(.header--search-inline) .header__inline-menu {
-    margin-left: auto;
-  }
-
-  /* ===========================================================
-     Inline search: hide the spacer flex when not search-inline
-     =========================================================== */
-  .header:not(.header--search-inline) .header__search-inline {
-    display: none !important;
-  }
-
-  /* ===========================================================
-     Popup search icon — hide in icons when inline on desktop
-     =========================================================== */
-  .header--search-inline .header__icons .header__search {
+  /* hide popup search icon when inline search is shown */
+  .header--has-inline-search .header__icons .header__search {
     display: none;
   }
 
-  /* mega-menu content z-index over absolute logo */
+  /* ─────────────────────────────────────────────
+     1. LOGO LEFT  (single row)
+        [Logo][Nav]............[Icons]
+     ───────────────────────────────────────────── */
+  .header--layout-logo-left {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0;
+  }
+
+  .header--layout-logo-left .header__heading {
+    order: 1;
+    flex: 0 0 auto;
+    margin-right: 2.4rem;
+    text-align: left;
+    justify-self: unset;
+    margin-block-start: 0;
+    margin-block-end: 0;
+  }
+
+  .header--layout-logo-left .header__inline-menu {
+    order: 2;
+  }
+
+  /* no inline search in logo-left */
+  .header--layout-logo-left .header__search-inline {
+    display: none !important;
+  }
+
+  .header--layout-logo-left .header__icons {
+    order: 3;
+    margin-left: auto;
+  }
+
+  /* ─────────────────────────────────────────────
+     2. LOGO LEFT + SEARCH OPEN  (two rows)
+        row 1: [Logo][Search bar............][Icons]
+        row 2:       [Nav centred]
+     ───────────────────────────────────────────── */
+  .header--layout-logo-left-search {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'logo search icons'
+      '.    nav    .    ';
+    align-items: center;
+    column-gap: 2rem;
+  }
+
+  .header--layout-logo-left-search .header__heading {
+    grid-area: logo;
+    text-align: left;
+    justify-self: start;
+    align-self: center;
+    margin: 0;
+  }
+
+  /* remove default h1 margins */
+  .header--layout-logo-left-search .header__heading,
+  .header--layout-logo-top .header__heading {
+    margin-block-start: 0;
+    margin-block-end: 0;
+  }
+
+  .header--layout-logo-left-search .header__search-inline {
+    grid-area: search;
+    display: flex !important;
+    padding: 0;
+    flex: unset;
+    min-width: 0;
+  }
+
+  .header--layout-logo-left-search .header__icons {
+    grid-area: icons;
+    margin-left: 0;
+    justify-self: end;
+  }
+
+  .header--layout-logo-left-search .header__inline-menu {
+    grid-area: nav;
+    justify-content: center;
+    padding: 0.6rem 0;
+    display: flex !important;
+  }
+
+  /* ─────────────────────────────────────────────
+     3. LOGO TOP  (two rows)
+        row 1: [Search][Logo centred][Icons]
+        row 2:         [Nav centred]
+     ───────────────────────────────────────────── */
+  .header--layout-logo-top {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'search  logo  icons'
+      'nav     nav   nav  ';
+    align-items: center;
+    column-gap: 2rem;
+  }
+
+  .header--layout-logo-top .header__heading {
+    grid-area: logo;
+    text-align: center;
+    justify-self: center;
+    align-self: center;
+    margin-block-start: 0;
+    margin-block-end: 0;
+  }
+
+  .header--layout-logo-top .header__search-inline {
+    grid-area: search;
+    display: flex !important;
+    padding: 0;
+    flex: unset;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .header--layout-logo-top .header__icons {
+    grid-area: icons;
+    margin-left: 0;
+    justify-self: end;
+  }
+
+  .header--layout-logo-top .header__inline-menu {
+    grid-area: nav;
+    justify-content: center;
+    padding: 0.6rem 0;
+    display: flex !important;
+  }
+
+  /* ─────────────────────────────────────────────
+     4. LOGO CENTER  (single row)
+        [Nav left][Logo centred][Icons]
+     ───────────────────────────────────────────── */
+  .header--layout-logo-center {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    position: relative;
+  }
+
+  .header--layout-logo-center .header__inline-menu {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  .header--layout-logo-center .header__heading {
+    order: 2;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    flex: 0 0 auto;
+    justify-self: unset;
+    margin-block-start: 0;
+    margin-block-end: 0;
+  }
+
+  /* no inline search in logo-center */
+  .header--layout-logo-center .header__search-inline {
+    display: none !important;
+  }
+
+  .header--layout-logo-center .header__icons {
+    order: 3;
+    margin-left: auto;
+  }
+
+  /* ─────────────────────────────────────────────
+     Nav-row second row: menu items centering + border
+     ───────────────────────────────────────────── */
+  .header--layout-logo-left-search .header__inline-menu .list-menu--inline,
+  .header--layout-logo-top .header__inline-menu .list-menu--inline {
+    justify-content: center;
+  }
+
+  /* subtle top border separating the nav row */
+  .header--layout-logo-left-search .header__inline-menu,
+  .header--layout-logo-top .header__inline-menu {
+    border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
+    width: 100%;
+  }
+
+  /* mega-menu z-index over absolute logo */
   .mega-menu__content {
     z-index: 50;
+  }
+
+  /* popup search icon hidden in two-row layouts (inline search is used) */
+  .header--layout-logo-left-search .header__icons .header__search,
+  .header--layout-logo-top .header__icons .header__search {
+    display: none;
   }
 }
 
 /* ============================================================
-   Sticky header - reduce logo size
+   Sticky header
    ============================================================ */
 .scrolled-past-header .header__heading-logo-wrapper {
   transition: width 0.3s ease;

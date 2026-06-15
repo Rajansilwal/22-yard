@@ -361,7 +361,7 @@
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
           href="{{ section.settings.collection.url }}"
-          class="{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
+          class="{% if section.settings.button_style == 'link' %}link underlined-link{% else %}btn btn--{{ section.settings.button_style }} button button--{{ section.settings.button_style }}{% endif %}"
           aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}"
         >
           {{ 'sections.featured_collection.view_all' | t }}
@@ -638,14 +638,16 @@
     },
     {
       "type": "select",
-      "id": "view_all_style",
-      "label": "t:sections.featured-collection.settings.view_all_style.label",
+      "id": "button_style",
+      "label": "View all button style",
       "options": [
-        { "value": "link", "label": "t:sections.featured-collection.settings.view_all_style.options__1.label" },
-        { "value": "outline", "label": "t:sections.featured-collection.settings.view_all_style.options__2.label" },
-        { "value": "solid", "label": "t:sections.featured-collection.settings.view_all_style.options__3.label" }
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "primary-outline", "label": "Primary outline" },
+        { "value": "secondary-outline", "label": "Secondary outline" },
+        { "value": "link", "label": "Link" }
       ],
-      "default": "solid"
+      "default": "primary"
     },
     {
       "type": "color_scheme",
