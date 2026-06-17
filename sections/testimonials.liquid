@@ -191,6 +191,74 @@
   }
 {% endstyle %}
 
+{%- comment %} ===== 22 Yard design overrides ===== {% endcomment -%}
+<style>
+  .testimonials-{{ sid }} .testimonials__container { padding: 0 1.5rem; max-width: 1300px; }
+
+  /* Left-aligned eyebrow + heading + view-all row */
+  .testimonials-{{ sid }} .testimonials__head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.4rem; text-align: left;
+  }
+  .testimonials-{{ sid }} .testimonials__eyebrow {
+    color: #8a2b2b; text-transform: uppercase; font-weight: 700;
+    letter-spacing: .12em; font-size: .8rem; margin: 0 0 .4rem;
+  }
+  .testimonials-{{ sid }} .testimonials__heading {
+    text-align: left; margin: 0;
+    font-family: var(--font-heading-family); font-weight: 800;
+    line-height: 1.05; color: #16161a;
+  }
+  .testimonials-{{ sid }} .testimonials__rating-line {
+    margin: .8rem 0 0; color: #6b7280; font-size: 1rem;
+  }
+  .testimonials-{{ sid }} .testimonials__rating-line strong { color: #16161a; }
+  .testimonials-{{ sid }} .testimonials__viewall {
+    flex: 0 0 auto; display: inline-block; text-decoration: none;
+    background: #fff; color: #16161a; border: 1.5px solid #16161a;
+    text-transform: uppercase; font-weight: 700; letter-spacing: .08em;
+    padding: .7rem 1.4rem; border-radius: 4px; transition: background .15s, color .15s;
+  }
+  .testimonials-{{ sid }} .testimonials__viewall:hover { background: #16161a; color: #fff; }
+
+  /* Card: white, soft shadow, faint corner quote mark */
+  .testimonials-{{ sid }} .testimonials__card {
+    position: relative; overflow: hidden;
+    background: #fff; border: 1px solid #e7e7e7; border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06); padding: 1.6rem 1.6rem 1.4rem;
+  }
+  .testimonials-{{ sid }} .testimonials__stars { color: #f6a609; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 1rem; }
+  .testimonials-{{ sid }} .testimonials__quote { color: #16161a; font-size: 1rem; line-height: 1.6; }
+  .testimonials-{{ sid }} .testimonials__quotemark {
+    position: absolute; right: 1.2rem; bottom: 1rem; margin: 0;
+    font-family: Georgia, serif; font-size: 7rem; line-height: 1;
+    color: #16161a; opacity: .07; pointer-events: none;
+  }
+  .testimonials-{{ sid }} .testimonials__name {
+    display: flex; align-items: center; gap: .4rem;
+    color: #16161a; font-weight: 700; font-family: var(--font-heading-family);
+  }
+  .testimonials-{{ sid }} .testimonials__verified { color: #1fa8dd; display: inline-flex; }
+  .testimonials-{{ sid }} .testimonials__role { color: #6b7280; opacity: 1; }
+
+  /* Circular outline arrows sitting OUTSIDE the cards */
+  .testimonials-{{ sid }} .testimonials__swiper { padding: 0 64px 4px; }
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next,
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev {
+    background: #fff; color: #16161a; border: 1px solid #e7e7e7;
+    width: 48px; height: 48px; box-shadow: none;
+  }
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev { left: 0; }
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next { right: 0; }
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-pagination-bullet-active {
+    background: #8a2b2b; border-radius: 6px; width: 22px;
+  }
+  @media screen and (max-width: 749px) {
+    .testimonials-{{ sid }} .testimonials__head { align-items: flex-start; }
+    .testimonials-{{ sid }} .testimonials__swiper { padding: 0 0 4px; }
+  }
+</style>
+
 {%- comment %} Load Swiper (slider is the only display mode) {% endcomment -%}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
@@ -198,18 +266,30 @@
 <section id="testimonials-{{ sid }}" class="testimonials-{{ sid }} testimonials-section{% if s.layout == 'single' %} is-single{% endif %} {{ section.settings.custom_class }}">
   <div class="testimonials__container">
 
-    {%- if s.heading != blank -%}
-      <h2 class="testimonials__heading">
-        {{ s.heading }}
-        {%- if s.highlight_text != blank -%}
-          <span class="testimonials__highlight">{{ s.highlight_text }}</span>
+    <div class="testimonials__head">
+      <div class="testimonials__head-text">
+        {%- if s.eyebrow != blank -%}
+          <p class="testimonials__eyebrow">{{ s.eyebrow }}</p>
         {%- endif -%}
-      </h2>
-    {%- endif -%}
-
-    {%- if s.subheading != blank -%}
-      <div class="testimonials__subheading">{{ s.subheading }}</div>
-    {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="testimonials__heading" style="font-size: {{ s.heading_size }}px;">
+            {{ s.heading }}
+            {%- if s.highlight_text != blank -%}
+              <span class="testimonials__highlight">{{ s.highlight_text }}</span>
+            {%- endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if s.rating_score != blank or s.rating_text != blank -%}
+          <p class="testimonials__rating-line">
+            {%- if s.rating_score != blank -%}<strong>{{ s.rating_score }}</strong> {% endif -%}
+            {{ s.rating_text }}
+          </p>
+        {%- endif -%}
+      </div>
+      {%- if s.view_all_label != blank -%}
+        <a href="{{ s.view_all_link | default: routes.all_products_collection_url }}" class="testimonials__viewall">{{ s.view_all_label }}</a>
+      {%- endif -%}
+    </div>
 
     {%- if section.blocks.size > 0 -%}
       <div class="testimonials__swiper" id="testimonials-swiper-{{ sid }}">
@@ -243,8 +323,17 @@
                       {%- endif -%}
                     </div>
                     <div>
-                      {%- if bs.name != blank -%}<div class="testimonials__name">{{ bs.name }}</div>{%- endif -%}
-                      {%- if bs.role != blank -%}<div class="testimonials__role">{{ bs.role }}</div>{%- endif -%}
+                      {%- if bs.name != blank -%}
+                        <div class="testimonials__name">
+                          {{ bs.name }}
+                          {%- if bs.verified -%}
+                            <span class="testimonials__verified" aria-label="Verified buyer">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l2.4 2.1 3.2-.3 1.3 2.9 2.9 1.3-.3 3.2L23.5 14l-2.1 2.4.3 3.2-2.9 1.3-1.3 2.9-3.2-.3L12 25.5 9.6 23.4l-3.2.3-1.3-2.9L2.2 19.5l.3-3.2L.5 14l2.1-2.4-.3-3.2 2.9-1.3L6.5 4.2l3.2.3z"/><path d="M10.6 15.6l-2.7-2.7 1.1-1.1 1.6 1.6 4-4 1.1 1.1z" fill="#fff"/></svg>
+                            </span>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                      {%- if bs.role != blank -%}<div class="testimonials__role" style="font-size: {{ s.role_size }}px;">{{ bs.role }}</div>{%- endif -%}
                     </div>
                   </div>
 
@@ -313,7 +402,7 @@
 
 {% schema %}
 {
-  "name": "Testimonials",
+  "name": "22 Yard Testimonials Slider",
   "tag": "section",
   "class": "testimonials-section",
   "settings": [
@@ -343,9 +432,13 @@
     { "type": "range", "id": "autoplay_speed", "label": "Autoplay delay", "min": 2, "max": 10, "step": 1, "unit": "s", "default": 5 },
 
     { "type": "header", "content": "Heading" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "What our customers say" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Testimonials" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What Our Customers Says" },
     { "type": "text", "id": "highlight_text", "label": "Highlighted heading text" },
-    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Real feedback from people who love what we do.</p>" },
+    { "type": "text", "id": "rating_score", "label": "Rating score", "default": "4.9" },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "out of 5 Based on 2,400+ reviews" },
+    { "type": "text", "id": "view_all_label", "label": "View all button label", "default": "View All" },
+    { "type": "url", "id": "view_all_link", "label": "View all button link" },
 
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "Section background", "default": "#ffffff" },
@@ -390,7 +483,8 @@
         { "type": "image_picker", "id": "image", "label": "Photo (upload)" },
         { "type": "text", "id": "image_url", "label": "Photo URL", "info": "Used if no upload above. If both empty, the person's initial is shown." },
         { "type": "text", "id": "name", "label": "Name", "default": "Customer name" },
-        { "type": "text", "id": "role", "label": "Designation", "default": "Verified buyer" },
+        { "type": "text", "id": "role", "label": "Location", "default": "Sydney, NSW" },
+        { "type": "checkbox", "id": "verified", "label": "Show verified badge", "default": true },
         { "type": "checkbox", "id": "show_stars", "label": "Show star rating", "default": true },
         { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 }
       ]
@@ -398,13 +492,13 @@
   ],
   "presets": [
     {
-      "name": "Testimonials",
+      "name": "22 Yard Testimonials Slider",
       "blocks": [
-        { "type": "testimonial", "settings": { "quote": "<p>Add a customer review here to build trust with new visitors.</p>", "name": "Customer name", "role": "Verified buyer", "rating": 5 } },
-        { "type": "testimonial", "settings": { "quote": "<p>Highlight a quote that shows the value of your products.</p>", "name": "Customer name", "role": "Verified buyer", "rating": 5 } },
-        { "type": "testimonial", "settings": { "quote": "<p>Use real feedback to tell your brand's story through your customers.</p>", "name": "Customer name", "role": "Verified buyer", "rating": 5 } }
+        { "type": "testimonial", "settings": { "quote": "<p>Wonderful Service, great products. They have everything you need. Highly recommend for anyone that needs any bats and gear. Will return again.</p>", "name": "James T.", "role": "Sydney, NSW", "rating": 5 } },
+        { "type": "testimonial", "settings": { "quote": "<p>Pick up my second dsc super natural from the guys down at wiz sports made everything so easy and great people to deal with and best prices in Australia.</p>", "name": "Sarah K.", "role": "Melbourne, VIC", "rating": 5 } },
+        { "type": "testimonial", "settings": { "quote": "<p>I bought a bat and a helmet for my brother, and I'm really happy with the purchase. The quality of both products is excellent and exactly as expected.</p>", "name": "Raj B.", "role": "Brisbane, QLD", "rating": 5 } }
       ]
-    }    
+    }
   ]
 }
 {% endschema %}

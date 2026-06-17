@@ -25,6 +25,176 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* ===== 22 Yard footer restyle ===== */
+  .footer {
+    background-color: #ffffff;
+    border-top: none;
+  }
+
+  .footer .footer__content-top {
+    padding-top: 0;
+  }
+
+  .footer .footer__blocks-wrapper {
+    gap: 2.5rem 2rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .footer .footer__blocks-wrapper.grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1fr 1.2fr;
+    }
+  }
+
+  .footer .footer-block__heading {
+    color: #16161a;
+    font-family: var(--font-heading-family);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.01em;
+    margin: 0 0 1.4rem;
+  }
+
+  .footer .footer-block__details-content .list-menu__item,
+  .footer .footer-block__details-content a,
+  .footer .footer-block__brand-info .rte a {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    padding: 0;
+    font-size: 1.05rem;
+  }
+
+  .footer .footer-block__details-content li {
+    margin-bottom: 0.9rem;
+  }
+
+  .footer .footer-block__details-content .list-menu__item:hover,
+  .footer .footer-block__details-content a:hover,
+  .footer .footer-block__brand-info .rte a:hover,
+  .footer .footer-block__details-content .list-menu__item--active {
+    color: #8a2b2b;
+  }
+
+  .footer .footer-block__brand-info .rte {
+    color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.6rem;
+  }
+
+  .footer .footer-block__brand-info .footer-block__image-wrapper {
+    margin-bottom: 1.4rem;
+  }
+
+  /* Maroon accent links (Call Us / Mail Us inside a text/richtext column) */
+  .footer .footer-block__details-content.rte a {
+    color: #8a2b2b;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .footer .footer-block__details-content.rte a:hover {
+    color: #16161a;
+  }
+
+  .footer .footer-block__details-content.rte strong {
+    color: #16161a;
+  }
+
+  /* Social icons in dark grey */
+  .footer .footer__list-social.list-social {
+    gap: 1.6rem;
+    margin-top: 1.6rem;
+  }
+
+  .footer .footer__list-social .list-social__link {
+    color: #16161a;
+    padding: 0;
+  }
+
+  .footer .footer__list-social .list-social__link:hover {
+    color: #8a2b2b;
+  }
+
+  .footer .footer__list-social .list-social__link .icon {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  /* Bottom bar */
+  .footer .footer__content-bottom {
+    border-top: 1px solid #e7e7e7;
+    margin-top: 2.5rem;
+    padding-top: 1.8rem;
+  }
+
+  .footer__bottom-bar .footer__copyright {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.2rem 1.6rem;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+  }
+
+  .footer__bottom-bar .copyright__content,
+  .footer__bottom-bar .copyright__content a {
+    color: #16161a;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .footer__bottom-bar .footer__payment {
+    margin: 0;
+  }
+
+  .footer__bottom-bar .list-payment {
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .footer__bottom-bar .list-payment__item .icon {
+    height: 1.9rem;
+    width: auto;
+  }
+
+  /* Policies pushed to the right edge */
+  .footer__bottom-policies {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0 0 0 auto;
+  }
+
+  .footer__bottom-policies li {
+    margin: 0;
+  }
+
+  .footer__bottom-policies li:not(:last-child)::after {
+    content: "|";
+    color: #6b7280;
+    margin: 0 0.7rem;
+  }
+
+  .footer__bottom-policies a {
+    color: #16161a;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .footer__bottom-policies a:hover {
+    color: #8a2b2b;
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer__bottom-policies {
+      margin-left: 0;
+    }
+  }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding {{ section.settings.custom_class }}">
@@ -97,7 +267,7 @@
                             >
                               {{ link.title | escape }}
                             </a>
-                          </td>
+                          </li>
                         {%- endfor -%}
                       </ul>
                     {%- endif -%}
@@ -120,6 +290,21 @@
                               height: brand_image_height,
                               width: settings.brand_image_width
                           }}
+                        </div>
+                      {%- elsif settings.logo != blank -%}
+                        {%- comment -%} Fall back to the header logo so the footer brand mark matches {%- endcomment -%}
+                        <div class="footer-block__image-wrapper" style="max-width: min(100%, 140px);">
+                          <a href="{{ routes.root_url }}" class="footer__logo-link">
+                            {{
+                              settings.logo
+                              | image_url: width: 600
+                              | image_tag:
+                                loading: 'lazy',
+                                widths: '100, 140, 200, 280',
+                                width: 140,
+                                alt: shop.name
+                            }}
+                          </a>
                         </div>
                       {%- endif -%}
                       {%- if settings.brand_headline != blank -%}
@@ -290,6 +475,9 @@
       data-cascade
     {% endif %}
   >
+    {%- if section.settings.enable_country_selector and localization.available_countries.size > 1
+      or section.settings.enable_language_selector and localization.available_languages.size > 1
+    -%}
     <div class="footer__content-bottom-wrapper page-width">
       <div class="footer__column footer__localization isolate">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
@@ -316,7 +504,13 @@
           </localization-form>
         {%- endif -%}
       </div>
-      <div class="footer__column footer__column--info">
+    </div>
+    {%- endif -%}
+    <div class="footer__content-bottom-wrapper footer__bottom-bar page-width">
+      <div class="footer__copyright caption">
+        <small class="copyright__content"
+          >Copyright &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved.</small
+        >
         {%- if section.settings.payment_enable -%}
           <div class="footer__payment">
             <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
@@ -329,23 +523,11 @@
             </ul>
           </div>
         {%- endif -%}
-      </div>
-    </div>
-    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
-      <div class="footer__copyright caption">
-        <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
-        </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
         {%- if section.settings.show_policy -%}
-          <ul class="policies list-unstyled">
+          <ul class="footer__bottom-policies list-unstyled">
             {%- for policy in shop.policies -%}
               {%- if policy != blank -%}
-                <li>
-                  <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
-                  >
-                </li>
+                <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
               {%- endif -%}
             {%- endfor -%}
           </ul>

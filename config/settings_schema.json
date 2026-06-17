@@ -1563,6 +1563,12 @@
       },
       {
         "type": "text",
+        "id": "social_linkedin_link",
+        "label": "LinkedIn",
+        "info": "https://linkedin.com/company/your-page"
+      },
+      {
+        "type": "text",
         "id": "social_snapchat_link",
         "label": "t:settings_schema.social-media.settings.social_snapchat_link.label",
         "placeholder": "t:settings_schema.social-media.settings.social_snapchat_link.info"

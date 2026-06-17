@@ -1,161 +1,258 @@
-{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
-{{ 'newsletter-section.css' | asset_url | stylesheet_tag }}
-
 {%- style -%}
-  .section-{{ section.id }}-padding {
+  .yard-newsletter-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: #ffffff;
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
+  .yard-newsletter__inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .yard-newsletter__heading {
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1.1;
+    margin: 0 0 0.9rem;
+    letter-spacing: -0.01em;
+  }
+
+  .yard-newsletter__subtext {
+    color: #b7b7b7;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0 0 1.6rem;
+    max-width: 520px;
+  }
+
+  .yard-newsletter__form {
+    display: flex;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .yard-newsletter__form .newsletter-form {
+    width: 100%;
+    margin: 0;
+  }
+
+  .yard-newsletter__row {
+    display: flex;
+    width: 100%;
+  }
+
+  .yard-newsletter__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none;
+    background: #ffffff;
+    color: #16161a;
+    font-size: 1rem;
+    padding: 0 1.1rem;
+    height: 54px;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+  }
+
+  .yard-newsletter__input::placeholder {
+    color: #6b7280;
+  }
+
+  .yard-newsletter__button {
+    flex: 0 0 auto;
+    border: none;
+    cursor: pointer;
+    background-color: #8a2b2b;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    font-size: 0.9rem;
+    padding: 0 1.8rem;
+    height: 54px;
+    border-radius: 0 4px 4px 0;
+    transition: background-color 0.2s ease;
+  }
+
+  .yard-newsletter__button:hover {
+    background-color: #6f2222;
+  }
+
+  .yard-newsletter__message {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+    color: #ffffff;
+    font-size: 0.95rem;
+  }
+
+  .yard-newsletter__message .svg-wrapper {
+    display: inline-flex;
+  }
+
+  .yard-newsletter__help-title {
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    color: #ffffff;
+    font-size: 1.9rem;
+    line-height: 1.1;
+    margin: 0 0 0.4rem;
+  }
+
+  .yard-newsletter__phone {
+    display: inline-block;
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    color: #ffffff;
+    font-size: 1.9rem;
+    line-height: 1.1;
+    text-decoration: none;
+    margin: 0 0 0.7rem;
+  }
+
+  .yard-newsletter__phone:hover {
+    color: #ffffff;
+    opacity: 0.85;
+  }
+
+  .yard-newsletter__hours {
+    color: #b7b7b7;
+    font-size: 1rem;
+    margin: 0;
+  }
+
   @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
+    .yard-newsletter-{{ section.id }} {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    .yard-newsletter__inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .yard-newsletter__left {
+      flex: 1 1 60%;
+    }
+
+    .yard-newsletter__right {
+      flex: 0 1 38%;
+    }
+
+    .yard-newsletter__heading {
+      font-size: 2.6rem;
+    }
+
+    .yard-newsletter__help-title,
+    .yard-newsletter__phone {
+      font-size: 2.4rem;
     }
   }
 {%- endstyle -%}
 
-{%- liquid
-  assign layout_type = section.settings.label_layout
-  assign field_class = 'field'
-  if layout_type != 'default_dawn'
-    assign field_class = 'custom-form-field'
-  endif
--%}
+<div class="yard-newsletter yard-newsletter-{{ section.id }}">
+  <div class="yard-newsletter__inner">
+    <div class="yard-newsletter__left">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="yard-newsletter__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
 
-<div class="newsletter center {% if section.settings.full_width == false %}newsletter--narrow page-width{% endif %} {{ section.settings.custom_class }}">
-  <div class="newsletter__wrapper color-{{ section.settings.color_scheme }} gradient content-container isolate{% if section.settings.full_width %} content-container--full-width{% endif %} section-{{ section.id }}-padding newsletter--{{ layout_type }}">
-    {%- for block in section.blocks -%}
-      {%- case block.type -%}
-        {%- when '@app' -%}
-          {% render block %}
-        {%- when 'heading' -%}
-          <h2
-            class="inline-richtext {{ block.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-            {{ block.shopify_attributes }}
-            {% if settings.animations_reveal_on_scroll %}
-              data-cascade
-              style="--animation-order: {{ forloop.index }};"
-            {% endif %}
-          >
-            {{ block.settings.heading }}
-          </h2>
-        {%- when 'paragraph' -%}
-          <div
-            class="newsletter__subheading rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-            {{ block.shopify_attributes }}
-            {% if settings.animations_reveal_on_scroll %}
-              data-cascade
-              style="--animation-order: {{ forloop.index }};"
-            {% endif %}
-          >
-            {{ block.settings.text }}
+      {%- if section.settings.subtext != blank -%}
+        <p class="yard-newsletter__subtext">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      <div class="yard-newsletter__form">
+        {%- form 'customer', class: 'newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="yard-newsletter__row">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="yard-newsletter__input"
+              value="{{ form.email }}"
+              aria-label="{{ 'newsletter.label' | t }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus
+                aria-invalid="true"
+                aria-describedby="Newsletter-error--{{ section.id }}"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="Newsletter-success--{{ section.id }}"
+              {% endif %}
+              placeholder="{{ section.settings.input_placeholder | default: 'Enter your email address' }}"
+              required
+            >
+            <button
+              type="submit"
+              class="yard-newsletter__button"
+              name="commit"
+              id="Subscribe"
+              aria-label="{{ 'newsletter.button_label' | t }}"
+            >
+              {{ section.settings.button_label | default: 'Subscribe' }}
+            </button>
           </div>
-        {%- when 'email_form' -%}
-          <div {{ block.shopify_attributes }}>
-            {% form 'customer', class: 'newsletter-form' %}
-              <input type="hidden" name="contact[tags]" value="newsletter">
-              <div
-                class="newsletter-form__field-wrapper{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                {% if settings.animations_reveal_on_scroll %}
-                  data-cascade
-                  style="--animation-order: {{ forloop.index }};"
-                {% endif %}
-              >
-                <div class="{{ field_class }}">
-                  {%- if layout_type == 'top_bottom' -%}
-                    <label class="custom-field__label" for="NewsletterForm--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
-                    </label>
-                  {%- endif -%}
+          {%- if form.errors -%}
+            <small class="yard-newsletter__message" id="Newsletter-error--{{ section.id }}">
+              <span class="svg-wrapper">
+                {{- 'icon-error.svg' | inline_asset_content -}}
+              </span>
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </small>
+          {%- endif -%}
+          {%- if form.posted_successfully? -%}
+            <h3
+              class="yard-newsletter__message"
+              id="Newsletter-success--{{ section.id }}"
+              tabindex="-1"
+              autofocus
+            >
+              <span class="svg-wrapper">
+                {{- 'icon-success.svg' | inline_asset_content -}}
+              </span>
+              {{- 'newsletter.success' | t }}
+            </h3>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
 
-                  {%- capture input_and_button -%}
-                    <input
-                      id="NewsletterForm--{{ section.id }}"
-                      type="email"
-                      name="contact[email]"
-                      class="{% if layout_type == 'default_dawn' %}field__input{% else %}custom-field__input{% endif %}"
-                      value="{{ form.email }}"
-                      aria-required="true"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="Newsletter-error--{{ section.id }}"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="Newsletter-success--{{ section.id }}"
-                      {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
-                      required
-                    >
-                    <button
-                      type="submit"
-                      class="newsletter-form__button {% if layout_type == 'default_dawn' %}field__button{% else %}custom-field__button{% endif %}"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
-                  {%- endcapture -%}
+    <div class="yard-newsletter__right">
+      {%- if section.settings.help_heading != blank -%}
+        <p class="yard-newsletter__help-title">{{ section.settings.help_heading }}</p>
+      {%- endif -%}
 
-                  {%- if layout_type == 'inside_label' -%}
-                    <label class="custom-field__label-wrap" for="NewsletterForm--{{ section.id }}">
-                      <span class="custom-field__label-text">{{ 'newsletter.label' | t }}</span>
-                      <div class="custom-input-button-row">
-                        {{ input_and_button }}
-                      </div>
-                    </label>
-                  {%- else -%}
-                    {%- if layout_type == 'default_dawn' -%}
-                      {{ input_and_button }}
-                      <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                        {{ 'newsletter.label' | t }}
-                      </label>
-                    {%- else -%}
-                      <div class="custom-input-button-row">
-                        {{ input_and_button }}
-                      </div>
-                    {%- endif -%}
-                  {%- endif -%}
-                </div>
-                {%- if form.errors -%}
-                  <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
-                    <span class="svg-wrapper">
-                      {{- 'icon-error.svg' | inline_asset_content -}}
-                    </span>
-                    {{- form.errors.translated_fields.email | capitalize }}
-                    {{ form.errors.messages.email -}}
-                  </small>
-                {%- endif -%}
-              </div>
-              {%- if form.posted_successfully? -%}
-                <h3
-                  class="newsletter-form__message newsletter-form__message--success form__message"
-                  id="Newsletter-success--{{ section.id }}"
-                  tabindex="-1"
-                  autofocus
-                >
-                  <span class="svg-wrapper">
-                    {{- 'icon-success.svg' | inline_asset_content -}}
-                  </span>
-                  {{- 'newsletter.success' | t }}
-                </h3>
-              {%- endif -%}
-            {% endform %}
-          </div>
-      {%- endcase -%}
-    {%- endfor -%}
+      {%- if section.settings.phone != blank -%}
+        <a class="yard-newsletter__phone" href="tel:{{ section.settings.phone | remove: ' ' | remove: '(' | remove: ')' }}">{{ section.settings.phone }}</a>
+      {%- endif -%}
+
+      {%- if section.settings.hours != blank -%}
+        <p class="yard-newsletter__hours">{{ section.settings.hours }}</p>
+      {%- endif -%}
+    </div>
   </div>
 </div>
 
 {% schema %}
 {
-  "name": "t:sections.newsletter.name",
+  "name": "22 Yard Newsletter",
   "tag": "section",
   "class": "section",
   "disabled_on": {
@@ -164,41 +261,63 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.newsletter.settings.paragraph.content"
+      "content": "Subscribers receive a customer account that can be used to checkout faster in the future."
     },
     {
-      "type": "select",
-      "id": "label_layout",
-      "label": "Form Labels Style",
-      "options": [
-        { "value": "top_bottom", "label": "Top Label & Bottom Input" },
-        { "value": "placeholder_only", "label": "Placeholder Only (No Labels)" },
-        { "value": "inside_label", "label": "Input Inside Label" },
-        { "value": "default_dawn", "label": "Standard Dawn Float Dynamic Style" }
-      ],
-      "default": "top_bottom"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "default": "scheme-1"
-    },
-    {
-      "type": "checkbox",
-      "id": "full_width",
-      "default": true,
-      "label": "t:sections.newsletter.settings.full_width.label"
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#0d0d0d"
     },
     {
       "type": "header",
-      "content": "Custom CSS class"
+      "content": "Left column"
     },
     {
       "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper. Useful for custom styling."
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get 10% Off on your first order"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Join 40,000+ cricketers - exclusive deals, new arrivals & coaching tips."
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Email input placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Right column"
+    },
+    {
+      "type": "text",
+      "id": "help_heading",
+      "label": "Help heading",
+      "default": "Need help?"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "(+001) 1234 5678 90"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Availability hours",
+      "default": "we are available 8:00am - 7:00pm"
     },
     {
       "type": "header",
@@ -212,7 +331,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 40
+      "default": 64
     },
     {
       "type": "range",
@@ -222,65 +341,13 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 52
-    }
-  ],
-  "blocks": [
-    {
-      "type": "heading",
-      "name": "t:sections.newsletter.blocks.heading.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "t:sections.newsletter.blocks.heading.settings.heading.default",
-          "label": "t:sections.newsletter.blocks.heading.settings.heading.label"
-        },
-        {
-          "type": "select",
-          "id": "heading_size",
-          "options": [
-            { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
-            { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
-            { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
-          ],
-          "default": "h1",
-          "label": "t:sections.all.heading_size.label"
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "name": "t:sections.newsletter.blocks.paragraph.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "text",
-          "default": "t:sections.newsletter.blocks.paragraph.settings.paragraph.default",
-          "label": "t:sections.newsletter.blocks.paragraph.settings.paragraph.label"
-        }
-      ]
-    },
-    {
-      "type": "email_form",
-      "name": "t:sections.newsletter.blocks.email_form.name",
-      "limit": 1
-    },
-    {
-      "type": "@app"
+      "default": 64
     }
   ],
   "presets": [
     {
-      "name": "t:sections.newsletter.presets.name",
-      "blocks": [
-        { "type": "heading" },
-        { "type": "paragraph" },
-        { "type": "email_form" }
-      ]
-    }    
+      "name": "22 Yard Newsletter"
+    }
   ]
 }
 {% endschema %}

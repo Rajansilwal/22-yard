@@ -70,13 +70,19 @@
   <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
 
     {%- unless section.settings.title == blank -%}
-      <div class="title-wrapper-with-link{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
-        <h2
-          id="SectionHeading-{{ section.id }}"
-          class="collection-list-title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-        >
-          {{ section.settings.title }}
-        </h2>
+      <div class="title-wrapper-with-link cl-header-row{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
+        <div class="cl-header-text">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="cl-eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h2
+            id="SectionHeading-{{ section.id }}"
+            class="collection-list-title cl-heading inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          >
+            {{ section.settings.title }}
+          </h2>
+        </div>
+        <a href="{{ routes.collections_url }}" class="cl-outline-btn">ALL CATEGORIES</a>
         {%- if section.settings.show_view_all and show_mobile_slider -%}
           <a
             href="{{ routes.collections_url }}"
@@ -328,6 +334,123 @@
 </div>
 
 <style>
+  /* ===== 22 Yard Category Slider — header + cards ===== */
+  .section-collection-list .cl-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .section-collection-list .cl-eyebrow {
+    margin: 0 0 0.4rem;
+    color: #8a2b2b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+  .section-collection-list .cl-heading {
+    margin: 0;
+    color: #16161a;
+    font-family: var(--font-heading-family);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .section-collection-list .cl-outline-btn {
+    display: inline-block;
+    background: #ffffff;
+    border: 1.5px solid #16161a;
+    color: #16161a;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .section-collection-list .cl-outline-btn:hover {
+    background: #16161a;
+    color: #ffffff;
+  }
+  @media screen and (max-width: 749px) {
+    .section-collection-list .cl-header-row {
+      align-items: flex-start;
+    }
+  }
+
+  /* Category cards: rounded image, dark bottom gradient, white-ish label box */
+  .section-collection-list .card--collection,
+  .section-collection-list .card-collection-wrapper .card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-collection-list .collection-card-wrapper .card__inner {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-collection-list .collection-card-wrapper .card__media .media,
+  .section-collection-list .collection-card-wrapper .card__media img {
+    border-radius: 8px;
+  }
+  /* Dark gradient fading up from bottom */
+  .section-collection-list .collection-card-wrapper .card__inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 28%, rgba(0,0,0,0) 55%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Bottom-left white-ish rounded label box */
+  .section-collection-list .collection-card-wrapper .card__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0.9rem;
+    pointer-events: none;
+  }
+  .section-collection-list .collection-card-wrapper .card__information {
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 6px;
+    padding: 0.55rem 0.85rem;
+    pointer-events: auto;
+    max-width: calc(100% - 0.4rem);
+  }
+  .section-collection-list .collection-card-wrapper .card__heading {
+    margin: 0;
+    line-height: 1.15;
+  }
+  .section-collection-list .collection-card-wrapper .card__heading a {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+  }
+  .section-collection-list .collection-card-wrapper .card__heading .icon-wrap {
+    display: none;
+  }
+  .section-collection-list .collection-card-wrapper .card-collection-count {
+    display: block;
+    margin: 0.15rem 0 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
   /* Swiper grid fallback when slider is disabled for current breakpoint */
   .cl-swiper--grid .swiper-wrapper {
     display: grid;
@@ -421,7 +544,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.collection-list.name",
+  "name": "22 Yard Category Slider",
   "tag": "section",
   "class": "section section-collection-list",
   "max_blocks": 15,
@@ -429,6 +552,12 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "EXPLORE"
+    },
     {
       "type": "inline_richtext",
       "id": "title",
@@ -638,7 +767,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.collection-list.presets.name",
+      "name": "22 Yard Category Slider",
       "blocks": [
         { "type": "featured_collection" },
         { "type": "featured_collection" },

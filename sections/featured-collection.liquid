@@ -86,14 +86,19 @@
     id="collection-{{ section.id }}"
     data-id="{{ section.id }}"
   >
-    <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
+    <div class="fc22-header page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <div class="fc22-header__text">
+      {%- assign fc22_eyebrow = section.settings.eyebrow | default: 'EXPLORE' -%}
+      {%- if fc22_eyebrow != blank -%}
+        <p class="fc22-eyebrow">{{ fc22_eyebrow }}</p>
+      {%- endif -%}
       {%- if section.settings.title != blank -%}
-        <h2 class="title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        <h2 class="fc22-heading title inline-richtext {{ section.settings.heading_size }}">
           {{ section.settings.title }}
         </h2>
       {%- endif -%}
       {%- if section.settings.description != blank or section.settings.show_description and section.settings.collection.description != empty -%}
-        <div class="collection__description {{ section.settings.description_style }} rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        <div class="collection__description {{ section.settings.description_style }} rte">
           {%- if section.settings.show_description -%}
             {{ section.settings.collection.description }}
           {%- else -%}
@@ -101,7 +106,34 @@
           {%- endif %}
         </div>
       {%- endif -%}
+      </div>
+      {%- if section.settings.show_view_all and section.settings.collection != blank -%}
+        <a
+          href="{{ section.settings.collection.url }}"
+          class="fc22-view-all"
+          aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}"
+        >
+          {{ section.settings.view_all_label | default: 'VIEW ALL' }}
+        </a>
+      {%- endif -%}
     </div>
+
+    {%- assign fc22_show_tabs = section.settings.show_tabs -%}
+    {%- if section.settings.show_tabs == nil -%}{%- assign fc22_show_tabs = true -%}{%- endif -%}
+    {%- if fc22_show_tabs -%}
+      <div class="fc22-tabs page-width">
+        <div class="fc22-tabs__row">
+          {%- assign fc22_tabs = section.settings.tabs | default: 'ALL, BATS, PROTECTION, BUNDLES' -%}
+          {%- assign tab_items = fc22_tabs | split: ',' -%}
+          {%- for tab in tab_items -%}
+            {%- assign tab_label = tab | strip -%}
+            {%- if tab_label != blank -%}
+              <button type="button" class="fc22-tab{% if forloop.first %} fc22-tab--active{% endif %}">{{ tab_label }}</button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
 
     {%- if section.settings.layout_mode == 'slider' -%}
       {%- comment -%} ===== SWIPER SLIDER LAYOUT ===== {%- endcomment -%}
@@ -376,6 +408,98 @@
 </div>
 
 <style>
+  /* ===== 22 Yard header / eyebrow / heading / view-all ===== */
+  #collection-{{ section.id }} .fc22-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  #collection-{{ section.id }} .fc22-header__text {
+    text-align: left;
+  }
+  #collection-{{ section.id }} .fc22-eyebrow {
+    margin: 0 0 0.4rem;
+    color: #8a2b2b;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  #collection-{{ section.id }} .fc22-heading {
+    margin: 0;
+    color: #16161a;
+    font-family: var(--font-heading-family);
+    font-weight: 800;
+    line-height: 1.05;
+    font-size: 2.6rem;
+  }
+  #collection-{{ section.id }} .collection__description {
+    margin-top: 0.6rem;
+  }
+  #collection-{{ section.id }} .fc22-view-all {
+    display: inline-block;
+    background: #fff;
+    border: 1.5px solid #16161a;
+    color: #16161a;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.7rem 1.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  #collection-{{ section.id }} .fc22-view-all:hover {
+    background: #16161a;
+    color: #fff;
+  }
+  /* Hide the default bottom view-all (header view-all replaces it) */
+  #collection-{{ section.id }} .collection__view-all {
+    display: none;
+  }
+
+  /* ===== Filter tabs ===== */
+  #collection-{{ section.id }} .fc22-tabs {
+    margin-bottom: 1.75rem;
+  }
+  #collection-{{ section.id }} .fc22-tabs__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e7e7e7;
+  }
+  #collection-{{ section.id }} .fc22-tab {
+    border: none;
+    cursor: pointer;
+    background: #f0f0f0;
+    color: #16161a;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+  }
+  #collection-{{ section.id }} .fc22-tab--active {
+    background: #8a2b2b;
+    color: #fff;
+  }
+
+  @media screen and (max-width: 749px) {
+    #collection-{{ section.id }} .fc22-header {
+      align-items: flex-start;
+    }
+    #collection-{{ section.id }} .fc22-heading {
+      font-size: 1.8rem;
+    }
+  }
+
   /* Swiper grid fallback (slider mode but swiper disabled for current breakpoint) */
   .fc-swiper--grid .swiper-wrapper {
     display: grid;
@@ -469,7 +593,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.featured-collection.name",
+  "name": "22 Yard Product Slider",
   "tag": "section",
   "class": "section",
   "disabled_on": {
@@ -771,11 +895,40 @@
       "id": "custom_class",
       "label": "Custom CSS class(es)",
       "info": "Add one or more space-separated CSS classes to the section wrapper."
+    },
+    {
+      "type": "header",
+      "content": "22 Yard layout"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "EXPLORE"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all button label",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tabs",
+      "label": "Show filter tabs",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tabs",
+      "label": "Filter tabs (comma-separated, first is active)",
+      "default": "ALL, BATS, PROTECTION, BUNDLES",
+      "info": "Presentational only; tabs do not filter products."
     }
   ],
   "presets": [
     {
-      "name": "t:sections.featured-collection.presets.name"
+      "name": "22 Yard Product Slider"
     }
   ]
 }

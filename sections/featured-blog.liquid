@@ -1,198 +1,530 @@
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
-{{ 'section-featured-blog.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign use_swiper_desktop = false
+  assign use_swiper_mobile = false
+  if section.settings.layout_mode == 'slider'
+    if section.settings.enable_swiper_desktop
+      assign use_swiper_desktop = true
+    endif
+    if section.settings.enable_swiper_mobile
+      assign use_swiper_mobile = true
+    endif
+  endif
+-%}
+
+{%- if use_swiper_desktop or use_swiper_mobile -%}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+{%- endif -%}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
-
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* ===== 22 Yard Blog Slider — scoped to this section ===== */
+  .yblog-{{ section.id }} {
+    background: #f7f7f7;
+  }
+  .yblog-{{ section.id }} .yblog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .yblog-{{ section.id }} .yblog-eyebrow {
+    display: block;
+    text-transform: uppercase;
+    color: #8a2b2b;
+    font-weight: 700;
+    letter-spacing: .12em;
+    font-size: .8rem;
+    margin: 0 0 .4rem;
+  }
+  .yblog-{{ section.id }} .yblog-heading {
+    margin: 0;
+    color: #16161a;
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    font-weight: 800;
+    line-height: 1.05;
+    font-size: 1.8rem;
+  }
+  @media screen and (min-width: 750px) {
+    .yblog-{{ section.id }} .yblog-heading {
+      font-size: 2.6rem;
+    }
+  }
+  .yblog-{{ section.id }} .yblog-viewall {
+    display: inline-block;
+    background: #fff;
+    border: 1.5px solid #16161a;
+    color: #16161a;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: .08em;
+    font-size: .8rem;
+    padding: .7rem 1.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+    white-space: nowrap;
+  }
+  .yblog-{{ section.id }} .yblog-viewall:hover {
+    background: #16161a;
+    color: #fff;
+  }
+
+  /* ---- Card ---- */
+  .yblog-{{ section.id }} .yblog-card {
+    display: block;
+    height: 100%;
+  }
+  .yblog-{{ section.id }} .yblog-card__media {
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1.55 / 1;
+    background: #e7e7e7;
+  }
+  .yblog-{{ section.id }} .yblog-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .yblog-{{ section.id }} .yblog-card__media .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .yblog-{{ section.id }} .yblog-pill {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #fff;
+    color: #8a2b2b;
+    font-weight: 700;
+    font-size: .78rem;
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  }
+  .yblog-{{ section.id }} .yblog-card__date {
+    color: #6b7280;
+    font-size: .85rem;
+    margin: 1rem 0 .5rem;
+  }
+  .yblog-{{ section.id }} .yblog-card__title {
+    margin: 0 0 .6rem;
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    color: #16161a;
+    font-weight: 800;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .yblog-{{ section.id }} .yblog-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .yblog-{{ section.id }} .yblog-card__title a:hover {
+    text-decoration: underline;
+  }
+  .yblog-{{ section.id }} .yblog-card__excerpt {
+    color: #6b7280;
+    font-size: .95rem;
+    line-height: 1.5;
+    margin: 0 0 .8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .yblog-{{ section.id }} .yblog-card__more {
+    display: inline-block;
+    color: #8a2b2b;
+    font-weight: 700;
+    font-size: .92rem;
+    text-decoration: none;
+  }
+  .yblog-{{ section.id }} .yblog-card__more:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Pre-init slide sizing to prevent FOUC ---- */
+  {%- if section.settings.layout_mode == 'slider' -%}
+    .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper {
+      overflow: hidden;
+    }
+    .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+      flex-shrink: 0;
+      box-sizing: border-box;
+      height: auto;
+      width: calc((100% - ({{ section.settings.columns_mobile | minus: 1 }} * 16px)) / {{ section.settings.columns_mobile }});
+    }
+    @media screen and (min-width: 750px) {
+      .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+        width: calc((100% - ({{ section.settings.columns_desktop | minus: 1 }} * 20px)) / {{ section.settings.columns_desktop }});
+      }
+    }
+  {%- endif -%}
+
+  /* ---- Grid fallback ---- */
+  .yblog-{{ section.id }} .yblog-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    gap: 24px;
+  }
+  @media screen and (min-width: 750px) {
+    .yblog-{{ section.id }} .yblog-grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      gap: 28px;
+    }
+  }
 {%- endstyle -%}
 
-{%- liquid
-  assign posts_displayed = section.settings.blog.articles_count
-  if section.settings.post_limit <= section.settings.blog.articles_count or section.settings.post_limit <= 4
-    assign posts_exceed_limit = true
-    assign posts_displayed = section.settings.post_limit
-  endif
--%}
-<div class="blog color-{{ section.settings.color_scheme }} gradient{% if section.settings.heading == blank %} no-heading{% endif %} {{ section.settings.custom_class }}">
-  <div class="page-width-desktop isolate{% if posts_displayed < 3 %} page-width-tablet{% endif %} section-{{ section.id }}-padding">
-    {%- unless section.settings.heading == blank -%}
-      <div class="title-wrapper-with-link{% if posts_displayed > 2 %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
-        <h2
-          id="SectionHeading-{{ section.id }}"
-          class="blog__title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-          {% endif %}
-        >
-          {{ section.settings.heading }}
-        </h2>
-
-        {%- if section.settings.blog != blank
-          and section.settings.show_view_all
-          and section.settings.post_limit < section.settings.blog.articles_count
-        -%}
-          <a
-            href="{{ section.settings.blog.url }}"
-            class="link underlined-link large-up-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          >
-            {{ 'sections.featured_blog.view_all' | t }}
-          </a>
-        {%- endif -%}
-      </div>
-    {%- endunless -%}
-
-    <slider-component class="slider-mobile-gutter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-      <ul
-        id="Slider-{{ section.id }}"
-        class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.blog_card_style == 'standard' %} contains-card--standard{% endif %} grid grid--peek grid--2-col-tablet grid--{{ section.settings.columns_desktop }}-col-desktop slider {% if posts_displayed > 2 %}slider--tablet{% else %}slider--mobile{% endif %}"
-        role="list"
-      >
-        {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
-          {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
-            <li
-              id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-              {% if settings.animations_reveal_on_scroll %}
-                data-cascade
-                style="--animation-order: {{ forloop.index }};"
-              {% endif %}
-            >
-              {% render 'article-card',
-                blog: section.settings.blog,
-                article: article,
-                media_aspect_ratio: 1.66,
-                show_image: section.settings.show_image,
-                show_date: section.settings.show_date,
-                show_author: section.settings.show_author,
-                show_excerpt: true
-              %}
-            </li>
-          {%- endfor -%}
-        {%- else -%}
-          {% for i in (1..section.settings.post_limit) -%}
-            {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
-            {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
-            <li
-              id="Slide-{{ section.id }}-{{ forloop.index }}"
-              class="blog__post grid__item article slider__slide slider__slide--full-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-              {% if settings.animations_reveal_on_scroll %}
-                data-cascade
-                style="--animation-order: {{ forloop.index }};"
-              {% endif %}
-            >
-              <div class="article-card-wrapper card-wrapper{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-                <div
-                  class="
-                    card article-card card--{{ settings.blog_card_style }}
-                    {% if settings.blog_card_style == 'card' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %}
-                    {% if section.settings.show_image %} card--media{% else %} card--text{% endif %}
-                  "
-                  style=" {% if settings.blog_card_style == 'standard' %} --ratio-percent: 100%;{% elsif settings.blog_card_style == 'card' %} --ratio-percent: 0%;{% endif %}"
+{%- capture cards -%}
+  {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
+    {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
+      {%- liquid
+        assign card_tag = ''
+        if article.tags.size > 0
+          assign card_tag = article.tags | first
+        endif
+      -%}
+      <YBLOG_ITEM>
+        <article class="yblog-card">
+          {%- if section.settings.show_image -%}
+            <a href="{{ article.url }}" class="yblog-card__media" aria-label="{{ article.title | escape }}">
+              {%- if article.image -%}
+                <img
+                  src="{{ article.image.src | image_url: width: 600 }}"
+                  srcset="{{ article.image.src | image_url: width: 400 }} 400w, {{ article.image.src | image_url: width: 600 }} 600w, {{ article.image.src | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 750px) 33vw, 100vw"
+                  alt="{{ article.image.src.alt | escape }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  loading="lazy"
                 >
-                  <div
-                    class="card__inner{% if settings.blog_card_style == 'standard' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %} ratio"
-                    style="--ratio-percent: 80%;"
-                  >
-                    {%- if section.settings.show_image == true -%}
-                      <div class="article-card__image-wrapper card__media">
-                        <div class="article-card__image media">
-                          {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
-                        </div>
-                      </div>
-                    {%- endif -%}
-                    <div class="card__content">
-                      <div class="card__information">
-                        <h3 class="card__heading h2">
-                          {{ 'sections.featured_blog.onboarding_title' | t }}
-                        </h3>
-                        <p class="article-card__excerpt rte-width">
-                          {{ 'sections.featured_blog.onboarding_content' | t }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card__content">
-                    <div class="card__information">
-                      <h3 class="card__heading h2">
-                        {{ 'sections.featured_blog.onboarding_title' | t }}
-                      </h3>
-                      <p class="article-card__excerpt rte-width">
-                        {{ 'sections.featured_blog.onboarding_content' | t }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          {%- endfor -%}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              {%- if card_tag != blank -%}
+                <span class="yblog-pill">{{ card_tag | escape }}</span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.show_date -%}
+            <div class="yblog-card__date">{{ article.published_at | time_tag: format: 'date' }}</div>
+          {%- endif -%}
+          <h3 class="yblog-card__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h3>
+          {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+            <p class="yblog-card__excerpt">
+              {%- if article.excerpt.size > 0 -%}
+                {{ article.excerpt | strip_html | truncatewords: 22 }}
+              {%- else -%}
+                {{ article.content | strip_html | truncatewords: 22 }}
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+          <a href="{{ article.url }}" class="yblog-card__more">Read More...</a>
+        </article>
+      </YBLOG_ITEM>
+    {%- endfor -%}
+  {%- else -%}
+    {%- for i in (1..section.settings.post_limit) -%}
+      {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
+      {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
+      <YBLOG_ITEM>
+        <article class="yblog-card">
+          {%- if section.settings.show_image -%}
+            <span class="yblog-card__media">
+              {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+              <span class="yblog-pill">Buying Guide</span>
+            </span>
+          {%- endif -%}
+          {%- if section.settings.show_date -%}
+            <div class="yblog-card__date">{{ 'now' | date: '%d %B %Y' }}</div>
+          {%- endif -%}
+          <h3 class="yblog-card__title">{{ 'sections.featured_blog.onboarding_title' | t }}</h3>
+          <p class="yblog-card__excerpt">{{ 'sections.featured_blog.onboarding_content' | t }}</p>
+          <span class="yblog-card__more">Read More...</span>
+        </article>
+      </YBLOG_ITEM>
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+<div class="blog yblog-{{ section.id }} {{ section.settings.custom_class }}">
+  <div class="page-width isolate section-{{ section.id }}-padding">
+
+    <div class="yblog-header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="yblog-eyebrow">{{ section.settings.eyebrow }}</span>
         {%- endif -%}
-      </ul>
-      {%- if posts_exceed_limit -%}
-        <div class="slider-buttons{% if section.settings.post_limit < 3 %} medium-hide{% endif %}{% if section.settings.post_limit < 2 %} small-hide{% endif %}">
-          <button
-            type="button"
-            class="slider-button slider-button--prev"
-            name="previous"
-            aria-label="{{ 'general.slider.previous_slide' | t }}"
-          >
-            <span class="svg-wrapper">
-              {{- 'icon-caret.svg' | inline_asset_content -}}
-            </span>
+        {%- unless section.settings.heading == blank -%}
+          <h2 id="SectionHeading-{{ section.id }}" class="yblog-heading">{{ section.settings.heading }}</h2>
+        {%- endunless -%}
+      </div>
+      {%- if section.settings.blog != blank and section.settings.show_view_all -%}
+        <a href="{{ section.settings.blog.url }}" class="yblog-viewall" aria-label="{{ 'sections.featured_blog.view_all' | t }}">VIEW ALL</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.layout_mode == 'slider' -%}
+      {%- comment -%} ===== SWIPER SLIDER LAYOUT ===== {%- endcomment -%}
+      <div
+        class="fb-swiper-section"
+        data-section-id="{{ section.id }}"
+        data-swiper-desktop="{{ use_swiper_desktop }}"
+        data-swiper-mobile="{{ use_swiper_mobile }}"
+        data-columns-desktop="{{ section.settings.columns_desktop }}"
+        data-columns-mobile="{{ section.settings.columns_mobile }}"
+        data-arrows-desktop="{{ section.settings.show_arrows_desktop }}"
+        data-arrows-mobile="{{ section.settings.show_arrows_mobile }}"
+        data-pagination-desktop="{{ section.settings.show_pagination_desktop }}"
+        data-pagination-mobile="{{ section.settings.show_pagination_mobile }}"
+        data-arrow-position="{{ section.settings.arrow_position }}"
+      >
+        <div class="fb-swiper-inner">
+          <button type="button" class="fb-swiper-btn fb-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
-          <div class="slider-counter caption">
-            <span class="slider-counter--current">1</span>
-            <span aria-hidden="true"> / </span>
-            <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-            <span class="slider-counter--total">{{ section.settings.post_limit }}</span>
+          <div class="swiper fb-swiper-{{ section.id }}" style="overflow: hidden;">
+            <div class="swiper-wrapper" style="display: flex; flex-wrap: nowrap;">
+              {{ cards | replace: '<YBLOG_ITEM>', '<div class="swiper-slide">' | replace: '</YBLOG_ITEM>', '</div>' }}
+            </div>
           </div>
-          <button
-            type="button"
-            class="slider-button slider-button--next"
-            name="next"
-            aria-label="{{ 'general.slider.next_slide' | t }}"
-          >
-            <span class="svg-wrapper">
-              {{- 'icon-caret.svg' | inline_asset_content -}}
-            </span>
+          <button type="button" class="fb-swiper-btn fb-swiper-btn-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
-      {%- endif -%}
-    </slider-component>
+        {%- if section.settings.arrow_position == 'bottom_center' -%}
+          <div class="fb-swiper-arrows--bottom-center">
+            <button type="button" class="fb-swiper-btn fb-swiper-btn-bc-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button type="button" class="fb-swiper-btn fb-swiper-btn-bc-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        {%- endif -%}
+        <div class="fb-swiper-pagination-{{ section.id }} fb-swiper-pagination"></div>
+      </div>
 
-    {%- if section.settings.show_view_all and section.settings.post_limit < section.settings.blog.articles_count -%}
-      <div
-        class="blog__view-all center small-hide medium-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-        {% if settings.animations_reveal_on_scroll %}
-          data-cascade
-        {% endif %}
-      >
-        <a
-          href="{{ section.settings.blog.url }}"
-          id="ViewAll-{{ section.id }}"
-          class="blog__button button"
-          aria-labelledby="ViewAll-{{ section.id }} SectionHeading-{{ section.id }}"
-        >
-          {{ 'sections.featured_blog.view_all' | t }}
-        </a>
+      <script>
+        (function () {
+          function initFbSwiper() {
+            if (typeof Swiper === 'undefined') {
+              setTimeout(initFbSwiper, 100);
+              return;
+            }
+            var el = document.querySelector('.fb-swiper-section[data-section-id="{{ section.id }}"]');
+            if (!el) return;
+
+            var isMobile = window.innerWidth < 750;
+            var enableDesktop = el.dataset.swiperDesktop === 'true';
+            var enableMobile = el.dataset.swiperMobile === 'true';
+            var colsDesktop = parseInt(el.dataset.columnsDesktop) || 3;
+            var colsMobile = parseInt(el.dataset.columnsMobile) || 1;
+            var arrowsDesktop = el.dataset.arrowsDesktop === 'true';
+            var arrowsMobile = el.dataset.arrowsMobile === 'true';
+            var paginationDesktop = el.dataset.paginationDesktop === 'true';
+            var paginationMobile = el.dataset.paginationMobile === 'true';
+            var arrowPosition = el.dataset.arrowPosition || 'left_right';
+
+            var enabled = isMobile ? enableMobile : enableDesktop;
+            if (!enabled) {
+              el.classList.add('fb-swiper--grid');
+              el.style.setProperty('--fb-cols-desktop', colsDesktop);
+              el.style.setProperty('--fb-cols-mobile', colsMobile);
+              return;
+            }
+
+            var showArrows = isMobile ? arrowsMobile : arrowsDesktop;
+            var showPagination = isMobile ? paginationMobile : paginationDesktop;
+
+            var prevBtn, nextBtn;
+            var bcPrevBtn = el.querySelector('.fb-swiper-btn-bc-prev-{{ section.id }}');
+            var bcNextBtn = el.querySelector('.fb-swiper-btn-bc-next-{{ section.id }}');
+            var bcContainer = el.querySelector('.fb-swiper-arrows--bottom-center');
+
+            if (arrowPosition === 'bottom_center' && bcPrevBtn && bcNextBtn) {
+              prevBtn = bcPrevBtn;
+              nextBtn = bcNextBtn;
+              var sidePrev = el.querySelector('.fb-swiper-btn-prev-{{ section.id }}');
+              var sideNext = el.querySelector('.fb-swiper-btn-next-{{ section.id }}');
+              if (sidePrev) sidePrev.style.display = 'none';
+              if (sideNext) sideNext.style.display = 'none';
+              if (!showArrows && bcContainer) bcContainer.style.display = 'none';
+            } else {
+              prevBtn = el.querySelector('.fb-swiper-btn-prev-{{ section.id }}');
+              nextBtn = el.querySelector('.fb-swiper-btn-next-{{ section.id }}');
+              if (bcContainer) bcContainer.style.display = 'none';
+              if (!showArrows) {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+              }
+            }
+            var paginationEl = el.querySelector('.fb-swiper-pagination-{{ section.id }}');
+            if (!showPagination && paginationEl) {
+              paginationEl.style.display = 'none';
+            }
+
+            new Swiper('.fb-swiper-{{ section.id }}', {
+              slidesPerView: colsMobile,
+              spaceBetween: 16,
+              navigation: showArrows ? {
+                nextEl: nextBtn,
+                prevEl: prevBtn,
+              } : false,
+              pagination: showPagination ? {
+                el: '.fb-swiper-pagination-{{ section.id }}',
+                clickable: true,
+              } : false,
+              breakpoints: {
+                750: {
+                  slidesPerView: colsDesktop,
+                  spaceBetween: 20,
+                },
+              },
+            });
+          }
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFbSwiper);
+          } else {
+            initFbSwiper();
+          }
+        })();
+      </script>
+
+    {%- else -%}
+      {%- comment -%} ===== DEFAULT GRID LAYOUT ===== {%- endcomment -%}
+      <div class="yblog-grid">
+        {{ cards | replace: '<YBLOG_ITEM>', '' | replace: '</YBLOG_ITEM>', '' }}
       </div>
     {%- endif -%}
+
   </div>
 </div>
 
+<style>
+  /* Swiper grid fallback when slider is disabled for current breakpoint */
+  .fb-swiper--grid .swiper-wrapper {
+    display: grid;
+    grid-template-columns: repeat(var(--fb-cols-mobile, 1), 1fr);
+    gap: 24px;
+    flex-wrap: unset;
+    transform: none !important;
+  }
+  @media screen and (min-width: 750px) {
+    .fb-swiper--grid .swiper-wrapper {
+      grid-template-columns: repeat(var(--fb-cols-desktop, 3), 1fr);
+      gap: 28px;
+    }
+  }
+  .fb-swiper--grid .swiper-slide {
+    width: auto !important;
+    margin: 0 !important;
+  }
+  .fb-swiper--grid .fb-swiper-btn,
+  .fb-swiper--grid .fb-swiper-pagination {
+    display: none !important;
+  }
+
+  /* Slider layout */
+  .fb-swiper-section {
+    position: relative;
+  }
+  .fb-swiper-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .fb-swiper-inner .swiper {
+    flex: 1;
+    min-width: 0;
+  }
+  .fb-swiper-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #16161a;
+    background: #fff;
+    cursor: pointer;
+    color: #16161a;
+    transition: background 0.2s, color 0.2s;
+  }
+  .fb-swiper-btn:hover {
+    background: #16161a;
+    color: #fff;
+  }
+  .fb-swiper-btn.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .fb-swiper-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .fb-swiper-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #16161a;
+    opacity: 0.3;
+    cursor: pointer;
+  }
+  .fb-swiper-pagination .swiper-pagination-bullet-active {
+    opacity: 1;
+    width: 24px;
+    border-radius: 999px;
+    background: #8a2b2b;
+  }
+  .fb-swiper-arrows--bottom-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 16px;
+  }
+  .fb-swiper-arrows--bottom-center .fb-swiper-btn {
+    flex-shrink: 0;
+  }
+  .fb-swiper--grid .fb-swiper-arrows--bottom-center {
+    display: none !important;
+  }
+</style>
+
 {% schema %}
 {
-  "name": "t:sections.featured-blog.name",
+  "name": "22 Yard Blog Slider",
   "tag": "section",
   "disabled_on": {
     "groups": ["header", "footer"]
@@ -207,53 +539,95 @@
       "type": "range",
       "id": "post_limit",
       "min": 2,
-      "max": 4,
+      "max": 12,
       "step": 1,
-      "default": 3,
+      "default": 6,
       "label": "t:sections.featured-blog.settings.post_limit.label"
     },
     {
       "type": "header",
       "content": "t:sections.featured-blog.settings.text_header.content"
-    },            
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "default": "INSIGHT",
+      "label": "Eyebrow"
+    },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "default": "t:sections.featured-blog.settings.heading.default",
+      "default": "Guides & Tips",
       "label": "t:sections.featured-blog.settings.heading.label"
     },
     {
-      "type": "select",
-      "id": "heading_size",
-      "options": [
-        {
-          "value": "h2",
-          "label": "t:sections.all.heading_size.options__1.label"
-        },
-        {
-          "value": "h1",
-          "label": "t:sections.all.heading_size.options__2.label"
-        },
-        {
-          "value": "h0",
-          "label": "t:sections.all.heading_size.options__3.label"
-        },
-        {
-          "value": "hxl",
-          "label": "t:sections.all.heading_size.options__4.label"
-        },
-        {
-          "value": "hxxl",
-          "label": "t:sections.all.heading_size.options__5.label"
-        }
-      ],
-      "default": "h1",
-      "label": "t:sections.all.heading_size.label"
+      "type": "header",
+      "content": "Layout"
     },
     {
-      "type": "header",
-      "content": "t:sections.featured-blog.settings.layout_header.content"
-    },        
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Layout mode",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "slider", "label": "Slider (Swiper)" }
+      ],
+      "default": "slider",
+      "info": "Choose between a static grid or a Swiper carousel."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swiper_desktop",
+      "label": "Enable slider on desktop",
+      "default": true,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swiper_mobile",
+      "label": "Enable slider on mobile",
+      "default": true,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows_desktop",
+      "label": "Show arrows on desktop",
+      "default": true,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows_mobile",
+      "label": "Show arrows on mobile",
+      "default": false,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow position",
+      "options": [
+        { "value": "left_right", "label": "Left & Right" },
+        { "value": "bottom_center", "label": "Bottom center" }
+      ],
+      "default": "left_right",
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination_desktop",
+      "label": "Show pagination dots on desktop",
+      "default": false,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination_mobile",
+      "label": "Show pagination dots on mobile",
+      "default": true,
+      "info": "Only applies when Layout mode is Slider."
+    },
     {
       "type": "range",
       "id": "columns_desktop",
@@ -264,12 +638,22 @@
       "label": "t:sections.featured-blog.settings.columns_desktop.label"
     },
     {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" }
+      ],
+      "default": "1",
+      "label": "Number of columns on mobile"
+    },
+    {
       "type": "checkbox",
       "id": "show_view_all",
       "default": true,
       "label": "t:sections.featured-blog.settings.show_view_all.label",
       "info": "t:sections.featured-blog.settings.show_view_all.info"
-    },    
+    },
     {
       "type": "checkbox",
       "id": "show_image",
@@ -283,18 +667,12 @@
       "label": "t:sections.featured-blog.settings.show_date.label"
     },
     {
-      "type": "checkbox",
-      "id": "show_author",
-      "default": false,
-      "label": "t:sections.featured-blog.settings.show_author.label"
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "info": "t:sections.all.colors.has_cards_info",
       "default": "scheme-1"
-    },    
+    },
     {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
@@ -307,7 +685,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 36
+      "default": 64
     },
     {
       "type": "range",
@@ -317,7 +695,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "default": 64
     },
     {
       "type": "header",
@@ -332,7 +710,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.featured-blog.presets.name"
+      "name": "22 Yard Blog Slider"
     }
   ]
 }

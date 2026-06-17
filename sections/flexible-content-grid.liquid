@@ -104,6 +104,52 @@
   }
   #fcg-{{ uid }}-root .fcg-item--logo:hover .fcg-item__media img { filter: none; opacity: 1; }
 
+  /* ----- 22 Yard section header (eyebrow + heading + VIEW ALL button) ----- */
+  #fcg-{{ uid }}-root .fcg-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.4rem;
+  }
+  #fcg-{{ uid }}-root .fcg-eyebrow {
+    display: block;
+    margin: 0 0 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a2b2b;
+  }
+  #fcg-{{ uid }}-root .fcg-heading {
+    margin: 0;
+    font-family: var(--font-heading-family);
+    font-weight: 800;
+    line-height: 1.05;
+    color: #16161a;
+    font-size: 2.6rem;
+  }
+  #fcg-{{ uid }}-root .fcg-viewall {
+    flex-shrink: 0;
+    display: inline-block;
+    background: #fff;
+    border: 1.5px solid #16161a;
+    color: #16161a;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+  }
+  #fcg-{{ uid }}-root .fcg-viewall:hover { background: #16161a; color: #fff; }
+  @media screen and (max-width: 749px) {
+    #fcg-{{ uid }}-root .fcg-header { flex-direction: column; align-items: flex-start; }
+    #fcg-{{ uid }}-root .fcg-heading { font-size: 1.8rem; }
+  }
+
   #fcg-{{ uid }}-root .fcg-item__body { min-width: 0; }
   #fcg-{{ uid }}-root .fcg-item__heading {
     margin: 0 0 0.6rem;
@@ -121,10 +167,41 @@
 
   /* Card look */
   #fcg-{{ uid }}-root .fcg-item--card .fcg-item__inner {
-    background-color: rgb(var(--color-background));
-    border: 1px solid rgba(var(--color-foreground), 0.08);
-    border-radius: var(--media-radius, 8px);
+    background-color: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
     padding: 2rem;
+    box-shadow: 0 1px 3px rgba(22, 22, 26, 0.06);
+  }
+
+  /* Brand logo card: white rounded card, subtle shadow, ~3:2 aspect, centered logo with padding */
+  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__inner,
+  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__inner {
+    background-color: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(22, 22, 26, 0.06);
+    aspect-ratio: 3 / 2;
+    padding: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  #fcg-{{ uid }}-root .fcg-item--image:hover .fcg-item__inner,
+  #fcg-{{ uid }}-root .fcg-item--logo:hover .fcg-item__inner {
+    box-shadow: 0 4px 14px rgba(22, 22, 26, 0.10);
+    border-color: #d8d8d8;
+  }
+  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__media,
+  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__media {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__media img,
+  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__media img {
+    max-height: 100%;
+    object-fit: contain;
   }
 
   /* Alignment */
@@ -222,10 +299,16 @@
 
 <div class="color-{{ section.settings.color_scheme }} gradient" id="fcg-{{ uid }}-root">
   <div class="page-width section-{{ uid }}-padding">
-    {%- if section.settings.heading != blank -%}
-      <div class="title-wrapper-with-link title-wrapper--self-padded-tablet-down title-wrapper--no-top-margin">
-        <h2 class="title inline-richtext {{ section.settings.section_heading_size }}">{{ section.settings.heading }}</h2>
-        {%- if section.settings.subheading != blank -%}<div class="subtitle">{{ section.settings.subheading }}</div>{%- endif -%}
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank or section.settings.button_label != blank -%}
+      <div class="fcg-header">
+        <div class="fcg-header__text">
+          {%- if section.settings.eyebrow != blank -%}<span class="fcg-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          {%- if section.settings.heading != blank -%}<h2 class="fcg-heading">{{ section.settings.heading }}</h2>{%- endif -%}
+          {%- if section.settings.subheading != blank -%}<div class="subtitle">{{ section.settings.subheading }}</div>{%- endif -%}
+        </div>
+        {%- if section.settings.button_label != blank -%}
+          <a class="fcg-viewall" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
@@ -377,7 +460,7 @@
 
 {% schema %}
 {
-  "name": "Flexible Content Grid",
+  "name": "22 Yard Brand Slider",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -420,6 +503,7 @@
       "default": "center"
     },
     { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop By" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Our Features" },
     {
       "type": "select", "id": "section_heading_size", "label": "Heading size",
@@ -431,6 +515,8 @@
       "default": "h1"
     },
     { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
     { "type": "header", "content": "Columns & spacing" },
     { "type": "range", "id": "columns_desktop", "min": 1, "max": 8, "step": 1, "label": "Columns / slides on desktop", "default": 4 },
     { "type": "range", "id": "columns_tablet", "min": 1, "max": 6, "step": 1, "label": "Columns / slides on tablet", "default": 3 },
@@ -479,7 +565,7 @@
   ],
   "presets": [
     {
-      "name": "Flexible Content Grid",
+      "name": "22 Yard Brand Slider",
       "blocks": [
         { "type": "item" }, { "type": "item" }, { "type": "item" }, { "type": "item" }
       ]

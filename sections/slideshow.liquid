@@ -26,9 +26,114 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* -- 22 Yard Banner Slider -- pixel-match styling -- */
+  /* Warm amber -> black gradient overlay on top of the photo */
+  .swiper-slideshow-{{ section.id }} .ss-slide__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      rgba(176, 112, 18, 0.92) 0%,
+      rgba(120, 74, 12, 0.55) 32%,
+      rgba(13, 13, 13, 0.35) 62%,
+      rgba(13, 13, 13, 0.85) 100%
+    );
+  }
+
+  /* Heading -- bold WHITE, from Shopify heading font */
+  .swiper-slideshow-{{ section.id }} .ss-slide__heading {
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    color: #ffffff;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin: 0 0 1.2rem;
+  }
+  @media screen and (min-width: 750px) {
+    .swiper-slideshow-{{ section.id }} .ss-slide__heading {
+      font-size: 3.4rem;
+    }
+  }
+
+  /* Subtext -- muted white */
+  .swiper-slideshow-{{ section.id }} .ss-slide__subheading {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    max-width: 560px;
+    margin: 0 auto 2rem;
+  }
+  .swiper-slideshow-{{ section.id }} .ss-text--left .ss-slide__subheading { margin-left: 0; }
+  .swiper-slideshow-{{ section.id }} .ss-text--right .ss-slide__subheading { margin-right: 0; }
+  .swiper-slideshow-{{ section.id }} .ss-slide__subheading p { margin: 0; }
+
+  /* No text-box background -- text sits directly on the banner */
+  .swiper-slideshow-{{ section.id }} .ss-slide__box {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 1rem 2rem;
+    max-width: 64rem;
+  }
+
+  /* Buttons */
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons {
+    gap: 1.2rem;
+  }
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons .ss-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  /* Primary -- solid white bg, dark text */
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons .ss-btn--primary {
+    background: #ffffff;
+    color: #16161a;
+    border: 1.5px solid #ffffff;
+  }
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons .ss-btn--primary:hover {
+    background: rgba(255, 255, 255, 0.88);
+  }
+  /* Secondary -- transparent with white border, white text */
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons .ss-btn--secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1.5px solid #ffffff;
+  }
+  .swiper-slideshow-{{ section.id }} .ss-slide__buttons .ss-btn--secondary:hover {
+    background: #ffffff;
+    color: #16161a;
+  }
+
+  /* -- Pagination: active = elongated white pill, inactive = small dots -- */
+  .swiper-slideshow-{{ section.id }} .ss-pagination .swiper-pagination-bullet {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 9999px;
+    background: #ffffff;
+    opacity: 0.45;
+    transition: width 0.25s ease, opacity 0.25s ease;
+  }
+  .swiper-slideshow-{{ section.id }} .ss-pagination .swiper-pagination-bullet-active {
+    width: 2.8rem;
+    opacity: 1;
+    transform: none;
+  }
 {%- endstyle -%}
 
-{%- comment %} Swiper CDN — only load when needed {%- endcomment %}
+{%- comment %} Swiper CDN -- only load when needed {%- endcomment %}
 {%- if use_swiper -%}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
@@ -64,7 +169,7 @@
           class="ss-slide{% if use_swiper %} swiper-slide{% endif %}{% if block.settings.media_type == 'video' %} ss-slide--video{% endif %}"
           {{ block.shopify_attributes }}
         >
-          {%- comment %} ── Media layer ── {%- endcomment %}
+          {%- comment %} -- Media layer -- {%- endcomment %}
           <div class="ss-slide__media">
 
             {%- comment %} Overlay {%- endcomment %}
@@ -136,9 +241,9 @@
             </div>
           </div>
 
-          {%- comment %} ── Content layer ── {%- endcomment %}
+          {%- comment %} -- Content layer -- {%- endcomment %}
           <div class="ss-slide__content ss-slide__content--{{ block.settings.box_align }} page-width">
-            <div class="ss-slide__box color-{{ block.settings.color_scheme }} gradient{% if block.settings.show_text_box == false %} ss-slide__box--transparent{% endif %} ss-text--{{ block.settings.text_alignment }} ss-text-mobile--{{ block.settings.text_alignment_mobile }}">
+            <div class="ss-slide__box ss-text--{{ block.settings.text_alignment }} ss-text-mobile--{{ block.settings.text_alignment_mobile }}">
               {%- if block.settings.heading != blank -%}
                 <h2 class="ss-slide__heading {{ block.settings.heading_size }}">
                   {{ block.settings.heading }}
@@ -149,14 +254,24 @@
                   <p>{{ block.settings.subheading }}</p>
                 </div>
               {%- endif -%}
-              {%- if block.settings.button_label != blank -%}
+              {%- if block.settings.button_label != blank or block.settings.button_label_2 != blank -%}
                 <div class="ss-slide__buttons">
-                  <a
-                    {% if block.settings.link %}href="{{ block.settings.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
-                    class="{% if block.settings.button_style == 'link' %}link underlined-link{% else %}btn btn--{{ block.settings.button_style }}{% endif %}"
-                  >
-                    {{- block.settings.button_label | escape -}}
-                  </a>
+                  {%- if block.settings.button_label != blank -%}
+                    <a
+                      {% if block.settings.link %}href="{{ block.settings.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                      class="ss-btn ss-btn--primary"
+                    >
+                      {{- block.settings.button_label | escape -}}
+                    </a>
+                  {%- endif -%}
+                  {%- if block.settings.button_label_2 != blank -%}
+                    <a
+                      {% if block.settings.link_2 %}href="{{ block.settings.link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                      class="ss-btn ss-btn--secondary"
+                    >
+                      {{- block.settings.button_label_2 | escape -}}
+                    </a>
+                  {%- endif -%}
                 </div>
               {%- endif -%}
             </div>
@@ -167,7 +282,7 @@
 
     </div>{%- comment %} /.swiper-wrapper {%- endcomment %}
 
-    {%- comment %} ── Pagination ── {%- endcomment %}
+    {%- comment %} -- Pagination -- {%- endcomment %}
     {%- if use_swiper -%}
       {%- if section.settings.show_pagination_desktop or section.settings.show_pagination_mobile -%}
         <div
@@ -179,7 +294,7 @@
         ></div>
       {%- endif -%}
 
-      {%- comment %} ── Arrows ── {%- endcomment %}
+      {%- comment %} -- Arrows -- {%- endcomment %}
       {%- if section.settings.show_arrows_desktop or section.settings.show_arrows_mobile -%}
         {%- if section.settings.arrow_position == 'bottom_center' -%}
           <div class="ss-arrows--bottom-center">
@@ -251,7 +366,7 @@
         } : false
       });
 
-      /* ── Advance on video end ── */
+      /* -- Advance on video end -- */
       if (advanceOnEnd) {
         /* Attach ended listener to the visible video in a slide */
         function attachVideoListeners(slideEl) {
@@ -325,7 +440,7 @@
 
 {% schema %}
 {
-  "name": "Slideshow",
+  "name": "22 Yard Banner Slider",
   "tag": "section",
   "class": "section",
   "disabled_on": { "groups": ["header", "footer"] },
@@ -549,7 +664,7 @@
           "id": "overlay_opacity",
           "min": 0, "max": 90, "step": 5, "unit": "%",
           "label": "Overlay opacity",
-          "default": 0
+          "default": 30
         },
         {
           "type": "header",
@@ -559,7 +674,7 @@
           "type": "inline_richtext",
           "id": "heading",
           "label": "Heading",
-          "default": "Slide heading"
+          "default": "Adidas 2026 Footwear Has Arrived!"
         },
         {
           "type": "select",
@@ -577,41 +692,33 @@
           "type": "inline_richtext",
           "id": "subheading",
           "label": "Subheading",
-          "default": "Tell your story"
+          "default": "Explore our exclusive range of cricket shoes. Whether you need spike cricket shoes for grip on soft ground, spikeless cricket shoes."
         },
         {
           "type": "text",
           "id": "button_label",
-          "label": "Button label",
-          "default": "Shop now"
+          "label": "Primary button label",
+          "default": "Shop the Range!"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Button link"
+          "label": "Primary button link"
         },
         {
-          "type": "select",
-          "id": "button_style",
-          "label": "Button style",
-          "options": [
-            { "value": "primary", "label": "Primary" },
-            { "value": "secondary", "label": "Secondary" },
-            { "value": "primary-outline", "label": "Primary outline" },
-            { "value": "secondary-outline", "label": "Secondary outline" },
-            { "value": "link", "label": "Link" }
-          ],
-          "default": "primary"
+          "type": "text",
+          "id": "button_label_2",
+          "label": "Secondary button label",
+          "default": "Shop Sale"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Secondary button link"
         },
         {
           "type": "header",
           "content": "Layout"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_text_box",
-          "label": "Show text box background",
-          "default": true
         },
         {
           "type": "select",
@@ -663,12 +770,12 @@
   ],
   "presets": [
     {
-      "name": "Slideshow",
+      "name": "22 Yard Banner Slider",
       "blocks": [
         { "type": "slide" },
         { "type": "slide" }
       ]
-    }    
+    }
   ]
 }
 {% endschema %}
