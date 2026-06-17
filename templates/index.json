@@ -18,11 +18,11 @@
             "media_type": "image",
             "video_url": "#",
             "mobile_video_url": "",
-            "overlay_opacity": 35,
-            "heading": "Adidas 2026 Footwear Has Arrived!",
+            "overlay_opacity": 30,
+            "heading": "Own the 22 Yards",
             "heading_size": "h1",
-            "subheading": "Explore our exclusive range of cricket shoes. Whether you need spike cricket shoes for grip on soft ground, spikeless cricket shoes.",
-            "button_label": "Shop the Range!",
+            "subheading": "Premium cricket gear, built for the middle",
+            "button_label": "Shop the collection",
             "link": "",
             "button_label_2": "Shop Sale",
             "link_2": "",
@@ -38,11 +38,11 @@
             "media_type": "image",
             "video_url": "",
             "mobile_video_url": "",
-            "overlay_opacity": 35,
+            "overlay_opacity": 30,
             "heading": "New Season Kit Has Landed",
             "heading_size": "h1",
             "subheading": "Bats, balls & apparel ready for match day",
-            "button_label": "Shop New Arrivals",
+            "button_label": "Shop new arrivals",
             "link": "",
             "button_label_2": "Shop Sale",
             "link_2": "",
@@ -53,16 +53,19 @@
           }
         }
       },
-      "block_order": ["slide_PcLfhD", "slide_fn7bi7"],
-      "name": "22 Yard Banner Slider",
+      "block_order": [
+        "slide_PcLfhD",
+        "slide_fn7bi7"
+      ],
+      "name": "Slideshow",
       "settings": {
         "layout": "full_bleed",
         "slide_height": "medium",
         "color_scheme": "",
         "transition": "slide",
         "loop": true,
-        "auto_rotate": true,
-        "change_slides_speed": 6,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
         "advance_on_video_end": false,
         "show_arrows_desktop": true,
         "show_arrows_mobile": false,
@@ -80,23 +83,33 @@
       "blocks": {
         "featured_collection_tVEmHV": {
           "type": "featured_collection",
-          "settings": { "collection": "sale" }
+          "settings": {
+            "collection": "sale"
+          }
         },
         "featured_collection_jiLpJc": {
           "type": "featured_collection",
-          "settings": { "collection": "frontpage" }
+          "settings": {
+            "collection": "frontpage"
+          }
         },
         "featured_collection_rNY6fF": {
           "type": "featured_collection",
-          "settings": { "collection": "test-1" }
+          "settings": {
+            "collection": "test-1"
+          }
         },
         "featured_collection_dg8m3Q": {
           "type": "featured_collection",
-          "settings": { "collection": "test-2" }
+          "settings": {
+            "collection": "test-2"
+          }
         },
         "featured_collection_QN4bQB": {
           "type": "featured_collection",
-          "settings": { "collection": "new" }
+          "settings": {
+            "collection": "new"
+          }
         }
       },
       "block_order": [
@@ -106,26 +119,27 @@
         "featured_collection_dg8m3Q",
         "featured_collection_QN4bQB"
       ],
-      "name": "22 Yard Category Slider",
+      "name": "t:sections.collection-list.presets.name",
       "settings": {
-        "eyebrow": "Explore",
-        "title": "Shop By Category",
+        "eyebrow": "EXPLORE",
+        "title": "Shop by Category",
         "heading_size": "h1",
         "layout_mode": "slider",
         "enable_swiper_desktop": true,
         "enable_swiper_mobile": true,
-        "show_arrows_desktop": false,
+        "show_arrows_desktop": true,
         "show_arrows_mobile": false,
         "arrow_position": "left_right",
         "show_pagination_desktop": false,
         "show_pagination_mobile": true,
         "image_ratio": "square",
-        "columns_desktop": 6,
+        "columns_desktop": 3,
         "color_scheme": "",
         "show_view_all": false,
-        "columns_mobile": "2",
+        "button_style": "primary",
+        "columns_mobile": "1",
         "swipe_on_mobile": false,
-        "padding_top": 48,
+        "padding_top": 36,
         "padding_bottom": 36,
         "custom_class": ""
       }
@@ -133,22 +147,18 @@
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "collection": "frontpage",
+        "collection": "sporting-goods-example-products",
         "products_to_show": 8,
         "layout_mode": "slider",
         "enable_swiper_desktop": true,
         "enable_swiper_mobile": true,
-        "show_arrows_desktop": false,
+        "show_arrows_desktop": true,
         "show_arrows_mobile": false,
         "arrow_position": "left_right",
         "show_pagination_desktop": false,
         "show_pagination_mobile": true,
-        "eyebrow": "Explore",
-        "title": "Featured Products",
+        "title": "Best Sellers",
         "heading_size": "h2",
-        "view_all_label": "View All",
-        "show_tabs": true,
-        "tabs": "All, Bats, Protection, Bundles",
         "description": "",
         "show_description": false,
         "description_style": "body",
@@ -168,161 +178,79 @@
         "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36,
-        "custom_class": ""
-      }
-    },
-    "promo_banner_bats": {
-      "type": "image-banner",
-      "blocks": {
-        "eyebrow": {
-          "type": "text",
-          "settings": { "text": "<p>Big Bat Sale</p>", "text_style": "caption-with-letter-spacing" }
-        },
-        "heading": {
-          "type": "heading",
-          "settings": { "heading": "Up To 40% Off Premium English Willow Bats", "heading_size": "hxl" }
-        },
-        "subtext": {
-          "type": "text",
-          "settings": { "text": "<p>Shop top brands like SG, SS, DSC, and Kookaburra at unbeatable prices.</p>", "text_style": "body" }
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop Bats",
-            "button_link_1": "",
-            "button_style_1": "primary",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary"
-          }
-        }
-      },
-      "block_order": ["eyebrow", "heading", "subtext", "buttons"],
-      "name": "22 Yard Promo Banner",
-      "settings": {
-        "image_overlay_opacity": 32,
-        "image_height": "medium",
-        "image_behavior": "none",
-        "desktop_content_position": "middle-left",
-        "desktop_content_alignment": "left",
-        "show_text_box": false,
-        "color_scheme": "",
-        "stack_images_on_mobile": true,
-        "mobile_content_alignment": "left",
-        "show_text_below": false,
-        "custom_class": ""
-      }
-    },
-    "featured_collection_season": {
-      "type": "featured-collection",
-      "settings": {
-        "collection": "sale",
-        "products_to_show": 8,
-        "layout_mode": "slider",
-        "enable_swiper_desktop": true,
-        "enable_swiper_mobile": true,
-        "show_arrows_desktop": false,
-        "show_arrows_mobile": false,
-        "arrow_position": "left_right",
-        "show_pagination_desktop": false,
-        "show_pagination_mobile": true,
-        "eyebrow": "Explore",
-        "title": "Season Sale",
-        "heading_size": "h2",
-        "view_all_label": "View All",
+        "custom_class": "",
+        "eyebrow": "EXPLORE",
+        "view_all_label": "VIEW ALL",
         "show_tabs": true,
-        "tabs": "All, Bats, Protection, Bundles",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 44,
-        "padding_bottom": 36,
-        "custom_class": ""
-      }
-    },
-    "promo_banner_kits": {
-      "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": { "heading": "Season Sale Up To 30% Off Kits & Bats", "heading_size": "hxl" }
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop Sale",
-            "button_link_1": "",
-            "button_style_1": "primary",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary"
-          }
-        }
-      },
-      "block_order": ["heading", "buttons"],
-      "name": "22 Yard Promo Banner",
-      "settings": {
-        "image_overlay_opacity": 35,
-        "image_height": "medium",
-        "image_behavior": "none",
-        "desktop_content_position": "middle-left",
-        "desktop_content_alignment": "left",
-        "show_text_box": false,
-        "color_scheme": "",
-        "stack_images_on_mobile": true,
-        "mobile_content_alignment": "left",
-        "show_text_below": false,
-        "custom_class": ""
+        "tabs": "ALL, BATS, PROTECTION, BUNDLES"
       }
     },
     "flexible_content_grid_aAaC9W": {
       "type": "flexible-content-grid",
       "blocks": {
-        "item_RkCWFQ": { "type": "item", "settings": { "heading": "", "text": "", "link": "" } },
-        "item_3dX8UV": { "type": "item", "settings": { "heading": "", "text": "", "link": "" } },
-        "item_8npQ9h": { "type": "item", "settings": { "heading": "", "text": "", "link": "" } },
-        "item_fG93VX": { "type": "item", "settings": { "heading": "", "text": "", "link": "" } }
+        "item_RkCWFQ": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_3dX8UV": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_8npQ9h": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        },
+        "item_fG93VX": {
+          "type": "item",
+          "settings": {
+            "heading": "",
+            "text": "",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["item_RkCWFQ", "item_3dX8UV", "item_8npQ9h", "item_fG93VX"],
-      "name": "22 Yard Brand Slider",
+      "block_order": [
+        "item_RkCWFQ",
+        "item_3dX8UV",
+        "item_8npQ9h",
+        "item_fG93VX"
+      ],
+      "name": "Flexible Content Grid",
       "settings": {
-        "display_mode": "slider",
+        "display_mode": "grid",
         "content_layout": "card",
         "alignment": "top",
         "text_align": "center",
         "eyebrow": "Shop By",
-        "heading": "Brands",
+        "heading": "Our Brand",
         "section_heading_size": "h1",
         "subheading": "",
-        "button_label": "View All",
+        "button_label": "",
         "button_link": "",
-        "columns_desktop": 8,
-        "columns_tablet": 4,
-        "columns_mobile": 3,
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "columns_mobile": 2,
         "grid_gap": 16,
         "icon_size": 64,
         "heading_size": 1.8,
-        "logo_style": true,
-        "logo_max_width": 120,
+        "logo_style": false,
+        "logo_max_width": 160,
         "logo_grayscale": false,
-        "slides_desktop": 8,
-        "slides_tablet": 4,
-        "slides_mobile": 3,
+        "slides_desktop": 0,
+        "slides_tablet": 0,
+        "slides_mobile": 0,
         "arrow_gutter": 56,
         "loop": true,
         "autoplay": false,
@@ -332,23 +260,193 @@
         "pagination_desktop": false,
         "pagination_mobile": true,
         "color_scheme": "",
-        "padding_top": 48,
-        "padding_bottom": 48,
+        "padding_top": 40,
+        "padding_bottom": 40,
         "padding_top_mobile": 28,
         "padding_bottom_mobile": 28
       }
     },
-    "featured_blog_guides": {
-      "type": "featured-blog",
+    "custom_multicolumn_F4xGRE": {
+      "type": "custom-multicolumn",
+      "blocks": {
+        "column_LttxFm": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column one",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "primary"
+          }
+        },
+        "column_wETt4P": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column two",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "secondary"
+          }
+        },
+        "column_kVPPTe": {
+          "type": "column",
+          "settings": {
+            "external_image_url": "",
+            "image_alt": "Column image",
+            "card_heading": "Column three",
+            "card_text": "<p>Add a short description for this column.</p>",
+            "button_label": "Learn more",
+            "button_link": "",
+            "button_style": "primary-outline"
+          }
+        }
+      },
+      "block_order": [
+        "column_LttxFm",
+        "column_wETt4P",
+        "column_kVPPTe"
+      ],
+      "name": "Custom Multicolumn",
       "settings": {
-        "blog": "news",
+        "layout": "swiper",
+        "grid_columns": 3,
+        "grid_columns_tablet": 2,
+        "grid_columns_mobile": 1,
+        "slides_desktop": 3,
+        "slides_tablet": 2,
+        "slides_mobile": 1,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "show_pagination_desktop": true,
+        "show_pagination_mobile": true,
+        "dots_per_page": true,
+        "loop": true,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "heading": "Section heading",
+        "highlight_text": "",
+        "intro_text": "<p>Add a short introduction to describe what this section is about.</p>",
+        "footer_text": "",
+        "background_color": "#ffffff",
+        "text_color": "#121212",
+        "heading_color": "#121212",
+        "highlight_color": "#1773b0",
+        "card_background": "#ffffff",
+        "card_border_color": "#e3e3e3",
+        "arrow_background": "#121212",
+        "arrow_icon_color": "#ffffff",
+        "placeholder_url": "",
+        "image_ratio": "4/3",
+        "container_width": 1200,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "card_radius": 8,
+        "heading_size": 32,
+        "mobile_heading_size": 26,
+        "text_size": 18,
+        "mobile_text_size": 16,
+        "card_heading_size": 20,
+        "card_text_size": 16,
+        "custom_class": ""
+      }
+    },
+    "testimonials_LzjeBG": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_MBQArP": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Add a customer review here to build trust with new visitors.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        },
+        "testimonial_reH6NK": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Highlight a quote that shows the value of your products.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        },
+        "testimonial_P6NAw3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Use real feedback to tell your brand's story through your customers.</p>",
+            "image_url": "",
+            "name": "Customer name",
+            "role": "Verified buyer",
+            "show_stars": true,
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_MBQArP",
+        "testimonial_reH6NK",
+        "testimonial_P6NAw3"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "layout": "multi",
+        "per_desktop": 3,
+        "per_tablet": 2,
+        "per_mobile": 1,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "show_pagination_desktop": true,
+        "show_pagination_mobile": true,
+        "dots_per_page": true,
+        "loop": false,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "heading": "What our customers say",
+        "highlight_text": "",
+        "subheading": "<p>Real feedback from people who love what we do.</p>",
+        "background_color": "#ffffff",
+        "text_color": "#121212",
+        "heading_color": "#121212",
+        "highlight_color": "#1773b0",
+        "card_background": "#f7f7f7",
+        "card_border_color": "#e3e3e3",
+        "arrow_background": "#121212",
+        "arrow_icon_color": "#ffffff",
+        "container_width": 1200,
+        "padding_top": 56,
+        "padding_bottom": 56,
+        "card_radius": 8,
+        "heading_size": 34,
+        "mobile_heading_size": 26,
+        "text_size": 17,
+        "quote_size": 16,
+        "name_size": 16,
+        "role_size": 13,
+        "custom_class": ""
+      }
+    },
+    "featured_blog_hmfing": {
+      "type": "featured-blog",
+      "name": "t:sections.featured-blog.presets.name",
+      "settings": {
+        "blog": "",
         "post_limit": 3,
-        "eyebrow": "Insight",
-        "heading": "Guides & Tips",
+        "eyebrow": "INSIGHT",
+        "heading": "Blog posts",
         "layout_mode": "slider",
         "enable_swiper_desktop": true,
         "enable_swiper_mobile": true,
-        "show_arrows_desktop": false,
+        "show_arrows_desktop": true,
         "show_arrows_mobile": false,
         "arrow_position": "left_right",
         "show_pagination_desktop": false,
@@ -359,93 +457,14 @@
         "show_image": true,
         "show_date": true,
         "color_scheme": "",
-        "padding_top": 48,
-        "padding_bottom": 48,
+        "padding_top": 36,
+        "padding_bottom": 36,
         "custom_class": ""
       }
     },
-    "testimonials_22yard": {
-      "type": "testimonials",
-      "blocks": {
-        "t1": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "<p>Wonderful Service, great products. They have everything you need. Highly recommend for anyone that needs any bats and gear. Will return again.</p>",
-            "name": "James T.",
-            "role": "Sydney, NSW",
-            "verified": true,
-            "show_stars": true,
-            "rating": 5
-          }
-        },
-        "t2": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "<p>Pick up my second dsc super natural from the guys down at wiz sports made everything so easy and great people to deal with and best prices in Australia.</p>",
-            "name": "Sarah K.",
-            "role": "Melbourne, VIC",
-            "verified": true,
-            "show_stars": true,
-            "rating": 5
-          }
-        },
-        "t3": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "<p>I bought a bat and a helmet for my brother, and I'm really happy with the purchase. The quality of both products is excellent and exactly as expected.</p>",
-            "name": "Raj B.",
-            "role": "Brisbane, QLD",
-            "verified": true,
-            "show_stars": true,
-            "rating": 5
-          }
-        }
-      },
-      "block_order": ["t1", "t2", "t3"],
-      "name": "22 Yard Testimonials Slider",
-      "settings": {
-        "layout": "multi",
-        "per_desktop": 3,
-        "per_tablet": 2,
-        "per_mobile": 1,
-        "show_arrows_desktop": true,
-        "show_arrows_mobile": false,
-        "show_pagination_desktop": false,
-        "show_pagination_mobile": true,
-        "dots_per_page": true,
-        "loop": false,
-        "autoplay": true,
-        "autoplay_speed": 5,
-        "eyebrow": "Testimonials",
-        "heading": "What Our Customers Says",
-        "highlight_text": "",
-        "rating_score": "4.9",
-        "rating_text": "out of 5 Based on 2,400+ reviews",
-        "view_all_label": "View All",
-        "view_all_link": "",
-        "background_color": "#ffffff",
-        "text_color": "#16161a",
-        "heading_color": "#16161a",
-        "highlight_color": "#8a2b2b",
-        "card_background": "#ffffff",
-        "card_border_color": "#e7e7e7",
-        "arrow_background": "#ffffff",
-        "arrow_icon_color": "#16161a",
-        "container_width": 1300,
-        "padding_top": 56,
-        "padding_bottom": 56,
-        "card_radius": 12,
-        "heading_size": 42,
-        "mobile_heading_size": 28,
-        "text_size": 16,
-        "quote_size": 16,
-        "name_size": 16,
-        "role_size": 13,
-        "custom_class": ""
-      }
-    },
-    "newsletter_22yard": {
+    "newsletter_RbBrfM": {
       "type": "newsletter",
+      "name": "t:sections.newsletter.presets.name",
       "settings": {
         "background_color": "#0d0d0d",
         "heading": "Get 10% Off on your first order",
@@ -455,8 +474,8 @@
         "help_heading": "Need help?",
         "phone": "(+001) 1234 5678 90",
         "hours": "we are available 8:00am - 7:00pm",
-        "padding_top": 72,
-        "padding_bottom": 72
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     }
   },
@@ -464,12 +483,10 @@
     "slideshow_E34qgP",
     "collection_list_KDQnYf",
     "featured_collection",
-    "promo_banner_bats",
-    "featured_collection_season",
-    "promo_banner_kits",
     "flexible_content_grid_aAaC9W",
-    "featured_blog_guides",
-    "testimonials_22yard",
-    "newsletter_22yard"
+    "custom_multicolumn_F4xGRE",
+    "testimonials_LzjeBG",
+    "featured_blog_hmfing",
+    "newsletter_RbBrfM"
   ]
 }
