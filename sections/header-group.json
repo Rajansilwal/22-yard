@@ -105,7 +105,7 @@
         "menu_item_override_wYwgtV"
       ],
       "settings": {
-        "header_layout": "logo-left-search",
+        "header_layout": "logo-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
         "menu_type_desktop": "mega",
