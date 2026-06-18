@@ -85,31 +85,37 @@
         "featured_collection_tVEmHV": {
           "type": "featured_collection",
           "settings": {
-            "collection": "sale"
+            "collection": "cricket-shoes"
           }
         },
         "featured_collection_jiLpJc": {
           "type": "featured_collection",
           "settings": {
-            "collection": "frontpage"
+            "collection": "cricket-pads"
           }
         },
         "featured_collection_rNY6fF": {
           "type": "featured_collection",
           "settings": {
-            "collection": "test-1"
+            "collection": "cricket-helmets"
           }
         },
         "featured_collection_dg8m3Q": {
           "type": "featured_collection",
           "settings": {
-            "collection": "test-2"
+            "collection": "cricket-bats"
           }
         },
         "featured_collection_QN4bQB": {
           "type": "featured_collection",
           "settings": {
-            "collection": "new"
+            "collection": "cricket-bags"
+          }
+        },
+        "featured_collection_cLLN6K": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "bundles"
           }
         }
       },
@@ -118,7 +124,8 @@
         "featured_collection_jiLpJc",
         "featured_collection_rNY6fF",
         "featured_collection_dg8m3Q",
-        "featured_collection_QN4bQB"
+        "featured_collection_QN4bQB",
+        "featured_collection_cLLN6K"
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
