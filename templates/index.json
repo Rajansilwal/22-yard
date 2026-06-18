@@ -423,78 +423,25 @@
     },
     "flexible_content_grid_6ijBtb": {
       "type": "flexible-content-grid",
-      "blocks": {
-        "item_HTjaYJ": {
-          "type": "item",
-          "settings": {
-            "heading": "",
-            "text": "",
-            "link": ""
-          }
-        },
-        "item_khQern": {
-          "type": "item",
-          "settings": {
-            "heading": "",
-            "text": "",
-            "link": ""
-          }
-        },
-        "item_3ThdxY": {
-          "type": "item",
-          "settings": {
-            "heading": "",
-            "text": "",
-            "link": ""
-          }
-        },
-        "item_wcGEnG": {
-          "type": "item",
-          "settings": {
-            "heading": "",
-            "text": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "item_HTjaYJ",
-        "item_khQern",
-        "item_3ThdxY",
-        "item_wcGEnG"
-      ],
       "name": "22 Yard Brand Slider",
       "settings": {
-        "display_mode": "grid",
-        "content_layout": "card",
-        "alignment": "top",
-        "text_align": "center",
         "eyebrow": "Shop By",
         "heading": "Brands",
-        "section_heading_size": "h1",
-        "subheading": "",
         "button_label": "",
         "button_link": "",
+        "display_mode": "grid",
         "columns_desktop": 8,
         "columns_tablet": 4,
         "columns_mobile": 2,
         "grid_gap": 16,
-        "icon_size": 64,
-        "heading_size": 1.8,
-        "logo_style": false,
-        "logo_max_width": 160,
         "logo_grayscale": false,
-        "slides_desktop": 0,
-        "slides_tablet": 0,
-        "slides_mobile": 0,
-        "arrow_gutter": 56,
-        "loop": true,
-        "autoplay": false,
-        "autoplay_speed": 4,
         "arrows_desktop": true,
         "arrows_mobile": false,
         "pagination_desktop": false,
         "pagination_mobile": true,
+        "arrow_gutter": 56,
+        "autoplay": false,
+        "autoplay_speed": 4,
         "color_scheme": "",
         "padding_top": 40,
         "padding_bottom": 40,
@@ -508,9 +455,9 @@
     "collection_list_KDQnYf",
     "featured_collection",
     "featured_collection_PbigGx",
+    "flexible_content_grid_6ijBtb",
     "testimonials_7gPRjM",
     "featured_blog_hmfing",
-    "newsletter_RbBrfM",
-    "flexible_content_grid_6ijBtb"
+    "newsletter_RbBrfM"
   ]
 }
