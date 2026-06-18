@@ -244,7 +244,7 @@
       ],
       "settings": {
         "products_to_show": 8,
-        "layout_mode": "grid",
+        "layout_mode": "slider",
         "enable_swiper_desktop": true,
         "enable_swiper_mobile": true,
         "show_arrows_desktop": true,
