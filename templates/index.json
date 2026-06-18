@@ -155,7 +155,7 @@
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "collection": "sporting-goods-example-products",
+        "collection": "cricket-shoes",
         "products_to_show": 8,
         "layout_mode": "slider",
         "enable_swiper_desktop": true,
