@@ -134,6 +134,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-between; /* copyright left · payment centre · policies right */
     gap: 1.2rem 1.6rem;
     width: 100%;
     margin: 0;
@@ -152,7 +153,7 @@
   }
 
   .footer__bottom-bar .list-payment {
-    justify-content: flex-start;
+    justify-content: center;
     gap: 0.5rem;
     margin: 0;
   }
@@ -162,12 +163,12 @@
     width: auto;
   }
 
-  /* Policies pushed to the right edge */
+  /* Policies on the right edge */
   .footer__bottom-policies {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0 0 0 auto;
+    margin: 0;
   }
 
   .footer__bottom-policies li {
@@ -191,6 +192,9 @@
   }
 
   @media screen and (max-width: 749px) {
+    .footer__bottom-bar .footer__copyright {
+      justify-content: flex-start;
+    }
     .footer__bottom-policies {
       margin-left: 0;
     }
@@ -210,6 +214,19 @@
 
     if section.blocks.size == 1 and section.blocks[0].type == 'brand_information' and brand_empty and has_social_icons == false and section.settings.newsletter_enable == false and section.settings.enable_follow_on_shop == false
       assign only_empty_brand = true
+    endif
+
+    # Only render the newsletter / follow / section-social column when at least one of them is actually on,
+    # so it never leaves an empty block above the bottom bar.
+    assign show_newsletter_col = false
+    if section.settings.newsletter_enable
+      assign show_newsletter_col = true
+    endif
+    if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop
+      assign show_newsletter_col = true
+    endif
+    if section.settings.show_social and has_social_icons
+      assign show_newsletter_col = true
     endif
   -%}
   {%- if section.blocks.size > 0
@@ -342,6 +359,7 @@
           </div>
         {%- endif -%}
 
+        {%- if show_newsletter_col -%}
         <div
           class="footer-block--newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           {% if settings.animations_reveal_on_scroll %}
@@ -465,6 +483,7 @@
             {%- render 'social-icons', class: 'footer__list-social' -%}
           {%- endif -%}
         </div>
+        {%- endif -%}
       </div>
     {%- endunless -%}
   {%- endif -%}
@@ -654,7 +673,7 @@
     {
       "type": "checkbox",
       "id": "newsletter_enable",
-      "default": true,
+      "default": false,
       "label": "t:sections.footer.settings.newsletter_enable.label"
     },
     {
@@ -694,14 +713,14 @@
     {
       "type": "checkbox",
       "id": "enable_follow_on_shop",
-      "default": true,
+      "default": false,
       "label": "t:sections.footer.settings.enable_follow_on_shop.label",
       "info": "t:sections.footer.settings.enable_follow_on_shop.info"
     },
     {
       "type": "checkbox",
       "id": "show_social",
-      "default": true,
+      "default": false,
       "label": "t:sections.footer.settings.show_social.label",
       "info": "t:sections.footer.settings.show_social.info"
     },
@@ -784,10 +803,35 @@
   "default": {
     "blocks": [
       {
-        "type": "link_list"
+        "type": "brand_information",
+        "settings": {
+          "show_social": true
+        }
       },
       {
-        "type": "text"
+        "type": "link_list",
+        "settings": {
+          "heading": "Quick Links"
+        }
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "heading": "BRANDS"
+        }
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "heading": "Category"
+        }
+      },
+      {
+        "type": "text",
+        "settings": {
+          "heading": "Contact Information",
+          "subtext": "<p><strong>22 Yard Pvt. Ltd.</strong><br>Consectetur Adipiscing Elit, VIC, Australia</p><p><strong>Call Us:</strong><br><a href=\"tel:+0111234567809\">(+011) 1234 5678 09</a></p><p><strong>Mail Us:</strong><br><a href=\"mailto:info@yard22.com\">info@yard22.com</a></p>"
+        }
       }
     ]
   }
