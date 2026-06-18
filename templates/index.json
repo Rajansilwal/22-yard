@@ -207,6 +207,7 @@
         "full_width": false,
         "color_scheme": "scheme-1",
         "eyebrow": "EXPLORE",
+        "badge_tag": "top-rated",
         "custom_class": "",
         "padding_top": 44,
         "padding_bottom": 36
@@ -268,6 +269,7 @@
         "full_width": false,
         "color_scheme": "scheme-1",
         "eyebrow": "EXPLORE",
+        "badge_tag": "",
         "custom_class": "",
         "padding_top": 44,
         "padding_bottom": 36
