@@ -382,7 +382,7 @@
       "type": "featured-blog",
       "name": "t:sections.featured-blog.presets.name",
       "settings": {
-        "blog": "",
+        "blog": "news",
         "post_limit": 3,
         "eyebrow": "INSIGHT",
         "heading": "Blog posts",
