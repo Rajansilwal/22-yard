@@ -220,7 +220,7 @@
         "post_limit": 3,
         "eyebrow": "INSIGHT",
         "heading": "Blog posts",
-        "layout_mode": "slider",
+        "layout_mode": "grid",
         "enable_swiper_desktop": true,
         "enable_swiper_mobile": true,
         "show_arrows_desktop": true,
