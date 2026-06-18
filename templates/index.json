@@ -155,11 +155,11 @@
     "featured_collection": {
       "type": "featured-collection",
       "blocks": {
-        "tab_QFcGtL": {
+        "tab_ddxcth": {
           "type": "tab",
           "settings": {
-            "tab_label": "Shoes",
-            "collection": "cricket-shoes"
+            "tab_label": "Bats",
+            "collection": "cricket-bats"
           }
         },
         "tab_6Xbmmc": {
@@ -169,18 +169,18 @@
             "collection": "cricket-helmets"
           }
         },
-        "tab_ddxcth": {
+        "tab_QFcGtL": {
           "type": "tab",
           "settings": {
-            "tab_label": "Bats",
-            "collection": "cricket-bats"
+            "tab_label": "Shoes",
+            "collection": "cricket-shoes"
           }
         }
       },
       "block_order": [
-        "tab_QFcGtL",
+        "tab_ddxcth",
         "tab_6Xbmmc",
-        "tab_ddxcth"
+        "tab_QFcGtL"
       ],
       "settings": {
         "products_to_show": 8,
