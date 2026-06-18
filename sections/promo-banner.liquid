@@ -1,0 +1,279 @@
+{%- comment -%}
+  Promo Banner Section
+  Settings: background image, overlay (color + opacity), heading, button,
+  and content alignment (left / center / right).
+  Note: no font-family is set here, so type inherits from your theme.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign overlay_opacity = s.overlay_opacity | divided_by: 100.0
+  assign heading_size_mobile = s.heading_size | times: 0.62 | round
+-%}
+
+{%- style -%}
+  #Banner-{{ section.id }} {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: {{ s.mobile_height }}px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__placeholder {
+    background-color: #2a2a2a;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: {{ s.overlay_color }};
+    opacity: {{ overlay_opacity }};
+    pointer-events: none;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    padding: 2rem 1.5rem;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__content {
+    max-width: {{ s.content_width }}px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__heading {
+    margin: 0;
+    color: {{ s.heading_color }};
+    font-size: {{ heading_size_mobile }}px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__button {
+    display: inline-block;
+    background-color: {{ s.button_bg_color }};
+    color: {{ s.button_text_color }};
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s ease;
+  }
+
+  #Banner-{{ section.id }} .promo-banner__button:hover {
+    opacity: 0.88;
+  }
+
+  /* Content alignment */
+  #Banner-{{ section.id }}.promo-banner--left  .promo-banner__inner { justify-content: flex-start; }
+  #Banner-{{ section.id }}.promo-banner--center .promo-banner__inner { justify-content: center; }
+  #Banner-{{ section.id }}.promo-banner--right  .promo-banner__inner { justify-content: flex-end; }
+
+  #Banner-{{ section.id }}.promo-banner--left   .promo-banner__content { text-align: left;   align-items: flex-start; }
+  #Banner-{{ section.id }}.promo-banner--center .promo-banner__content { text-align: center; align-items: center; }
+  #Banner-{{ section.id }}.promo-banner--right  .promo-banner__content { text-align: right;  align-items: flex-end; }
+
+  @media screen and (min-width: 750px) {
+    #Banner-{{ section.id }} {
+      min-height: {{ s.desktop_height }}px;
+    }
+    #Banner-{{ section.id }} .promo-banner__inner {
+      padding: 3rem 5rem;
+    }
+    #Banner-{{ section.id }} .promo-banner__heading {
+      font-size: {{ s.heading_size }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="Banner-{{ section.id }}" class="promo-banner promo-banner--{{ s.content_alignment }}">
+
+  {%- if s.background_image != blank -%}
+    {{
+      s.background_image
+      | image_url: width: 3000
+      | image_tag:
+        loading: 'lazy',
+        class: 'promo-banner__media',
+        widths: '375, 750, 1100, 1500, 2000, 3000',
+        alt: s.heading | strip_html | escape
+    }}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'promo-banner__media promo-banner__placeholder' }}
+  {%- endif -%}
+
+  <div class="promo-banner__overlay"></div>
+
+  <div class="promo-banner__inner">
+    <div class="promo-banner__content">
+      {%- if s.heading != blank -%}
+        <h2 class="promo-banner__heading">{{ s.heading }}</h2>
+      {%- endif -%}
+
+      {%- if s.button_label != blank -%}
+        <a href="{{ s.button_link }}" class="promo-banner__button">{{ s.button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Promo Banner",
+  "tag": "section",
+  "class": "section-promo-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 200,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Height (desktop)",
+      "min": 200,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Height (mobile)",
+      "min": 150,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Season Sale Up To 30% Off Kits & Bats"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size (desktop)",
+      "min": 24,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Sale"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banner"
+    }
+  ]
+}
+{% endschema %}
