@@ -1,47 +1,29 @@
 {%- comment -%}
-  Flexible Content Grid / Slider Section
+  22 Yard — Brand Listing
   ---------------------------------------------------------------
-  One section for: icon-with-text grid/slider, brand logo slider,
-  vendor lists, feature cards, etc.
+  Brands are pulled from the `brand_listing` metaobject:
+     • brand_image  (Image / File)
+     • brand_name   (Single line text)
+     • brand_url    (URL)
+     • order        (Integer)   -> used for sorting
 
-  Display mode:      grid | slider (Swiper from CDN)  -- BOTH supported
-  Content layout:    text | image | card
-  Alignment (card):  top | bottom | left | right
-  Slides per view:   desktop / tablet / mobile (slider mode)
-  Responsive:        show/hide arrows & pagination per device
-  Section padding:   desktop + mobile, top + bottom
-  Block:             flexible item (image/icon + optional heading/text/link)
-  Self-contained. Uses Dawn color schemes.
+  Grid by default. Switch to "Slider" when you have lots of brands —
+  the slider shows TWO rows per view (Swiper grid).
+
+  NOTE: If your metaobject type isn't literally `brand_listing`,
+  change it in the `assign brands = ...` line below.
 {%- endcomment -%}
 
 {%- liquid
-  assign mode = section.settings.display_mode
-  assign content_layout = section.settings.content_layout
-  assign alignment = section.settings.alignment
-  assign text_align = section.settings.text_align
+  assign uid    = section.id
+  assign mode   = section.settings.display_mode
   assign cols_d = section.settings.columns_desktop
   assign cols_t = section.settings.columns_tablet
   assign cols_m = section.settings.columns_mobile
-  assign gap = section.settings.grid_gap
-  assign uid = section.id
+  assign gap    = section.settings.grid_gap
 
-  assign spv_d = section.settings.slides_desktop
-  assign spv_t = section.settings.slides_tablet
-  assign spv_m = section.settings.slides_mobile
-  if spv_d == 0
-    assign spv_d = cols_d
-  endif
-  if spv_t == 0
-    assign spv_t = cols_t
-  endif
-  if spv_m == 0
-    assign spv_m = cols_m
-  endif
-
-  assign item_class = 'fcg-item fcg-item--' | append: content_layout | append: ' fcg-align--' | append: alignment
-  if content_layout == 'image' and section.settings.logo_style
-    assign item_class = item_class | append: ' fcg-item--logo'
-  endif
+  # ---- Pull + order the brand entries ----
+  assign brands = shop.metaobjects.brand_listing.values | sort: 'order'
 
   assign show_arrows = false
   if section.settings.arrows_desktop or section.settings.arrows_mobile
@@ -51,15 +33,6 @@
   if section.settings.pagination_desktop or section.settings.pagination_mobile
     assign show_pagination = true
   endif
-
-  case text_align
-    when 'left'
-      assign cross = 'flex-start'
-    when 'right'
-      assign cross = 'flex-end'
-    else
-      assign cross = 'center'
-  endcase
 -%}
 
 {%- if mode == 'slider' -%}
@@ -68,284 +41,150 @@
 {%- endif -%}
 
 <style>
-  #fcg-{{ uid }}-root .fcg-item {
-    position: relative; 
-    width: 100%;
-    height: 100%;
+  /* ---------- Header ---------- */
+  #bl-{{ uid }} .bl-header{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1.5rem; margin-bottom:2.4rem;
   }
-  #fcg-{{ uid }}-root .fcg-item__link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
+  #bl-{{ uid }} .bl-eyebrow{
+    display:block; margin:0 0 .4rem; font-size:.8rem; font-weight:700;
+    letter-spacing:.12em; text-transform:uppercase; color:#8a2b2b;
   }
-  #fcg-{{ uid }}-root .fcg-item__inner {
-    display: flex;
-    gap: 1.2rem;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
+  #bl-{{ uid }} .bl-heading{
+    margin:0; font-family:var(--font-heading-family); font-weight:800;
+    line-height:1.05; color:#16161a; font-size:2.6rem;
   }
-
-  #fcg-{{ uid }}-root .fcg-item__media { flex-shrink: 0; line-height: 0; }
-  #fcg-{{ uid }}-root .fcg-item__media img,
-  #fcg-{{ uid }}-root .fcg-item__media svg {
-    display: block;
-    width: {{ section.settings.icon_size }}px;
-    height: auto;
-    max-width: 100%;
-    object-fit: contain;
-    transition: transform 0.4s ease, opacity 0.3s ease, filter 0.3s ease;
+  #bl-{{ uid }} .bl-viewall{
+    flex-shrink:0; display:inline-block; background:#fff;
+    border:1.5px solid #16161a; color:#16161a; text-decoration:none;
+    text-transform:uppercase; font-weight:700; letter-spacing:.08em;
+    font-size:.85rem; padding:.7rem 1.4rem; border-radius:4px;
+    transition:background .15s, color .15s;
   }
-  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__media img {
-    width: 100%;
-    max-width: {{ section.settings.logo_max_width }}px;
-    {% if section.settings.logo_grayscale %}filter: grayscale(100%); opacity: 0.7;{% endif %}
-  }
-  #fcg-{{ uid }}-root .fcg-item--logo:hover .fcg-item__media img { filter: none; opacity: 1; }
-
-  /* ----- 22 Yard section header (eyebrow + heading + VIEW ALL button) ----- */
-  #fcg-{{ uid }}-root .fcg-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    margin-bottom: 2.4rem;
-  }
-  #fcg-{{ uid }}-root .fcg-eyebrow {
-    display: block;
-    margin: 0 0 0.4rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #8a2b2b;
-  }
-  #fcg-{{ uid }}-root .fcg-heading {
-    margin: 0;
-    font-family: var(--font-heading-family);
-    font-weight: 800;
-    line-height: 1.05;
-    color: #16161a;
-    font-size: 2.6rem;
-  }
-  #fcg-{{ uid }}-root .fcg-viewall {
-    flex-shrink: 0;
-    display: inline-block;
-    background: #fff;
-    border: 1.5px solid #16161a;
-    color: #16161a;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    font-size: 0.85rem;
-    padding: 0.7rem 1.4rem;
-    border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
-  }
-  #fcg-{{ uid }}-root .fcg-viewall:hover { background: #16161a; color: #fff; }
-  @media screen and (max-width: 749px) {
-    #fcg-{{ uid }}-root .fcg-header { flex-direction: column; align-items: flex-start; }
-    #fcg-{{ uid }}-root .fcg-heading { font-size: 1.8rem; }
+  #bl-{{ uid }} .bl-viewall:hover{ background:#16161a; color:#fff; }
+  @media screen and (max-width:749px){
+    #bl-{{ uid }} .bl-header{ flex-direction:column; align-items:flex-start; }
+    #bl-{{ uid }} .bl-heading{ font-size:1.8rem; }
   }
 
-  #fcg-{{ uid }}-root .fcg-item__body { min-width: 0; }
-  #fcg-{{ uid }}-root .fcg-item__heading {
-    margin: 0 0 0.6rem;
-    font-size: {{ section.settings.heading_size }}rem;
-    line-height: 1.3;
-    color: rgb(var(--color-foreground));
+  /* ---------- Brand card ---------- */
+  #bl-{{ uid }} .bl-card{
+    display:flex; align-items:center; justify-content:center;
+    background:#fff; border:1px solid #e7e7e7; border-radius:8px;
+    box-shadow:0 1px 3px rgba(22,22,26,.06);
+    aspect-ratio:3 / 2; padding:1.6rem;
+    text-decoration:none; color:inherit;
+    transition:box-shadow .2s ease, border-color .2s ease;
   }
-  #fcg-{{ uid }}-root .fcg-item__text {
-    margin: 0;
-    font-size: 1.4rem;
-    line-height: 1.55;
-    color: rgba(var(--color-foreground), 0.75);
+  #bl-{{ uid }} .bl-card:hover{
+    box-shadow:0 4px 14px rgba(22,22,26,.10); border-color:#d8d8d8;
   }
-  #fcg-{{ uid }}-root .fcg-item__text p:last-child { margin-bottom: 0; }
+  #bl-{{ uid }} .bl-card__img{
+    max-width:100%; max-height:100%; object-fit:contain;
+    {% if section.settings.logo_grayscale %}filter:grayscale(100%); opacity:.75; transition:filter .25s ease, opacity .25s ease;{% endif %}
+  }
+  {% if section.settings.logo_grayscale %}#bl-{{ uid }} .bl-card:hover .bl-card__img{ filter:none; opacity:1; }{% endif %}
+  #bl-{{ uid }} .bl-card__name{ font-weight:700; font-size:1.4rem; text-align:center; color:#16161a; }
 
-  /* Card look */
-  #fcg-{{ uid }}-root .fcg-item--card .fcg-item__inner {
-    background-color: #ffffff;
-    border: 1px solid #e7e7e7;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(22, 22, 26, 0.06);
+  /* ---------- Grid ---------- */
+  #bl-{{ uid }} .bl-grid{
+    display:grid; gap:{{ gap }}px;
+    grid-template-columns:repeat({{ cols_m }}, minmax(0,1fr));
   }
-
-  /* Brand logo card: white rounded card, subtle shadow, ~3:2 aspect, centered logo with padding */
-  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__inner,
-  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__inner {
-    background-color: #ffffff;
-    border: 1px solid #e7e7e7;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(22, 22, 26, 0.06);
-    aspect-ratio: 3 / 2;
-    padding: 1.6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  @media screen and (min-width:750px){
+    #bl-{{ uid }} .bl-grid{ grid-template-columns:repeat({{ cols_t }}, minmax(0,1fr)); }
   }
-  #fcg-{{ uid }}-root .fcg-item--image:hover .fcg-item__inner,
-  #fcg-{{ uid }}-root .fcg-item--logo:hover .fcg-item__inner {
-    box-shadow: 0 4px 14px rgba(22, 22, 26, 0.10);
-    border-color: #d8d8d8;
-  }
-  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__media,
-  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__media {
-    max-width: 100%;
-    max-height: 100%;
-  }
-  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__media img,
-  #fcg-{{ uid }}-root .fcg-item--logo .fcg-item__media img {
-    max-height: 100%;
-    object-fit: contain;
+  @media screen and (min-width:990px){
+    #bl-{{ uid }} .bl-grid{ grid-template-columns:repeat({{ cols_d }}, minmax(0,1fr)); }
   }
 
-  /* Alignment */
-  #fcg-{{ uid }}-root .fcg-align--top .fcg-item__inner    { flex-direction: column; align-items: {{ cross }}; justify-content: center; text-align: {{ text_align }}; }
-  #fcg-{{ uid }}-root .fcg-align--bottom .fcg-item__inner { flex-direction: column-reverse; align-items: {{ cross }}; justify-content: center; text-align: {{ text_align }}; }
-  #fcg-{{ uid }}-root .fcg-align--left .fcg-item__inner   { flex-direction: row; align-items: center; justify-content: flex-start; text-align: left; }
-  #fcg-{{ uid }}-root .fcg-align--right .fcg-item__inner  { flex-direction: row-reverse; align-items: center; justify-content: flex-start; text-align: right; }
-
-  /* Content-layout visibility */
-  #fcg-{{ uid }}-root .fcg-item--text .fcg-item__media { display: none; }
-  #fcg-{{ uid }}-root .fcg-item--image .fcg-item__body { display: none; }
-
-  /* GRID */
-  #fcg-{{ uid }}-root .fcg-grid {
-    display: grid;
-    gap: {{ gap }}px;
-    grid-template-columns: repeat({{ cols_m }}, minmax(0, 1fr));
+  /* ---------- Slider ---------- */
+  #bl-{{ uid }} .bl-slider-wrap{
+    position:relative;
+    {% if show_arrows %}padding:0 {{ section.settings.arrow_gutter }}px;{% endif %}
   }
-  @media screen and (min-width: 750px) {
-    #fcg-{{ uid }}-root .fcg-grid { grid-template-columns: repeat({{ cols_t }}, minmax(0, 1fr)); }
-  }
-  @media screen and (min-width: 990px) {
-    #fcg-{{ uid }}-root .fcg-grid { grid-template-columns: repeat({{ cols_d }}, minmax(0, 1fr)); }
-  }
+  #bl-{{ uid }} .swiper.bl-swiper{ width:100%; overflow:hidden; position:relative; }
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-slide{ height:auto; box-sizing:border-box; }
 
-  /* SLIDER ---------------------------------------------------- */
-  /* Outer wrap holds arrows in side gutters so they sit OUTSIDE the cards */
-  #fcg-{{ uid }}-root .fcg-slider-wrap {
-    position: relative;
-    {% if show_arrows %}padding: 0 {{ section.settings.arrow_gutter }}px;{% endif %}
+  #bl-{{ uid }} .bl-arrow{
+    position:absolute; top:50%; z-index:10; width:4rem; height:4rem;
+    display:flex; align-items:center; justify-content:center;
+    background:rgb(var(--color-background));
+    border:.1rem solid rgba(var(--color-foreground),.15);
+    border-radius:50%; cursor:pointer; color:rgb(var(--color-foreground));
+    padding:0; transition:background .15s, border-color .15s, opacity .15s;
   }
-  #fcg-{{ uid }}-root .swiper.fcg-swiper { width: 100%; overflow: hidden; position: relative; }
-  #fcg-{{ uid }}-root .swiper.fcg-swiper .swiper-slide { height: auto; box-sizing: border-box; }
+  #bl-{{ uid }} .bl-arrow:hover{ background:rgba(var(--color-foreground),.06); border-color:rgba(var(--color-foreground),.3); }
+  #bl-{{ uid }} .bl-arrow.swiper-button-disabled,
+  #bl-{{ uid }} .bl-arrow.swiper-button-lock{ opacity:.3; cursor:default; pointer-events:none; }
+  #bl-{{ uid }} .bl-arrow--prev{ left:0; transform:translate(-50%,-50%); }
+  #bl-{{ uid }} .bl-arrow--next{ right:0; transform:translate(50%,-50%); }
+  #bl-{{ uid }} .bl-arrow svg{ width:1.4rem; height:1.4rem; display:block; }
+  #bl-{{ uid }} .bl-arrow--prev svg{ transform:rotate(180deg); }
+  #bl-{{ uid }} .bl-arrow::after,
+  #bl-{{ uid }} .bl-arrow::before{ content:none !important; display:none !important; }
 
-  /* Arrow buttons positioned in the gutters of the wrap */
-  #fcg-{{ uid }}-root .fcg-arrow {
-    position: absolute;
-    top: 50%;
-    z-index: 10;
-    width: 4rem;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgb(var(--color-background));
-    border: 0.1rem solid rgba(var(--color-foreground), 0.15);
-    border-radius: 50%;
-    cursor: pointer;
-    color: rgb(var(--color-foreground));
-    padding: 0;
-    transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination{
+    position:static; margin-top:1.6rem; display:flex; justify-content:center;
+    align-items:center; gap:.5rem; width:100%;
   }
-  #fcg-{{ uid }}-root .fcg-arrow:hover { background: rgba(var(--color-foreground), 0.06); border-color: rgba(var(--color-foreground), 0.3); }
-  #fcg-{{ uid }}-root .fcg-arrow.swiper-button-disabled,
-  #fcg-{{ uid }}-root .fcg-arrow.swiper-button-lock { opacity: 0.3; cursor: default; pointer-events: none; }
-  #fcg-{{ uid }}-root .fcg-arrow--prev { left: 0; transform: translate(-50%, -50%); }
-  #fcg-{{ uid }}-root .fcg-arrow--next { right: 0; transform: translate(50%, -50%); }
-  #fcg-{{ uid }}-root .fcg-arrow svg { width: 1.4rem; height: 1.4rem; display: block; }
-  #fcg-{{ uid }}-root .fcg-arrow--prev svg { transform: rotate(180deg); }
-  /* kill any Swiper-injected default chevron */
-  #fcg-{{ uid }}-root .fcg-arrow::after,
-  #fcg-{{ uid }}-root .fcg-arrow::before { content: none !important; display: none !important; }
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination-bullet{ background:rgb(var(--color-foreground)); opacity:.35; }
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination-bullet-active{ background:rgb(var(--color-base-accent-1, var(--color-foreground))); opacity:1; }
 
-  /* Pagination */
-  #fcg-{{ uid }}-root .swiper.fcg-swiper .swiper-pagination {
-    position: static;
-    margin-top: 1.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-  }
-  #fcg-{{ uid }}-root .swiper.fcg-swiper .swiper-pagination-bullet { background: rgb(var(--color-foreground)); opacity: 0.35; }
-  #fcg-{{ uid }}-root .swiper.fcg-swiper .swiper-pagination-bullet-active { background: rgb(var(--color-base-accent-1, var(--color-foreground))); opacity: 1; }
-
-  /* Arrows show/hide */
   {%- unless section.settings.arrows_desktop -%}
-  @media (min-width: 750px) { #fcg-{{ uid }}-root .fcg-arrow { display: none !important; } #fcg-{{ uid }}-root .fcg-slider-wrap { padding-left: 0; padding-right: 0; } }
+  @media (min-width:750px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
   {%- endunless -%}
   {%- unless section.settings.arrows_mobile -%}
-  @media (max-width: 749px) { #fcg-{{ uid }}-root .fcg-arrow { display: none !important; } #fcg-{{ uid }}-root .fcg-slider-wrap { padding-left: 0; padding-right: 0; } }
+  @media (max-width:749px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
   {%- endunless -%}
-
-  /* Pagination show/hide */
   {%- unless section.settings.pagination_desktop -%}
-  @media (min-width: 750px) { #fcg-{{ uid }}-root .swiper-pagination { display: none !important; } }
+  @media (min-width:750px){ #bl-{{ uid }} .swiper-pagination{ display:none !important; } }
   {%- endunless -%}
   {%- unless section.settings.pagination_mobile -%}
-  @media (max-width: 749px) { #fcg-{{ uid }}-root .swiper-pagination { display: none !important; } }
+  @media (max-width:749px){ #bl-{{ uid }} .swiper-pagination{ display:none !important; } }
   {%- endunless -%}
 
-  #fcg-{{ uid }}-root .fcg-empty { text-align: center; padding: 4rem 2rem; color: rgba(var(--color-foreground), 0.6); }
+  #bl-{{ uid }} .bl-empty{ text-align:center; padding:4rem 2rem; color:rgba(var(--color-foreground),.6); }
 </style>
 
-<div class="color-{{ section.settings.color_scheme }} gradient" id="fcg-{{ uid }}-root">
+<div class="color-{{ section.settings.color_scheme }} gradient" id="bl-{{ uid }}">
   <div class="page-width section-{{ uid }}-padding">
-    {%- if section.settings.heading != blank or section.settings.eyebrow != blank or section.settings.button_label != blank -%}
-      <div class="fcg-header">
-        <div class="fcg-header__text">
-          {%- if section.settings.eyebrow != blank -%}<span class="fcg-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
-          {%- if section.settings.heading != blank -%}<h2 class="fcg-heading">{{ section.settings.heading }}</h2>{%- endif -%}
-          {%- if section.settings.subheading != blank -%}<div class="subtitle">{{ section.settings.subheading }}</div>{%- endif -%}
+
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.button_label != blank -%}
+      <div class="bl-header">
+        <div class="bl-header__text">
+          {%- if section.settings.eyebrow != blank -%}<span class="bl-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          {%- if section.settings.heading != blank -%}<h2 class="bl-heading">{{ section.settings.heading }}</h2>{%- endif -%}
         </div>
         {%- if section.settings.button_label != blank -%}
-          <a class="fcg-viewall" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
+          <a class="bl-viewall" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
         {%- endif -%}
       </div>
     {%- endif -%}
 
-    {%- if section.blocks.size > 0 -%}
+    {%- if brands.size > 0 -%}
       {%- if mode == 'slider' -%}
-        <div class="fcg-slider-wrap">
+        <div class="bl-slider-wrap">
           {%- if show_arrows -%}
-            <button type="button" class="fcg-arrow fcg-arrow--prev" aria-label="Previous slide">
+            <button type="button" class="bl-arrow bl-arrow--prev" aria-label="Previous">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
-            <button type="button" class="fcg-arrow fcg-arrow--next" aria-label="Next slide">
+            <button type="button" class="bl-arrow bl-arrow--next" aria-label="Next">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           {%- endif -%}
-          <div class="swiper fcg-swiper" id="fcg-{{ uid }}">
+          <div class="swiper bl-swiper" id="bl-swiper-{{ uid }}">
             <div class="swiper-wrapper">
-              {%- for block in section.blocks -%}
-                <div class="swiper-slide" {{ block.shopify_attributes }}>
-                  <div class="{{ item_class }}">
-                    {%- if block.settings.link != blank -%}<a class="fcg-item__link" href="{{ block.settings.link }}"><span class="fcg-item__inner">{%- else -%}<div class="fcg-item__inner">{%- endif -%}
-                      {%- unless content_layout == 'text' -%}
-                        <span class="fcg-item__media">
-                          {%- if block.settings.image -%}
-                            {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400' }}
-                          {%- else -%}
-                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                          {%- endif -%}
-                        </span>
-                      {%- endunless -%}
-                      {%- unless content_layout == 'image' -%}
-                        <span class="fcg-item__body">
-                          {%- if block.settings.heading != blank -%}<span class="fcg-item__heading" style="display:block;">{{ block.settings.heading }}</span>{%- endif -%}
-                          {%- if block.settings.text != blank -%}<span class="fcg-item__text" style="display:block;">{{ block.settings.text }}</span>{%- endif -%}
-                        </span>
-                      {%- endunless -%}
-                    {%- if block.settings.link != blank -%}</span></a>{%- else -%}</div>{%- endif -%}
-                  </div>
+              {%- for brand in brands -%}
+                {%- assign brand_img = brand.brand_image.value -%}
+                <div class="swiper-slide">
+                  <a class="bl-card" href="{{ brand.brand_url.value | default: '#' }}" aria-label="{{ brand.brand_name.value | escape }}">
+                    {%- if brand_img != blank -%}
+                      {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
+                    {%- else -%}
+                      <span class="bl-card__name">{{ brand.brand_name.value }}</span>
+                    {%- endif -%}
+                  </a>
                 </div>
               {%- endfor -%}
             </div>
@@ -353,223 +192,133 @@
           </div>
         </div>
       {%- else -%}
-        <div class="fcg-grid">
-          {%- for block in section.blocks -%}
-            <div class="fcg-grid__cell" {{ block.shopify_attributes }}>
-              <div class="{{ item_class }}">
-                {%- if block.settings.link != blank -%}<a class="fcg-item__link" href="{{ block.settings.link }}"><span class="fcg-item__inner">{%- else -%}<div class="fcg-item__inner">{%- endif -%}
-                  {%- unless content_layout == 'text' -%}
-                    <span class="fcg-item__media">
-                      {%- if block.settings.image -%}
-                        {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400' }}
-                      {%- else -%}
-                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                      {%- endif -%}
-                    </span>
-                  {%- endunless -%}
-                  {%- unless content_layout == 'image' -%}
-                    <span class="fcg-item__body">
-                      {%- if block.settings.heading != blank -%}<span class="fcg-item__heading" style="display:block;">{{ block.settings.heading }}</span>{%- endif -%}
-                      {%- if block.settings.text != blank -%}<span class="fcg-item__text" style="display:block;">{{ block.settings.text }}</span>{%- endif -%}
-                    </span>
-                  {%- endunless -%}
-                {%- if block.settings.link != blank -%}</span></a>{%- else -%}</div>{%- endif -%}
-              </div>
-            </div>
+        <div class="bl-grid">
+          {%- for brand in brands -%}
+            {%- assign brand_img = brand.brand_image.value -%}
+            <a class="bl-card" href="{{ brand.brand_url.value | default: '#' }}" aria-label="{{ brand.brand_name.value | escape }}">
+              {%- if brand_img != blank -%}
+                {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
+              {%- else -%}
+                <span class="bl-card__name">{{ brand.brand_name.value }}</span>
+              {%- endif -%}
+            </a>
           {%- endfor -%}
         </div>
       {%- endif -%}
     {%- else -%}
-      <div class="fcg-empty">Add blocks to display content.</div>
+      {%- if request.design_mode -%}
+        <div class="bl-empty">No brands found. Add entries to the <strong>brand_listing</strong> metaobject under Content &rsaquo; Metaobjects (and make sure they're Active).</div>
+      {%- endif -%}
     {%- endif -%}
+
   </div>
 </div>
 
-{%- if mode == 'slider' and section.blocks.size > 0 -%}
+{%- if mode == 'slider' and brands.size > 0 -%}
   <script>
-    (function () {
-      var SECTION_ID = '{{ uid }}';
-      var SPV_D = {{ spv_d }};
-      var SPV_T = {{ spv_t }};
-      var SPV_M = {{ spv_m }};
+    (function(){
+      var ID    = '{{ uid }}';
+      var SPV_D = {{ cols_d }};
+      var SPV_T = {{ cols_t }};
+      var SPV_M = {{ cols_m }};
       var GAP   = {{ gap }};
-      var SLIDE_COUNT = {{ section.blocks.size }};
-      var LOOP_PREF   = {% if section.settings.loop %}true{% else %}false{% endif %};
-      var AUTOPLAY    = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction: false, pauseOnMouseEnter: true }{% else %}false{% endif %};
+      var AUTOPLAY = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction:false, pauseOnMouseEnter:true }{% else %}false{% endif %};
 
-      function initFcg() {
-        if (typeof Swiper === 'undefined') { setTimeout(initFcg, 80); return; }
-        var el = document.getElementById('fcg-' + SECTION_ID);
-        if (!el) return;
-        var wrap = el.closest('.fcg-slider-wrap') || el.parentNode;
+      // 2-row grid config for a given number of columns (slides-per-view)
+      function gridCfg(spv){ return { slidesPerView:spv, slidesPerGroup:spv, grid:{ rows:2, fill:'row' }, spaceBetween:GAP }; }
 
-        if (el._fcgSwiper) { try { el._fcgSwiper.destroy(true, true); } catch(e) {} el._fcgSwiper = null; }
+      function init(){
+        if(typeof Swiper==='undefined'){ setTimeout(init,80); return; }
+        var el = document.getElementById('bl-swiper-'+ID);
+        if(!el) return;
+        var wrap = el.closest('.bl-slider-wrap') || el.parentNode;
+        if(el._sw){ try{ el._sw.destroy(true,true); }catch(e){} el._sw=null; }
 
-        var maxSpv  = Math.max(SPV_D, SPV_T, SPV_M);
-        // Loop only when there are extra slides AND it won't conflict with grouped paging.
-        var useLoop = LOOP_PREF && SLIDE_COUNT > maxSpv && (SLIDE_COUNT % SPV_D === 0);
-
-        el._fcgSwiper = new Swiper(el, {
-          slidesPerView  : SPV_M,
-          slidesPerGroup : SPV_M,
-          spaceBetween   : GAP,
-          loop           : useLoop,
-          watchOverflow  : true,
-          autoplay       : AUTOPLAY,
-          pagination     : { el: el.querySelector('.swiper-pagination'), clickable: true },
-          navigation     : {
-            nextEl: wrap.querySelector('.fcg-arrow--next'),
-            prevEl: wrap.querySelector('.fcg-arrow--prev')
-          },
-          breakpoints: {
-            750: { slidesPerView: SPV_T, slidesPerGroup: SPV_T, spaceBetween: GAP },
-            990: { slidesPerView: SPV_D, slidesPerGroup: SPV_D, spaceBetween: GAP }
-          }
-        });
+        el._sw = new Swiper(el, Object.assign(gridCfg(SPV_M), {
+          loop:false,                 // Swiper grid (2 rows) does NOT support loop
+          watchOverflow:true,         // auto-disables nav when there's nothing to slide
+          autoplay:AUTOPLAY,
+          pagination:{ el: el.querySelector('.swiper-pagination'), clickable:true },
+          navigation:{ nextEl: wrap.querySelector('.bl-arrow--next'), prevEl: wrap.querySelector('.bl-arrow--prev') },
+          breakpoints:{ 750: gridCfg(SPV_T), 990: gridCfg(SPV_D) }
+        }));
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initFcg);
-      } else { initFcg(); }
-
-      document.addEventListener('shopify:section:load',    function(e){ if(e.detail.sectionId===SECTION_ID) initFcg(); });
-      document.addEventListener('shopify:section:reorder', function(e){ if(e.detail.sectionId===SECTION_ID) initFcg(); });
-      document.addEventListener('shopify:block:select',    function(e){ if(e.detail.sectionId===SECTION_ID) initFcg(); });
+      if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+      document.addEventListener('shopify:section:load',    function(e){ if(e.detail.sectionId===ID) init(); });
+      document.addEventListener('shopify:section:reorder', function(e){ if(e.detail.sectionId===ID) init(); });
       document.addEventListener('shopify:section:unload',  function(e){
-        if(e.detail.sectionId===SECTION_ID){
-          var el=document.getElementById('fcg-'+SECTION_ID);
-          if(el&&el._fcgSwiper){ try{el._fcgSwiper.destroy(true,true);}catch(ex){} el._fcgSwiper=null; }
-        }
+        if(e.detail.sectionId===ID){ var el=document.getElementById('bl-swiper-'+ID); if(el&&el._sw){ try{el._sw.destroy(true,true);}catch(ex){} el._sw=null; } }
       });
     })();
   </script>
 {%- endif -%}
 
 {%- style -%}
-  .section-{{ uid }}-padding {
-    padding-top: {{ section.settings.padding_top_mobile }}px;
-    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  .section-{{ uid }}-padding{
+    padding-top:{{ section.settings.padding_top_mobile }}px;
+    padding-bottom:{{ section.settings.padding_bottom_mobile }}px;
   }
-  @media screen and (min-width: 750px) {
-    .section-{{ uid }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
+  @media screen and (min-width:750px){
+    .section-{{ uid }}-padding{
+      padding-top:{{ section.settings.padding_top }}px;
+      padding-bottom:{{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
 
 {% schema %}
 {
-  "name": "22 Yard Brand Slider",
+  "name": "22 Yard Brand Listing",
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "header", "content": "Display" },
+    { "type": "paragraph", "content": "Brands come from the 'brand_listing' metaobject and are sorted by the Order field. Manage entries under Content > Metaobjects." },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop By" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Brands" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "View All" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+
+    { "type": "header", "content": "Layout" },
     {
       "type": "select", "id": "display_mode", "label": "Display mode",
+      "info": "Slider shows 2 rows per view — use it when you have a lot of brands.",
       "options": [
         { "value": "grid", "label": "Grid" },
-        { "value": "slider", "label": "Slider (Swiper)" }
+        { "value": "slider", "label": "Slider (2 rows)" }
       ],
       "default": "grid"
     },
-    {
-      "type": "select", "id": "content_layout", "label": "Content layout",
-      "options": [
-        { "value": "text", "label": "Text only" },
-        { "value": "image", "label": "Image / icon only" },
-        { "value": "card", "label": "Card (image + text)" }
-      ],
-      "default": "card"
-    },
-    {
-      "type": "select", "id": "alignment", "label": "Icon & text position",
-      "info": "Applies to card / image+text layouts.",
-      "options": [
-        { "value": "top", "label": "Icon top, text bottom" },
-        { "value": "bottom", "label": "Text top, icon bottom" },
-        { "value": "left", "label": "Icon left, text right" },
-        { "value": "right", "label": "Text left, icon right" }
-      ],
-      "default": "top"
-    },
-    {
-      "type": "select", "id": "text_align", "label": "Text alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    { "type": "header", "content": "Heading" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop By" },
-    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Our Features" },
-    {
-      "type": "select", "id": "section_heading_size", "label": "Heading size",
-      "options": [
-        { "value": "h2", "label": "Small" },
-        { "value": "h1", "label": "Medium" },
-        { "value": "h0", "label": "Large" }
-      ],
-      "default": "h1"
-    },
-    { "type": "text", "id": "subheading", "label": "Subheading" },
-    { "type": "text", "id": "button_label", "label": "Button label" },
-    { "type": "url", "id": "button_link", "label": "Button link" },
-    { "type": "header", "content": "Columns & spacing" },
-    { "type": "range", "id": "columns_desktop", "min": 1, "max": 8, "step": 1, "label": "Columns / slides on desktop", "default": 4 },
-    { "type": "range", "id": "columns_tablet", "min": 1, "max": 6, "step": 1, "label": "Columns / slides on tablet", "default": 3 },
-    { "type": "range", "id": "columns_mobile", "min": 1, "max": 4, "step": 1, "label": "Columns / slides on mobile", "default": 2 },
+    { "type": "range", "id": "columns_desktop", "min": 2, "max": 10, "step": 1, "label": "Columns / slides — desktop", "default": 8 },
+    { "type": "range", "id": "columns_tablet",  "min": 2, "max": 8,  "step": 1, "label": "Columns / slides — tablet",  "default": 4 },
+    { "type": "range", "id": "columns_mobile",  "min": 1, "max": 5,  "step": 1, "label": "Columns / slides — mobile",  "default": 2 },
     { "type": "range", "id": "grid_gap", "min": 0, "max": 48, "step": 2, "unit": "px", "label": "Gap", "default": 16 },
-    { "type": "header", "content": "Icon / image" },
-    { "type": "range", "id": "icon_size", "min": 24, "max": 160, "step": 4, "unit": "px", "label": "Icon size", "default": 64 },
-    { "type": "range", "id": "heading_size", "min": 1.2, "max": 3, "step": 0.1, "unit": "rem", "label": "Item heading size", "default": 1.8 },
-    { "type": "checkbox", "id": "logo_style", "label": "Treat images as logos", "info": "Full-width logo styling (good for brand/vendor logos).", "default": false },
-    { "type": "range", "id": "logo_max_width", "min": 80, "max": 320, "step": 10, "unit": "px", "label": "Logo max width", "default": 160 },
+
+    { "type": "header", "content": "Logos" },
     { "type": "checkbox", "id": "logo_grayscale", "label": "Grayscale logos (color on hover)", "default": false },
+
     { "type": "header", "content": "Slider options" },
-    { "type": "paragraph", "content": "Slides per view (slider mode). If left at 0, the column counts above are used instead." },
-    { "type": "range", "id": "slides_desktop", "min": 0, "max": 8, "step": 1, "label": "Slides per view — desktop", "default": 0 },
-    { "type": "range", "id": "slides_tablet", "min": 0, "max": 6, "step": 1, "label": "Slides per view — tablet / iPad", "default": 0 },
-    { "type": "range", "id": "slides_mobile", "min": 0, "max": 4, "step": 1, "label": "Slides per view — mobile", "default": 0 },
-    { "type": "range", "id": "arrow_gutter", "min": 0, "max": 80, "step": 4, "unit": "px", "label": "Arrow side spacing", "info": "Horizontal room reserved for the arrows so they sit outside the cards.", "default": 56 },
-    { "type": "checkbox", "id": "loop", "label": "Loop slides", "default": true },
+    { "type": "checkbox", "id": "arrows_desktop", "label": "Arrows on desktop & tablet", "default": true },
+    { "type": "checkbox", "id": "arrows_mobile", "label": "Arrows on mobile", "default": false },
+    { "type": "checkbox", "id": "pagination_desktop", "label": "Pagination on desktop & tablet", "default": false },
+    { "type": "checkbox", "id": "pagination_mobile", "label": "Pagination on mobile", "default": true },
+    { "type": "range", "id": "arrow_gutter", "min": 0, "max": 80, "step": 4, "unit": "px", "label": "Arrow side spacing", "default": 56 },
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false },
     { "type": "range", "id": "autoplay_speed", "min": 2, "max": 10, "step": 1, "unit": "s", "label": "Autoplay speed", "default": 4 },
-    { "type": "header", "content": "Arrows (show / hide)" },
-    { "type": "checkbox", "id": "arrows_desktop", "label": "Show arrows on desktop & tablet", "default": true },
-    { "type": "checkbox", "id": "arrows_mobile", "label": "Show arrows on mobile", "default": false },
-    { "type": "header", "content": "Pagination (show / hide)" },
-    { "type": "checkbox", "id": "pagination_desktop", "label": "Show pagination on desktop & tablet", "default": false },
-    { "type": "checkbox", "id": "pagination_mobile", "label": "Show pagination on mobile", "default": true },
+
     { "type": "header", "content": "Appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+
     { "type": "header", "content": "Section padding" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding top (desktop)", "default": 40 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding bottom (desktop)", "default": 40 },
     { "type": "range", "id": "padding_top_mobile", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding top (mobile)", "default": 28 },
     { "type": "range", "id": "padding_bottom_mobile", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding bottom (mobile)", "default": 28 }
   ],
-  "blocks": [
-    {
-      "type": "item",
-      "name": "Item",
-      "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image / icon / logo" },
-        { "type": "text", "id": "heading", "label": "Heading" },
-        { "type": "richtext", "id": "text", "label": "Text" },
-        { "type": "url", "id": "link", "label": "Link" }
-      ]
-    }
-  ],
   "presets": [
-    {
-      "name": "22 Yard Brand Slider",
-      "blocks": [
-        { "type": "item" }, { "type": "item" }, { "type": "item" }, { "type": "item" }
-      ]
-    }
+    { "name": "22 Yard Brand Listing" }
   ]
 }
 {% endschema %}
