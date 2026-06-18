@@ -145,7 +145,7 @@ input::-webkit-search-decoration {
 .header-search-inline .predictive-search {
   position: absolute;
   top: calc(100% + 0.4rem);
-  left: -300px;
+  /* left: -300px; */
   right: 0;
   z-index: 200;
   width: max-content;
