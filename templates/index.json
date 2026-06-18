@@ -154,8 +154,35 @@
     },
     "featured_collection": {
       "type": "featured-collection",
+      "blocks": {
+        "tab_QFcGtL": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Shoes",
+            "collection": "cricket-shoes"
+          }
+        },
+        "tab_6Xbmmc": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Helmets",
+            "collection": "cricket-helmets"
+          }
+        },
+        "tab_ddxcth": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Bats",
+            "collection": "cricket-bats"
+          }
+        }
+      },
+      "block_order": [
+        "tab_QFcGtL",
+        "tab_6Xbmmc",
+        "tab_ddxcth"
+      ],
       "settings": {
-        "collection": "cricket-shoes",
         "products_to_show": 8,
         "layout_mode": "slider",
         "enable_swiper_desktop": true,
@@ -167,30 +194,22 @@
         "show_pagination_mobile": true,
         "title": "Best Sellers",
         "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
         "show_view_all": true,
-        "button_style": "primary",
-        "color_scheme": "scheme-1",
+        "view_all_label": "VIEW ALL",
         "image_ratio": "adapt",
         "image_shape": "default",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
         "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": false,
         "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 44,
-        "padding_bottom": 36,
-        "custom_class": "",
+        "full_width": false,
+        "color_scheme": "scheme-1",
         "eyebrow": "EXPLORE",
-        "view_all_label": "VIEW ALL",
-        "show_tabs": true,
-        "tabs": "ALL, BATS, PROTECTION, BUNDLES"
+        "custom_class": "",
+        "padding_top": 44,
+        "padding_bottom": 36
       }
     },
     "flexible_content_grid_aAaC9W": {
