@@ -16,6 +16,7 @@
           "type": "slide",
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/hero-bg.png",
             "video_url": "#",
             "mobile_video_url": "",
             "overlay_opacity": 30,
@@ -60,7 +61,7 @@
       "name": "Slideshow",
       "settings": {
         "layout": "full_bleed",
-        "slide_height": "medium",
+        "slide_height": "large",
         "color_scheme": "",
         "transition": "slide",
         "loop": true,
