@@ -273,6 +273,54 @@
         "padding_bottom": 36
       }
     },
+    "promo_banner_6tzGA3": {
+      "type": "promo-banner",
+      "name": "Promo Banner",
+      "settings": {
+        "background_image": "shopify://shop_images/Mask_group_1.png",
+        "overlay_color": "#000000",
+        "overlay_opacity": 35,
+        "content_alignment": "left",
+        "content_width": 560,
+        "desktop_height": 480,
+        "mobile_height": 360,
+        "heading": "Season Sale Up To 30% Off Kits & Bats",
+        "heading_size": 56,
+        "heading_color": "#ffffff",
+        "button_label": "Shop Sale",
+        "button_link": "",
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#000000"
+      }
+    },
+    "flexible_content_grid_6ijBtb": {
+      "type": "flexible-content-grid",
+      "name": "22 Yard Brand Slider",
+      "settings": {
+        "eyebrow": "Shop By",
+        "heading": "Brands",
+        "button_label": "",
+        "button_link": "",
+        "display_mode": "grid",
+        "columns_desktop": 8,
+        "columns_tablet": 4,
+        "columns_mobile": 2,
+        "grid_gap": 16,
+        "logo_grayscale": false,
+        "arrows_desktop": true,
+        "arrows_mobile": false,
+        "pagination_desktop": false,
+        "pagination_mobile": true,
+        "arrow_gutter": 56,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 28
+      }
+    },
     "testimonials_7gPRjM": {
       "type": "testimonials",
       "blocks": {
@@ -420,34 +468,6 @@
         "padding_top": 40,
         "padding_bottom": 52
       }
-    },
-    "flexible_content_grid_6ijBtb": {
-      "type": "flexible-content-grid",
-      "name": "22 Yard Brand Slider",
-      "settings": {
-        "eyebrow": "Shop By",
-        "heading": "Brands",
-        "button_label": "",
-        "button_link": "",
-        "display_mode": "grid",
-        "columns_desktop": 8,
-        "columns_tablet": 4,
-        "columns_mobile": 2,
-        "grid_gap": 16,
-        "logo_grayscale": false,
-        "arrows_desktop": true,
-        "arrows_mobile": false,
-        "pagination_desktop": false,
-        "pagination_mobile": true,
-        "arrow_gutter": 56,
-        "autoplay": false,
-        "autoplay_speed": 4,
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "padding_top_mobile": 28,
-        "padding_bottom_mobile": 28
-      }
     }
   },
   "order": [
@@ -455,6 +475,7 @@
     "collection_list_KDQnYf",
     "featured_collection",
     "featured_collection_PbigGx",
+    "promo_banner_6tzGA3",
     "flexible_content_grid_6ijBtb",
     "testimonials_7gPRjM",
     "featured_blog_hmfing",
