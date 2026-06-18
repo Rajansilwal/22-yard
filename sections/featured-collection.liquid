@@ -160,7 +160,8 @@
                           show_rating: section.settings.show_rating,
                           skip_styles: skip_card_product_styles,
                           section_id: section.id,
-                          quick_add: section.settings.quick_add
+                          quick_add: section.settings.quick_add,
+                          fc22_force_badge_tag: section.settings.badge_tag
                         %}
                       </div>
                       {%- assign skip_card_product_styles = true -%}
@@ -222,7 +223,8 @@
                       show_rating: section.settings.show_rating,
                       skip_styles: skip_card_product_styles,
                       section_id: section.id,
-                      quick_add: section.settings.quick_add
+                      quick_add: section.settings.quick_add,
+                      fc22_force_badge_tag: section.settings.badge_tag
                     %}
                   </li>
                   {%- assign skip_card_product_styles = true -%}
@@ -761,6 +763,25 @@
       "id": "eyebrow",
       "label": "Eyebrow text",
       "default": "EXPLORE"
+    },
+    {
+      "type": "select",
+      "id": "badge_tag",
+      "label": "Force badge on all cards",
+      "info": "Override auto-detection and show this badge on every product in this section. Choose 'Auto (from product tags)' to let each product show its own badge based on its tags.",
+      "options": [
+        { "value": "",                "label": "Auto (from product tags)" },
+        { "value": "best-seller",     "label": "Best Seller (dark red)" },
+        { "value": "top-rated",       "label": "Top Rated (bright red)" },
+        { "value": "new-arrival",     "label": "New Arrival (blue)" },
+        { "value": "new-in",          "label": "New In (blue)" },
+        { "value": "hot-sale",        "label": "Hot Sale (orange)" },
+        { "value": "clearance",       "label": "Clearance (purple)" },
+        { "value": "sale",            "label": "Sale (red)" },
+        { "value": "featured",        "label": "Featured (teal)" },
+        { "value": "limited-edition", "label": "Limited Edition (amber)" }
+      ],
+      "default": ""
     },
     {
       "type": "header",
