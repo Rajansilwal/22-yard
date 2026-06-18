@@ -212,6 +212,66 @@
         "padding_bottom": 36
       }
     },
+    "featured_collection_PbigGx": {
+      "type": "featured-collection",
+      "blocks": {
+        "tab_gwLGwU": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Bats",
+            "collection": "cricket-bats"
+          }
+        },
+        "tab_BYxqze": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Helmets",
+            "collection": "cricket-helmets"
+          }
+        },
+        "tab_P8nyxP": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Shoes",
+            "collection": "cricket-shoes"
+          }
+        }
+      },
+      "block_order": [
+        "tab_gwLGwU",
+        "tab_BYxqze",
+        "tab_P8nyxP"
+      ],
+      "settings": {
+        "products_to_show": 8,
+        "layout_mode": "grid",
+        "enable_swiper_desktop": true,
+        "enable_swiper_mobile": true,
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "arrow_position": "left_right",
+        "show_pagination_desktop": false,
+        "show_pagination_mobile": true,
+        "title": "New Arrival",
+        "heading_size": "h2",
+        "show_view_all": true,
+        "view_all_label": "VIEW ALL",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "full_width": false,
+        "color_scheme": "scheme-1",
+        "eyebrow": "EXPLORE",
+        "custom_class": "",
+        "padding_top": 44,
+        "padding_bottom": 36
+      }
+    },
     "featured_blog_hmfing": {
       "type": "featured-blog",
       "name": "t:sections.featured-blog.presets.name",
@@ -260,6 +320,7 @@
     "slideshow_E34qgP",
     "collection_list_KDQnYf",
     "featured_collection",
+    "featured_collection_PbigGx",
     "featured_blog_hmfing",
     "newsletter_RbBrfM"
   ]
