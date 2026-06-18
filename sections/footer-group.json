@@ -16,19 +16,30 @@
       "blocks": {
         "brand": {
           "type": "brand_information",
-          "settings": { "show_social": true }
+          "settings": {
+            "show_social": true
+          }
         },
         "quick_links": {
           "type": "link_list",
-          "settings": { "heading": "Quick Links", "menu": "footer" }
+          "settings": {
+            "heading": "Quick Links",
+            "menu": "quick-links"
+          }
         },
         "brands": {
           "type": "link_list",
-          "settings": { "heading": "BRANDS", "menu": "footer" }
+          "settings": {
+            "heading": "BRANDS",
+            "menu": "brands"
+          }
         },
         "category": {
           "type": "link_list",
-          "settings": { "heading": "Category", "menu": "footer" }
+          "settings": {
+            "heading": "Category",
+            "menu": "category"
+          }
         },
         "contact": {
           "type": "text",
@@ -38,11 +49,18 @@
           }
         }
       },
-      "block_order": ["brand", "quick_links", "brands", "category", "contact"],
+      "block_order": [
+        "brand",
+        "quick_links",
+        "brands",
+        "category",
+        "contact"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
         "newsletter_enable": false,
         "newsletter_heading": "Subscribe to our emails",
+        "newsletter_layout_type": "top_bottom",
         "enable_follow_on_shop": false,
         "show_social": false,
         "enable_country_selector": false,
@@ -51,7 +69,8 @@
         "show_policy": true,
         "margin_top": 0,
         "padding_top": 56,
-        "padding_bottom": 32
+        "padding_bottom": 32,
+        "custom_class": ""
       }
     }
   },
