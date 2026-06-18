@@ -110,14 +110,14 @@
 {{ s.background_image }}
   {%- if s.background_image != blank -%}
     {{
-      s.background_image
-      | image_url: width: 3000
-      | image_tag:
-        loading: 'lazy',
-        class: 'promo-banner__media',
-        widths: '375, 750, 1100, 1500, 2000, 3000',
-        alt: s.heading | strip_html | escape
-    }}
+  s.background_image
+  | image_url: width: 3000
+  | image_tag: 
+    loading: 'lazy', 
+    class: 'promo-banner__media', 
+    widths: '375, 750, 1100, 1500, 2000, 3000', 
+    alt: s.heading | strip_html | escape
+}}
   {%- else -%}
     {{ 'lifestyle-1' | placeholder_svg_tag: 'promo-banner__media promo-banner__placeholder' }}
   {%- endif -%}
