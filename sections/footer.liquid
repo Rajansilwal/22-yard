@@ -36,21 +36,35 @@
     padding-top: 0;
   }
 
-  .footer .footer__blocks-wrapper {
-    gap: 2.5rem 2rem;
+  /* Override Dawn's flex-based .grid with a proper CSS grid */
+  .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
+    display: grid;
+    gap: 2.5rem 3rem;
+  }
+
+  /* Grid items must not overflow their column */
+  .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom > .footer-block {
+    min-width: 0;
   }
 
   /* 5-column desktop layout */
   @media screen and (min-width: 990px) {
-    .footer .footer__blocks-wrapper.grid {
-      grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr;
+    .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
+      grid-template-columns: minmax(358px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(160px, 1.2fr);
       align-items: start;
     }
   }
 
   @media screen and (min-width: 750px) and (max-width: 989px) {
-    .footer .footer__blocks-wrapper.grid {
+    .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
       grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Mobile: single column */
+  @media screen and (max-width: 749px) {
+    .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -58,23 +72,19 @@
     color: #16161a;
     font-family: var(--font-heading-family);
     font-weight: 700;
-    font-size: 1.3rem;
-    letter-spacing: 0.01em;
+    font-size: 1.8rem;
     margin: 0 0 1.4rem;
+    white-space: nowrap;
   }
 
   .footer .footer-block__details-content .list-menu__item,
   .footer .footer-block__details-content a,
   .footer .footer-block__brand-info .rte a {
-    color: #6b7280;
+    color: #484848;
     text-decoration: none;
     transition: color 0.15s ease;
     padding: 0;
-    font-size: 1.05rem;
-  }
-
-  .footer .footer-block__details-content li {
-    margin-bottom: 0.9rem;
+    font-size: 1.6rem;
   }
 
   .footer .footer-block__details-content .list-menu__item:hover,
@@ -86,8 +96,8 @@
 
   .footer .footer-block__brand-info .rte {
     color: #6b7280;
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: 1.6rem;
+    line-height: 24px;
     margin-bottom: 0;
   }
 
@@ -95,20 +105,37 @@
     margin-bottom: 1.4rem;
   }
 
-  /* Maroon accent links (Call Us / Mail Us inside a text/richtext column) */
+  /* Contact info block — bold labels in dark, phone/email links in maroon */
+  .footer .footer-block__details-content.rte {
+    font-size: 1.6rem;
+    line-height: 24px;
+    color: #6b7280;
+  }
+
+  .footer .footer-block__details-content.rte strong {
+    display: block;
+    color: #16161a;
+    font-weight: 700;
+    margin-top: 1.2rem;
+  }
+
+  .footer .footer-block__details-content.rte strong:first-child {
+    margin-top: 0;
+  }
+
   .footer .footer-block__details-content.rte a {
     color: #8a2b2b;
     font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer .footer-block__details-content.rte a:hover {
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .footer .footer-block__details-content.rte a:hover {
-    color: #16161a;
-  }
-
-  .footer .footer-block__details-content.rte strong {
-    color: #16161a;
+  .footer .footer-block__details-content.rte p {
+    margin: 0 0 0.2rem;
   }
 
   /* Social icons under brand description */
@@ -144,22 +171,22 @@
     display: none;
   }
 
-  /* Bottom bar */
+  /* ── Bottom bar ── */
   .footer .footer__content-bottom {
     border-top: 1px solid #e7e7e7;
     margin-top: 2.5rem;
     padding-top: 1.8rem;
+    padding-bottom: 1.8rem;
   }
 
+  /* Three-group row: copyright | payments | policies */
   .footer__bottom-bar .footer__copyright {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1.2rem 1.6rem;
+    gap: 1rem 1.6rem;
     width: 100%;
     margin: 0;
-    text-align: left;
   }
 
   .footer__bottom-bar .copyright__content,
@@ -167,29 +194,38 @@
     color: #16161a;
     font-size: 0.95rem;
     text-decoration: none;
+    white-space: nowrap;
   }
 
+  /* Payment icons — centre column */
   .footer__bottom-bar .footer__payment {
     margin: 0;
+    justify-self: center;
   }
 
   .footer__bottom-bar .list-payment {
+    display: flex;
+    align-items: center;
     justify-content: center;
     gap: 0.5rem;
     margin: 0;
+    flex-wrap: nowrap;
   }
 
   .footer__bottom-bar .list-payment__item .icon {
-    height: 1.9rem;
+    height: 2rem;
     width: auto;
   }
 
-  /* Policies on the right edge */
+  /* Policies — right column */
   .footer__bottom-policies {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     margin: 0;
+    list-style: none;
+    padding: 0;
   }
 
   .footer__bottom-policies li {
@@ -206,18 +242,27 @@
     color: #16161a;
     text-decoration: none;
     font-size: 0.95rem;
+    white-space: nowrap;
   }
 
   .footer__bottom-policies a:hover {
     color: #8a2b2b;
   }
 
+  /* Mobile: stack the three groups */
   @media screen and (max-width: 749px) {
     .footer__bottom-bar .footer__copyright {
-      justify-content: flex-start;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
     }
+
+    .footer__bottom-bar .copyright__content {
+      white-space: normal;
+    }
+
     .footer__bottom-policies {
-      margin-left: 0;
+      justify-content: center;
     }
   }
 {%- endstyle -%}
@@ -242,14 +287,14 @@
     {%- unless only_empty_brand -%}
       <div class="footer__content-top page-width">
         <div
-          class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          class="footer__blocks-wrapper grid footer__blocks-wrapper--custom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           {% if settings.animations_reveal_on_scroll %}
             data-cascade
           {% endif %}
         >
           {%- for block in section.blocks -%}
             <div
-              class="footer-block grid__item{% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              class="footer-block {% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
               {{ block.shopify_attributes }}
               {% if settings.animations_reveal_on_scroll %}
                 data-cascade

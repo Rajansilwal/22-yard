@@ -21,9 +21,7 @@
     color: {{ s.text_color }};
   }
   .testimonials-{{ sid }} .testimonials__container {
-    max-width: {{ s.container_width }}px;
     margin: 0 auto;
-    padding: 0 16px;
   }
 
   /* ---------- Top header row ---------- */
@@ -223,7 +221,7 @@
   }
 
   /* ---------- Swiper ---------- */
-  .testimonials-{{ sid }} .testimonials__swiper { position: relative; padding: 0 52px 4px; }
+  .testimonials-{{ sid }} .testimonials__swiper { position: relative; }
   .testimonials-{{ sid }} .testimonials__swiper .swiper { overflow: hidden; }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-slide { height: auto; }
 
@@ -328,7 +326,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
 <section id="testimonials-{{ sid }}" class="testimonials-{{ sid }} testimonials-section{% if s.layout == 'single' %} is-single{% endif %} {{ s.custom_class }}">
-  <div class="testimonials__container">
+  <div class="testimonials__container page-width">
 
     {%- if s.label != blank or s.heading != blank or s.rating_summary_text != blank or s.show_view_all -%}
       <div class="testimonials__top">
@@ -518,7 +516,7 @@
     { "type": "richtext", "id": "subheading", "label": "Optional subheading (below rating)" },
 
     { "type": "header", "content": "View All button" },
-    { "type": "checkbox", "id": "show_view_all", "label": "Show 'View All' button", "default": true },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show 'View All' button", "default": false },
     { "type": "text", "id": "view_all_text", "label": "Button text", "default": "VIEW ALL" },
     { "type": "url", "id": "view_all_url", "label": "Button link" },
 
@@ -550,7 +548,6 @@
     { "type": "color", "id": "arrow_hover_icon_color", "label": "Arrow hover icon color", "default": "#ffffff" },
 
     { "type": "header", "content": "Sizing" },
-    { "type": "range", "id": "container_width", "label": "Container width", "min": 800, "max": 1600, "step": 10, "default": 1280 },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 56 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 56 },
     { "type": "range", "id": "card_radius", "label": "Card border radius", "min": 0, "max": 40, "step": 2, "default": 6 },

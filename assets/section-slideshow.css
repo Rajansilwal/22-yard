@@ -177,6 +177,9 @@
   height: 1.6rem;
   fill: rgb(var(--color-foreground));
 }
+.ss-arrow .svg-wrapper svg path {
+    fill: #121212;
+}
 
 /* Override Swiper's default arrow styles */
 .ss-arrow.swiper-button-prev::after,
