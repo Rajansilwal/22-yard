@@ -15,7 +15,7 @@
     "heading_scale": 100,
     "type_body_font": "instrument_sans_n4",
     "body_scale": 100,
-    "page_width": 1200,
+    "page_width": 1360,
     "animations_reveal_on_scroll": true,
     "animations_hover_elements": "none",
     "buttons_border_thickness": 1,
@@ -205,7 +205,7 @@
         "settings": {
           "background": "#ffffff",
           "background_gradient": "",
-          "text": "#7F1923",
+          "text": "#7f1923",
           "button": "#121212",
           "button_label": "#ffffff",
           "secondary_button_label": "#121212",
