@@ -45,7 +45,7 @@
           "type": "text",
           "settings": {
             "heading": "Contact Information",
-            "subtext": "<p><strong>22 Yard Pvt. Lty.</strong><br/>Consectetur Adipiscing Elit, VIC, Australia</p><p><strong>Call Us: </strong><a href=\"tel:+011123456709\">(+011) 1234 5678 09</a></p><p><strong>Mail Us: </strong><a href=\"mailto:info@yard22.com\">info@yard22.com</a></p>"
+            "subtext": "<p><strong>22 Yard Pvt. Lty.</strong><br/>Consectetur Adipiscing Elit, VIC, Australia</p><p></p><p><strong>Call Us: </strong><a href=\"tel:+011123456709\">(+011) 1234 5678 09</a></p><p></p><p><strong>Mail Us: </strong><a href=\"mailto:info@yard22.com\">info@yard22.com</a></p>"
           }
         }
       },
