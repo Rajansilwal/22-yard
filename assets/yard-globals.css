@@ -1,0 +1,272 @@
+/* =============================================================
+   22 Yard — Global Section Utilities
+   Loaded via theme.liquid — applies to all sections.
+   ============================================================= */
+
+/* ── Section header row (eyebrow + heading left, button right) ── */
+.yard-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.2rem 2rem;
+  margin-bottom: 2.4rem;
+}
+
+.yard-section-header__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Stack on narrow screens */
+@media screen and (max-width: 749px) {
+  .yard-section-header {
+    align-items: center;
+    margin-bottom: 1.6rem;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .yard-section-header__text{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .yard-section-header__text h2{
+    margin-bottom: 0;
+  }
+}
+
+/* ── Eyebrow label ── */
+.yard-eyebrow {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a2b2b;
+  margin: 0 0 0.4rem;
+  line-height: 1;
+}
+
+/* ── Section main heading ── */
+.yard-heading {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #16161a;
+  font-size: 1.8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .yard-heading {
+    font-size: 2.8rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .yard-heading {
+    font-size: 3.2rem;
+  }
+}
+
+/* ── Outline button (white bg, dark border — hover inverts) ── */
+.yard-btn--outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1.5px solid #16161a;
+  color: #16161a;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding: 0.9rem 1.8rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.yard-btn--outline:hover {
+  background: #16161a;
+  color: #ffffff;
+  border-color: #16161a;
+}
+
+@media screen and (max-width: 749px) {
+  .yard-btn--outline {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.4rem;
+  }
+}
+
+/* ── Solid button (white bg, black text — hover swaps to black bg, white text) ── */
+.yard-btn--solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1.5px solid #16161a;
+  color: #16161a;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding: 0.9rem 1.8rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.yard-btn--solid:hover {
+  background: #16161a;
+  color: #ffffff;
+  border-color: #16161a;
+}
+
+@media screen and (max-width: 749px) {
+  .yard-btn--solid {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.4rem;
+  }
+}
+
+/* ── Global mobile font reductions ── */
+@media screen and (max-width: 749px) {
+
+  /* Body text */
+  body {
+    font-size: 1.4rem;
+  }
+
+  /* Reduce heading scale across all h-tags on mobile */
+  h1, .h1 { font-size: 2.8rem; }
+  h2, .h2 { font-size: 2.2rem; }
+  h3, .h3 { font-size: 1.8rem; }
+  h4, .h4 { font-size: 1.6rem; }
+
+  /* Logo max height reduced */
+  .header__heading-logo-wrapper img.header__heading-logo {
+    max-height: 48px;
+    width: auto;
+  }
+}
+
+/* =============================================================
+   Global Slider — arrows, pagination, shared across all
+   swiper-based sections (featured-collection, collection-list,
+   featured-blog, flexible-content-grid, etc.)
+   ============================================================= */
+
+/* ── Slider wrapper shell ── */
+.yard-swiper-section { position: relative; }
+
+.yard-swiper-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.yard-swiper-inner .swiper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── Arrow buttons ── */
+.yard-swiper-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  border: 1.5px solid #d9d9d9;
+  background: #ffffff;
+  cursor: pointer;
+  color: #16161a;
+  padding: 0;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.yard-swiper-btn svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  display: block;
+}
+
+.yard-swiper-btn:hover {
+  background: #16161a;
+  border-color: #16161a;
+  color: #ffffff;
+}
+
+.yard-swiper-btn:hover svg {
+  stroke: #ffffff;
+}
+
+.yard-swiper-btn.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Bottom-center arrow group */
+.yard-swiper-arrows--bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.6rem;
+}
+
+.yard-swiper-arrows--bottom .yard-swiper-btn {
+  position: static;
+}
+
+/* ── Pagination dots ── */
+.yard-swiper-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+}
+
+.yard-swiper-pagination .swiper-pagination-bullet {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 9999px;
+  background: #16161a;
+  opacity: 0.25;
+  cursor: pointer;
+  transition: width 0.22s ease, opacity 0.22s ease;
+}
+
+.yard-swiper-pagination .swiper-pagination-bullet-active {
+  width: 2.4rem;
+  opacity: 1;
+  background: #8a2b2b;
+}
+
+/* Mobile: slightly smaller arrows */
+@media screen and (max-width: 749px) {
+  .yard-swiper-btn {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  .yard-swiper-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

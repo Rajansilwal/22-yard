@@ -32,54 +32,6 @@
   .yblog-{{ section.id }} {
     background: #f7f7f7;
   }
-  .yblog-{{ section.id }} .yblog-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-  .yblog-{{ section.id }} .yblog-eyebrow {
-    display: block;
-    text-transform: uppercase;
-    color: #8a2b2b;
-    font-weight: 700;
-    font-size: 1.6rem;
-    margin: 0 0 .4rem;
-  }
-  .yblog-{{ section.id }} .yblog-heading {
-    margin: 0;
-    color: #16161a;
-    font-family: var(--font-heading-family);
-    font-style: var(--font-heading-style);
-    font-weight: 800;
-    font-size: 1.8rem;
-  }
-  @media screen and (min-width: 750px) {
-    .yblog-{{ section.id }} .yblog-heading {
-      font-size: 3.6rem;
-    }
-  }
-  .yblog-{{ section.id }} .yblog-viewall {
-    display: inline-block;
-    background: #fff;
-    border: 1.5px solid #16161a;
-    color: #16161a;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 1.6rem;
-    line-height:1;
-    padding: 1.4rem 2.4rem;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: background .2s, color .2s;
-    white-space: nowrap;
-  }
-  .yblog-{{ section.id }} .yblog-viewall:hover {
-    background: #16161a;
-    color: #fff;
-  }
 
   /* ---- Card ---- */
   .yblog-{{ section.id }} .yblog-card {
@@ -180,6 +132,11 @@
     }
     @media screen and (min-width: 750px) {
       .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+        width: calc((100% - ({{ section.settings.columns_tablet | minus: 1 }} * 20px)) / {{ section.settings.columns_tablet }});
+      }
+    }
+    @media screen and (min-width: 990px) {
+      .fb-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
         width: calc((100% - ({{ section.settings.columns_desktop | minus: 1 }} * 20px)) / {{ section.settings.columns_desktop }});
       }
     }
@@ -193,8 +150,13 @@
   }
   @media screen and (min-width: 750px) {
     .yblog-{{ section.id }} .yblog-grid {
-      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
       gap: 28px;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    .yblog-{{ section.id }} .yblog-grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
     }
   }
 {%- endstyle -%}
@@ -274,17 +236,17 @@
 <div class="blog yblog-{{ section.id }} {{ section.settings.custom_class }}">
   <div class="page-width isolate section-{{ section.id }}-padding">
 
-    <div class="yblog-header">
+    <div class="yblog-header yard-section-header">
       <div>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="yblog-eyebrow">{{ section.settings.eyebrow }}</span>
+          <span class="yard-eyebrow">{{ section.settings.eyebrow }}</span>
         {%- endif -%}
         {%- unless section.settings.heading == blank -%}
-          <h2 id="SectionHeading-{{ section.id }}" class="yblog-heading">{{ section.settings.heading }}</h2>
+          <h2 id="SectionHeading-{{ section.id }}" class="yard-heading">{{ section.settings.heading }}</h2>
         {%- endunless -%}
       </div>
       {%- if section.settings.blog != blank and section.settings.show_view_all -%}
-        <a href="{{ section.settings.blog.url }}" class="yblog-viewall" aria-label="{{ 'sections.featured_blog.view_all' | t }}">VIEW ALL</a>
+        <a href="{{ section.settings.blog.url }}" class="yard-btn--outline" aria-label="{{ 'sections.featured_blog.view_all' | t }}">VIEW ALL</a>
       {%- endif -%}
     </div>
 
@@ -296,6 +258,7 @@
         data-swiper-desktop="{{ use_swiper_desktop }}"
         data-swiper-mobile="{{ use_swiper_mobile }}"
         data-columns-desktop="{{ section.settings.columns_desktop }}"
+        data-columns-tablet="{{ section.settings.columns_tablet }}"
         data-columns-mobile="{{ section.settings.columns_mobile }}"
         data-arrows-desktop="{{ section.settings.show_arrows_desktop }}"
         data-arrows-mobile="{{ section.settings.show_arrows_mobile }}"
@@ -304,7 +267,7 @@
         data-arrow-position="{{ section.settings.arrow_position }}"
       >
         <div class="fb-swiper-inner">
-          <button type="button" class="fb-swiper-btn fb-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <button type="button" class="fb-swiper-btn yard-swiper-btn fb-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
           <div class="swiper fb-swiper-{{ section.id }}" style="overflow: hidden;">
@@ -312,25 +275,26 @@
               {{ cards | replace: '<YBLOG_ITEM>', '<div class="swiper-slide">' | replace: '</YBLOG_ITEM>', '</div>' }}
             </div>
           </div>
-          <button type="button" class="fb-swiper-btn fb-swiper-btn-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <button type="button" class="fb-swiper-btn yard-swiper-btn fb-swiper-btn-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
         {%- if section.settings.arrow_position == 'bottom_center' -%}
           <div class="fb-swiper-arrows--bottom-center">
-            <button type="button" class="fb-swiper-btn fb-swiper-btn-bc-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <button type="button" class="fb-swiper-btn yard-swiper-btn fb-swiper-btn-bc-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
-            <button type="button" class="fb-swiper-btn fb-swiper-btn-bc-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+            <button type="button" class="fb-swiper-btn yard-swiper-btn fb-swiper-btn-bc-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
         {%- endif -%}
-        <div class="fb-swiper-pagination-{{ section.id }} fb-swiper-pagination"></div>
+        <div class="fb-swiper-pagination-{{ section.id }} fb-swiper-pagination yard-swiper-pagination"></div>
       </div>
 
       <script>
         (function () {
+          var FB_AUTOPLAY = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction: false, pauseOnMouseEnter: true }{% else %}false{% endif %};
           function initFbSwiper() {
             if (typeof Swiper === 'undefined') {
               setTimeout(initFbSwiper, 100);
@@ -343,6 +307,7 @@
             var enableDesktop = el.dataset.swiperDesktop === 'true';
             var enableMobile = el.dataset.swiperMobile === 'true';
             var colsDesktop = parseInt(el.dataset.columnsDesktop) || 3;
+            var colsTablet = parseInt(el.dataset.columnsTablet) || 2;
             var colsMobile = parseInt(el.dataset.columnsMobile) || 1;
             var arrowsDesktop = el.dataset.arrowsDesktop === 'true';
             var arrowsMobile = el.dataset.arrowsMobile === 'true';
@@ -354,12 +319,16 @@
             if (!enabled) {
               el.classList.add('fb-swiper--grid');
               el.style.setProperty('--fb-cols-desktop', colsDesktop);
+              el.style.setProperty('--fb-cols-tablet', colsTablet);
               el.style.setProperty('--fb-cols-mobile', colsMobile);
               return;
             }
 
             var showArrows = isMobile ? arrowsMobile : arrowsDesktop;
             var showPagination = isMobile ? paginationMobile : paginationDesktop;
+
+            // Mobile (22 Yard pattern): peek the next card, pagination only, no arrows.
+            if (isMobile) { showArrows = false; showPagination = true; }
 
             var prevBtn, nextBtn;
             var bcPrevBtn = el.querySelector('.fb-swiper-btn-bc-prev-{{ section.id }}');
@@ -388,9 +357,15 @@
               paginationEl.style.display = 'none';
             }
 
+            // Collapse arrows/pagination when all slides fit the view
+            // (e.g. post count <= columns) — nothing to slide.
+            function syncLock(sw) { el.classList.toggle('fb-locked', !!sw.isLocked); }
+
             new Swiper('.fb-swiper-{{ section.id }}', {
-              slidesPerView: colsMobile,
+              slidesPerView: colsMobile + 0.2,   // peek next card on mobile
               spaceBetween: 16,
+              autoplay: FB_AUTOPLAY,
+              watchOverflow: true,        // auto-locks nav when there's nothing to slide
               navigation: showArrows ? {
                 nextEl: nextBtn,
                 prevEl: prevBtn,
@@ -401,10 +376,15 @@
               } : false,
               breakpoints: {
                 750: {
+                  slidesPerView: colsTablet,
+                  spaceBetween: 20,
+                },
+                990: {
                   slidesPerView: colsDesktop,
                   spaceBetween: 20,
                 },
               },
+              on: { afterInit: syncLock, lock: syncLock, unlock: syncLock, breakpoint: syncLock, resize: syncLock },
             });
           }
           if (document.readyState === 'loading') {
@@ -436,8 +416,13 @@
   }
   @media screen and (min-width: 750px) {
     .fb-swiper--grid .swiper-wrapper {
-      grid-template-columns: repeat(var(--fb-cols-desktop, 3), 1fr);
+      grid-template-columns: repeat(var(--fb-cols-tablet, 2), 1fr);
       gap: 28px;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    .fb-swiper--grid .swiper-wrapper {
+      grid-template-columns: repeat(var(--fb-cols-desktop, 3), 1fr);
     }
   }
   .fb-swiper--grid .swiper-slide {
@@ -449,61 +434,16 @@
     display: none !important;
   }
 
-  /* Slider layout */
-  .fb-swiper-section {
-    position: relative;
-  }
-  .fb-swiper-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .fb-swiper-inner .swiper {
-    flex: 1;
-    min-width: 0;
-  }
-  .fb-swiper-btn {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #16161a;
-    background: #fff;
-    cursor: pointer;
-    color: #16161a;
-    transition: background 0.2s, color 0.2s;
-  }
-  .fb-swiper-btn:hover {
-    background: #16161a;
-    color: #fff;
-  }
-  .fb-swiper-btn.swiper-button-disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-  .fb-swiper-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 20px;
-  }
-  .fb-swiper-pagination .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #16161a;
-    opacity: 0.3;
-    cursor: pointer;
-  }
-  .fb-swiper-pagination .swiper-pagination-bullet-active {
-    opacity: 1;
-    width: 24px;
-    border-radius: 999px;
-    background: #8a2b2b;
-  }
+  /* Slider layout — arrow/pagination aligned with yard-globals.css */
+  .fb-swiper-section { position: relative; }
+  .fb-swiper-inner { display: flex; align-items: center; gap: 1.2rem; }
+  .fb-swiper-inner .swiper { flex: 1; min-width: 0; }
+  /* Arrow buttons use the global .yard-swiper-btn style (yard-globals.css) */
+  /* Nothing to slide (slides fit the view): hide arrows + pagination entirely */
+  .fb-swiper-section.fb-locked .fb-swiper-btn,
+  .fb-swiper-section.fb-locked .fb-swiper-arrows--bottom-center,
+  .fb-swiper-section.fb-locked .fb-swiper-pagination { display: none !important; }
+  /* Pagination styling is global — see .yard-swiper-pagination in yard-globals.css */
   .fb-swiper-arrows--bottom-center {
     display: flex;
     justify-content: center;
@@ -511,12 +451,8 @@
     gap: 1.2rem;
     margin-top: 16px;
   }
-  .fb-swiper-arrows--bottom-center .fb-swiper-btn {
-    flex-shrink: 0;
-  }
-  .fb-swiper--grid .fb-swiper-arrows--bottom-center {
-    display: none !important;
-  }
+  .fb-swiper--grid .fb-swiper-btn,
+  .fb-swiper--grid .fb-swiper-arrows--bottom-center { display: none !important; }
 </style>
 
 {% schema %}
@@ -626,6 +562,23 @@
       "info": "Only applies when Layout mode is Slider."
     },
     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slide every",
+      "default": 5
+    },
+    {
       "type": "range",
       "id": "columns_desktop",
       "min": 1,
@@ -633,6 +586,15 @@
       "step": 1,
       "default": 3,
       "label": "t:sections.featured-blog.settings.columns_desktop.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "label": "Number of columns on tablet (iPad)"
     },
     {
       "type": "select",

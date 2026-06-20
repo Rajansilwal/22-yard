@@ -1,14 +1,12 @@
 {%- comment -%}
   Promo Banner Section
-  Settings: background image, overlay (color + opacity), heading, button,
-  and content alignment (left / center / right).
-  Note: no font-family is set here, so type inherits from your theme.
+  Settings: background image, overlay (color + opacity), heading, subheading,
+  button, full-width toggle, and content alignment (left / center / right).
 {%- endcomment -%}
 
 {%- liquid
   assign s = section.settings
   assign overlay_opacity = s.overlay_opacity | divided_by: 100.0
-  assign heading_size_mobile = s.heading_size | times: 0.62 | round
   assign is_full_width = s.full_width
 -%}
 
@@ -31,9 +29,6 @@
     display: block;
   }
 
-  #Banner-{{ section.id }} .promo-banner__placeholder {
-  }
-
   #Banner-{{ section.id }} .promo-banner__overlay {
     position: absolute;
     inset: 0;
@@ -47,62 +42,87 @@
     z-index: 1;
     width: 100%;
     display: flex;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.6rem;
   }
 
-  /* Constrained (non-full-width) wrapper */
+  /* Constrained (non-full-width): content aligned to page-width */
   #Banner-{{ section.id }} .promo-banner__inner-constrained {
     width: 100%;
     max-width: var(--page-width);
     margin: 0 auto;
-    padding: 0 5rem;
+    padding: 0 1.6rem;
     display: flex;
   }
 
   #Banner-{{ section.id }} .promo-banner__content {
-    max-width: {{ s.content_width }}px;
+    max-width: min(100%, {{ s.content_width }}px);
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   #Banner-{{ section.id }} .promo-banner__heading {
     margin: 0;
     color: {{ s.heading_color }};
-    font-size: {{ heading_size_mobile }}px;
-    font-weight: 700;
+    font-family: var(--font-heading-family);
+    font-weight: 800;
     line-height: 1.05;
     letter-spacing: -0.01em;
+    /* Mobile-first: compact size */
+    font-size: clamp(2rem, 5vw, {{ s.heading_size }}px);
+  }
+
+  #Banner-{{ section.id }} .promo-banner__subheading {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    line-height: 1.5;
+    max-width: 52rem;
   }
 
   #Banner-{{ section.id }} .promo-banner__button {
-    display: inline-block;
-    background-color: {{ s.button_bg_color }};
-    color: {{ s.button_text_color }};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #16161a;
+    border: 1.5px solid #ffffff;
     padding: 0.9rem 2rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 2px;
-    transition: opacity 0.2s ease;
+    align-self: flex-start;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
   }
 
   #Banner-{{ section.id }} .promo-banner__button:hover {
-    opacity: 0.88;
+    background: #16161a;
+    color: #ffffff;
+    border-color: #16161a;
   }
 
   /* Content alignment */
-  #Banner-{{ section.id }}.promo-banner--left  .promo-banner__inner { justify-content: flex-start; }
-  #Banner-{{ section.id }}.promo-banner--center .promo-banner__inner { justify-content: center; }
-  #Banner-{{ section.id }}.promo-banner--right  .promo-banner__inner { justify-content: flex-end; }
+  #Banner-{{ section.id }}.promo-banner--left   .promo-banner__inner,
+  #Banner-{{ section.id }}.promo-banner--left   .promo-banner__inner-constrained { justify-content: flex-start; }
+  #Banner-{{ section.id }}.promo-banner--center .promo-banner__inner,
+  #Banner-{{ section.id }}.promo-banner--center .promo-banner__inner-constrained { justify-content: center; }
+  #Banner-{{ section.id }}.promo-banner--right  .promo-banner__inner,
+  #Banner-{{ section.id }}.promo-banner--right  .promo-banner__inner-constrained { justify-content: flex-end; }
 
   #Banner-{{ section.id }}.promo-banner--left   .promo-banner__content { text-align: left;   align-items: flex-start; }
   #Banner-{{ section.id }}.promo-banner--center .promo-banner__content { text-align: center; align-items: center; }
   #Banner-{{ section.id }}.promo-banner--right  .promo-banner__content { text-align: right;  align-items: flex-end; }
 
+  #Banner-{{ section.id }}.promo-banner--center .promo-banner__subheading {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Desktop overrides */
   @media screen and (min-width: 750px) {
     #Banner-{{ section.id }} {
       min-height: {{ s.desktop_height }}px;
@@ -113,8 +133,12 @@
     #Banner-{{ section.id }} .promo-banner__inner-constrained {
       padding: 0 5rem;
     }
-    #Banner-{{ section.id }} .promo-banner__heading {
-      font-size: {{ s.heading_size }}px;
+    #Banner-{{ section.id }} .promo-banner__content {
+      gap: 1.4rem;
+    }
+    #Banner-{{ section.id }} .promo-banner__button {
+      font-size: 1.4rem;
+      padding: 1.1rem 2.4rem;
     }
   }
 {%- endstyle -%}
@@ -142,6 +166,9 @@
         {%- if s.heading != blank -%}
           <h2 class="promo-banner__heading">{{ s.heading }}</h2>
         {%- endif -%}
+        {%- if s.subheading != blank -%}
+          <p class="promo-banner__subheading">{{ s.subheading }}</p>
+        {%- endif -%}
         {%- if s.button_label != blank -%}
           <a href="{{ s.button_link }}" class="promo-banner__button">{{ s.button_label }}</a>
         {%- endif -%}
@@ -151,6 +178,9 @@
         <div class="promo-banner__content">
           {%- if s.heading != blank -%}
             <h2 class="promo-banner__heading">{{ s.heading }}</h2>
+          {%- endif -%}
+          {%- if s.subheading != blank -%}
+            <p class="promo-banner__subheading">{{ s.subheading }}</p>
           {%- endif -%}
           {%- if s.button_label != blank -%}
             <a href="{{ s.button_link }}" class="promo-banner__button">{{ s.button_label }}</a>
@@ -272,6 +302,12 @@
       "default": "#ffffff"
     },
     {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Optional text below the heading."
+    },
+    {
       "type": "header",
       "content": "Button"
     },
@@ -285,18 +321,6 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
-    },
-    {
-      "type": "color",
-      "id": "button_bg_color",
-      "label": "Button background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "button_text_color",
-      "label": "Button text",
-      "default": "#000000"
     }
   ],
   "presets": [

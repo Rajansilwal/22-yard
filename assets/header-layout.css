@@ -41,9 +41,9 @@ header-drawer         { grid-area: drawer; }
 }
 
 /* ============================================================
-   DESKTOP (≥ 990px)
+   DESKTOP (≥ 1200px)
    ============================================================ */
-@media screen and (min-width: 990px) {
+@media screen and (min-width: 1200px) {
 
   /* hide mobile drawer (unless drawer-menu mode) */
   header-drawer              { display: none; }

@@ -24,15 +24,7 @@
     margin: 0 auto;
   }
 
-  /* ---------- Top header row ---------- */
-  .testimonials-{{ sid }} .testimonials__top {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-  }
+  /* ---------- Top header row — layout handled by yard-section-header ── */
   .testimonials-{{ sid }} .testimonials__top-left {
     flex: 1 1 auto;
     min-width: 240px;
@@ -45,13 +37,9 @@
     text-transform: uppercase;
     margin: 0 0 10px;
   }
-  .testimonials-{{ sid }} .testimonials__heading {
-    text-align: left;
-    font-size: {{ s.heading_size }}px;
-    margin: 0 0 12px;
-    color: {{ s.heading_color }};
-    line-height: 1.15;
-  }
+  /* Heading uses the shared .yard-heading style (see yard-globals.css).
+     Only the spacing below it is section-specific. */
+  .testimonials-{{ sid }} .yard-heading { margin: 0 0 12px; }
   .testimonials-{{ sid }} .testimonials__highlight { color: {{ s.highlight_color }}; }
 
   /* Rating summary line under heading */
@@ -249,29 +237,27 @@
   }
   {%- endif -%}
 
-  /* Arrows */
+  /* Arrows — match the global .yard-swiper-btn look (kept scoped to override Swiper's
+     bundle CSS; these arrows overlay the slider edges). */
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next,
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev {
-    color: {{ s.arrow_icon_color }};
-    background: {{ s.arrow_background }};
-    width: 44px; height: 44px; border-radius: 50%;
-    border: 1px solid {{ s.arrow_border_color }};
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    transition: transform .18s ease, opacity .18s ease, background .2s;
+    width: 4rem; height: 4rem; border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid #d9d9d9;
+    color: #16161a;
+    transition: background .18s ease, border-color .18s ease, color .18s ease;
   }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next:hover,
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev:hover {
-    transform: scale(1.05);
-    background: {{ s.arrow_hover_background }};
-    color: {{ s.arrow_hover_icon_color }};
+    background: #16161a; border-color: #16161a; color: #ffffff;
   }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next:after,
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev:after { display: none; }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next svg,
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev svg {
-    display: block; width: 14px; height: 14px; color: currentColor;
+    display: block; width: 1.8rem; height: 1.8rem; color: currentColor;
   }
-  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-disabled { opacity: 0.35; }
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-button-disabled { opacity: 0.3; }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-prev { left: 0; }
   .testimonials-{{ sid }} .testimonials__swiper .swiper-button-next { right: 0; }
 
@@ -281,39 +267,26 @@
       .testimonials-{{ sid }} .swiper-button-next, .testimonials-{{ sid }} .swiper-button-prev { display: none; }
     }
   {% endunless %}
-  {% unless s.show_arrows_mobile %}
-    @media screen and (max-width: 768px) {
-      .testimonials-{{ sid }} .swiper-button-next, .testimonials-{{ sid }} .swiper-button-prev { display: none !important; }
-    }
-  {% endunless %}
+  {% comment %} Mobile (22 Yard pattern): never show arrows — pagination only. {% endcomment %}
+  @media screen and (max-width: 768px) {
+    .testimonials-{{ sid }} .swiper-button-next, .testimonials-{{ sid }} .swiper-button-prev { display: none !important; }
+  }
 
-  /* Pagination */
-  .testimonials-{{ sid }} .testimonials__swiper .swiper-pagination { position: static; margin-top: 22px; }
-  .testimonials-{{ sid }} .testimonials__swiper .swiper-pagination-bullet {
-    background: {{ s.text_color }}; opacity: 0.35;
-    width: 9px; height: 9px; transition: opacity .2s, transform .2s;
-  }
-  .testimonials-{{ sid }} .testimonials__swiper .swiper-pagination-bullet-active {
-    background: {{ s.highlight_color }}; opacity: 1; transform: scale(1.25);
-  }
+  /* Pagination — dot/pill styling is global (.yard-swiper-pagination in yard-globals.css).
+     Only the static positioning is section-specific (overrides Swiper's absolute default). */
+  .testimonials-{{ sid }} .testimonials__swiper .swiper-pagination { position: static; }
   {% unless s.show_pagination_desktop %}
     @media screen and (min-width: 769px) {
       .testimonials-{{ sid }} .swiper-pagination { display: none; }
     }
   {% endunless %}
-  {% unless s.show_pagination_mobile %}
-    @media screen and (max-width: 768px) {
-      .testimonials-{{ sid }} .swiper-pagination { display: none !important; }
-    }
-  {% endunless %}
+  {% comment %} Mobile (22 Yard pattern): always show pagination dots. {% endcomment %}
+  @media screen and (max-width: 768px) {
+    .testimonials-{{ sid }} .swiper-pagination { display: flex !important; }
+  }
 
   /* ---------- Responsive ---------- */
   @media screen and (max-width: 768px) {
-    .testimonials-{{ sid }} .testimonials__heading { font-size: {{ s.mobile_heading_size }}px; }
-    .testimonials-{{ sid }} .testimonials__top {
-      flex-direction: column;
-      align-items: flex-start;
-    }
     .testimonials-{{ sid }} .testimonials__view-all {
       align-self: flex-start;
     }
@@ -329,15 +302,15 @@
   <div class="testimonials__container page-width">
 
     {%- if s.label != blank or s.heading != blank or s.rating_summary_text != blank or s.show_view_all -%}
-      <div class="testimonials__top">
-        <div class="testimonials__top-left">
+      <div class="testimonials__top yard-section-header">
+        <div class="testimonials__top-left yard-section-header__text">
 
           {%- if s.label != blank -%}
-            <div class="testimonials__label">{{ s.label }}</div>
+            <div class="yard-eyebrow">{{ s.label }}</div>
           {%- endif -%}
 
           {%- if s.heading != blank -%}
-            <h2 class="testimonials__heading">
+            <h2 class="yard-heading">
               {{ s.heading }}
               {%- if s.highlight_text != blank -%}
                 <span class="testimonials__highlight">{{ s.highlight_text }}</span>
@@ -418,9 +391,8 @@
               </div>
             {%- endfor -%}
           </div>
-          {%- if s.show_pagination_desktop or s.show_pagination_mobile -%}
-            <div class="swiper-pagination"></div>
-          {%- endif -%}
+          {%- comment -%} Always rendered — mobile always shows dots; desktop visibility controlled by setting. {%- endcomment -%}
+          <div class="swiper-pagination yard-swiper-pagination"></div>
         </div>
         {%- if s.show_arrows_desktop or s.show_arrows_mobile -%}
           <div class="swiper-button-prev" aria-label="Previous">
@@ -445,9 +417,10 @@
             {%- else -%}
               var perMobile = {{ s.per_mobile }}, perTablet = {{ s.per_tablet }}, perDesktop = {{ s.per_desktop }};
             {%- endif -%}
+            var peekMobile = 0.2;   // peek the next card on mobile (matches other sliders)
 
             new Swiper(el, {
-              slidesPerView: perMobile,
+              slidesPerView: perMobile + peekMobile,
               slidesPerGroup: {% if s.dots_per_page %}perMobile{% else %}1{% endif %},
               spaceBetween: 18,
               loop: {% if s.loop and s.dots_per_page == false %}true{% else %}false{% endif %},
@@ -540,13 +513,6 @@
     { "type": "color", "id": "viewall_hover_background", "label": "Hover background", "default": "#0e0e0e" },
     { "type": "color", "id": "viewall_hover_text_color", "label": "Hover text", "default": "#ffffff" },
 
-    { "type": "header", "content": "Arrow colors" },
-    { "type": "color", "id": "arrow_background", "label": "Arrow background", "default": "#ffffff" },
-    { "type": "color", "id": "arrow_icon_color", "label": "Arrow icon color", "default": "#0e0e0e" },
-    { "type": "color", "id": "arrow_border_color", "label": "Arrow border color", "default": "#d9d9d9" },
-    { "type": "color", "id": "arrow_hover_background", "label": "Arrow hover background", "default": "#0e0e0e" },
-    { "type": "color", "id": "arrow_hover_icon_color", "label": "Arrow hover icon color", "default": "#ffffff" },
-
     { "type": "header", "content": "Sizing" },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 56 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 56 },
@@ -555,8 +521,6 @@
 
     { "type": "header", "content": "Typography" },
     { "type": "range", "id": "label_size", "label": "Small label size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 13 },
-    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 20, "max": 60, "step": 2, "unit": "px", "default": 38 },
-    { "type": "range", "id": "mobile_heading_size", "label": "Mobile heading size", "min": 18, "max": 44, "step": 2, "unit": "px", "default": 28 },
     { "type": "range", "id": "rating_summary_size", "label": "Rating summary size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 14 },
     { "type": "range", "id": "text_size", "label": "Subheading size", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 15 },
     { "type": "range", "id": "quote_size", "label": "Quote size", "min": 13, "max": 26, "step": 1, "unit": "px", "default": 15 },

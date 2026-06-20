@@ -116,7 +116,21 @@
   .ss-text-mobile--right  { text-align: right; }
 
   .ss-slide__box {
-    padding: 2rem 2.4rem;
+    padding: 1.6rem 1.8rem;
+  }
+
+  .ss-slide__heading {
+    font-size: 2rem !important;
+    margin-bottom: 0.8rem;
+  }
+
+  .ss-slide__subheading {
+    font-size: 1.35rem !important;
+    margin-bottom: 1.4rem;
+  }
+
+  .ss-slide__buttons {
+    gap: 0.8rem;
   }
 }
 

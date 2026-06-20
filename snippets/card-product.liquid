@@ -16,6 +16,8 @@
   - horizontal_class: {Boolean} Add a card--horizontal class if set to true. Default: false (optional)
   - horizontal_quick_add: {Boolean} Changes the quick add button styles when set to true. Default: false (optional)
   - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+  - show_badge: {Boolean} Show the 22 Yard top-left marketing badge. Default: true (optional)
+  - default_badge: {String} Fallback badge for products with no recognised tag. Values: 'none', 'bestseller', 'toprated', 'newin'. Default: 'none' (optional)
 
   Usage:
   {% render 'card-product', show_vendor: section.settings.show_vendor %}
@@ -23,106 +25,9 @@
 {%- unless skip_styles -%}
   {{ 'component-rating.css' | asset_url | stylesheet_tag }}
   {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
-
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
-{%- endunless -%}
-{%- unless skip_styles -%}
-  {% comment %} 22 Yard product card visuals (additive, safe across templates) {% endcomment %}
-  <style>
-    .product-card-wrapper .card {
-      background: #fff;
-      border: 1px solid #e7e7e7;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .product-card-wrapper .card__inner {
-      background: #fff;
-    }
-    .product-card-wrapper .card .media img {
-      object-fit: contain;
-      mix-blend-mode: multiply;
-    }
-    .product-card-wrapper .card__content {
-      padding: 1rem;
-    }
-    .product-card-wrapper .card__heading,
-    .product-card-wrapper .card__heading a {
-      color: #222222;
-      font-weight: 600;
-      line-height: 24px;
-    }
-    .product-card-wrapper .card__heading {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    /* 22 Yard top-left badge */
-    .fc22-badge {
-      position: absolute;
-      top: 0.75rem;
-      left: 0.75rem;
-      z-index: 2;
-      display: inline-block;
-      padding: 0.8rem;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      color: #fff;
-      line-height: 1;
-    }
-    .fc22-badge--bestseller { background: #8a2b2b; }
-    .fc22-badge--toprated { background: #e0242b; }
-    .fc22-badge--newin { background: #1fa8dd; }
-    /* 22 Yard rating row */
-    .fc22-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      margin: 0.35rem 0;
-      font-size: 0.85rem;
-    }
-    .fc22-rating__stars {
-      color: #f6a609;
-      letter-spacing: 1px;
-      line-height: 1;
-    }
-    .fc22-rating__score {
-      font-weight: 700;
-      color: #16161a;
-    }
-    .fc22-rating__count {
-      color: #6b7280;
-    }
-    /* 22 Yard price + save pill */
-    .fc22-price-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.35rem;
-    }
-    .fc22-price-row .price {
-      margin: 0;
-    }
-    .fc22-price-row .price__sale .price-item--regular,
-    .fc22-price-row .price .price-item--last {
-      color: #9aa0a8;
-    }
-    .fc22-save-pill {
-      display: inline-block;
-      background: #d8f1de;
-      color: #1f9254;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      line-height: 1;
-    }
-  </style>
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
@@ -137,23 +42,43 @@
     endif
 
     comment
-      22 Yard: derive a top-left marketing badge from product tags.
+      22 Yard: top-left marketing badge.
+      Product tags drive the badge first. When a product has no recognised tag,
+      fall back to the caller-supplied `default_badge` (none unless set), so the
+      card no longer forces a "Best Seller" badge on every product.
+      Set `show_badge: false` to hide badges entirely for a section.
     endcomment
     assign fc22_badge_label = ''
     assign fc22_badge_class = ''
-    assign fc22_tags_down = card_product.tags | join: ',' | downcase
-    if fc22_tags_down contains 'top rated' or fc22_tags_down contains 'top-rated'
-      assign fc22_badge_label = 'TOP RATED'
-      assign fc22_badge_class = 'fc22-badge--toprated'
-    elsif fc22_tags_down contains 'new in' or fc22_tags_down contains 'new-in' or fc22_tags_down contains 'new'
-      assign fc22_badge_label = 'NEW IN'
-      assign fc22_badge_class = 'fc22-badge--newin'
-    elsif fc22_tags_down contains 'best seller' or fc22_tags_down contains 'best-seller' or fc22_tags_down contains 'bestseller'
-      assign fc22_badge_label = 'BEST SELLER'
-      assign fc22_badge_class = 'fc22-badge--bestseller'
+    if show_badge == nil
+      assign fc22_show_badge = true
     else
-      assign fc22_badge_label = 'BEST SELLER'
-      assign fc22_badge_class = 'fc22-badge--bestseller'
+      assign fc22_show_badge = show_badge
+    endif
+    if fc22_show_badge
+      assign fc22_tags_down = card_product.tags | join: ',' | downcase
+      if fc22_tags_down contains 'top rated' or fc22_tags_down contains 'top-rated'
+        assign fc22_badge_label = 'TOP RATED'
+        assign fc22_badge_class = 'fc22-badge--toprated'
+      elsif fc22_tags_down contains 'new in' or fc22_tags_down contains 'new-in' or fc22_tags_down contains 'new'
+        assign fc22_badge_label = 'NEW IN'
+        assign fc22_badge_class = 'fc22-badge--newin'
+      elsif fc22_tags_down contains 'best seller' or fc22_tags_down contains 'best-seller' or fc22_tags_down contains 'bestseller'
+        assign fc22_badge_label = 'BEST SELLER'
+        assign fc22_badge_class = 'fc22-badge--bestseller'
+      else
+        case default_badge
+          when 'bestseller'
+            assign fc22_badge_label = 'BEST SELLER'
+            assign fc22_badge_class = 'fc22-badge--bestseller'
+          when 'toprated'
+            assign fc22_badge_label = 'TOP RATED'
+            assign fc22_badge_class = 'fc22-badge--toprated'
+          when 'newin'
+            assign fc22_badge_label = 'NEW IN'
+            assign fc22_badge_class = 'fc22-badge--newin'
+        endcase
+      endif
     endif
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
@@ -325,7 +250,7 @@
                 assign fc22_save_pct = fc22_diff | times: 100.0 | divided_by: card_product.compare_at_price | round
               endif
             -%}
-            <div class="fc22-price-row">
+            <div class="fc22-price-wrap">
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
               {%- if fc22_save_pct > 0 -%}
                 <span class="fc22-save-pill">Save {{ fc22_save_pct }}%</span>

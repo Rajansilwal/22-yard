@@ -8,10 +8,6 @@
   width: 100%;
 }
 
-.collection-list-title {
-  margin: 0 0 3rem 0;
-}
-
 .collection-list__item {
   box-sizing: border-box;
   flex-grow: 0;

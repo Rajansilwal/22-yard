@@ -67,14 +67,14 @@
   >
 
     {{- '<!-- ===== HEADER ===== -->' -}}
-    <div class="fc22-header page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-      <div class="fc22-header__text">
+    <div class="fc22-header yard-section-header page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <div class="fc22-header__text yard-section-header__text">
         {%- assign fc22_eyebrow = section.settings.eyebrow | default: 'EXPLORE' -%}
         {%- if fc22_eyebrow != blank -%}
-          <p class="fc22-eyebrow">{{ fc22_eyebrow }}</p>
+          <p class="yard-eyebrow">{{ fc22_eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.title != blank -%}
-          <h2 class="fc22-heading title inline-richtext {{ section.settings.heading_size }}">
+          <h2 class="yard-heading title inline-richtext {{ section.settings.heading_size }}">
             {{ section.settings.title }}
           </h2>
         {%- endif -%}
@@ -83,7 +83,7 @@
         {%- comment -%} View All href is updated by JS when tabs change {%- endcomment -%}
         <a
           href="{{ section.blocks.first.settings.collection.url | default: '#' }}"
-          class="fc22-view-all"
+          class="yard-btn--outline"
           id="fc22-view-all-{{ section.id }}"
         >
           {{ section.settings.view_all_label | default: 'VIEW ALL' }}
@@ -141,7 +141,7 @@
             data-arrow-position="{{ section.settings.arrow_position }}"
           >
             <div class="fc-swiper-inner">
-              <button type="button" class="fc-swiper-btn fc-swiper-btn-prev-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+              <button type="button" class="fc-swiper-btn yard-swiper-btn fc-swiper-btn-prev-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
               </button>
               <div class="swiper fc-swiper-{{ section.id }}-{{ forloop.index0 }}">
@@ -160,7 +160,9 @@
                           show_rating: section.settings.show_rating,
                           skip_styles: skip_card_product_styles,
                           section_id: section.id,
-                          quick_add: section.settings.quick_add
+                          quick_add: section.settings.quick_add,
+                          show_badge: section.settings.show_badges,
+                          default_badge: section.settings.default_badge
                         %}
                       </div>
                       {%- assign skip_card_product_styles = true -%}
@@ -181,21 +183,21 @@
                   {%- endif -%}
                 </div>
               </div>
-              <button type="button" class="fc-swiper-btn fc-swiper-btn-next-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+              <button type="button" class="fc-swiper-btn yard-swiper-btn fc-swiper-btn-next-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.next_slide' | t }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </button>
             </div>
             {%- if section.settings.arrow_position == 'bottom_center' -%}
               <div class="fc-swiper-arrows--bottom-center">
-                <button type="button" class="fc-swiper-btn fc-swiper-btn-bc-prev-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+                <button type="button" class="fc-swiper-btn yard-swiper-btn fc-swiper-btn-bc-prev-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
-                <button type="button" class="fc-swiper-btn fc-swiper-btn-bc-next-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+                <button type="button" class="fc-swiper-btn yard-swiper-btn fc-swiper-btn-bc-next-{{ section.id }}-{{ forloop.index0 }}" aria-label="{{ 'general.slider.next_slide' | t }}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
               </div>
             {%- endif -%}
-            <div class="fc-swiper-pagination-{{ section.id }}-{{ forloop.index0 }} fc-swiper-pagination"></div>
+            <div class="fc-swiper-pagination-{{ section.id }}-{{ forloop.index0 }} fc-swiper-pagination yard-swiper-pagination"></div>
           </div>
 
         {%- else -%}
@@ -222,7 +224,9 @@
                       show_rating: section.settings.show_rating,
                       skip_styles: skip_card_product_styles,
                       section_id: section.id,
-                      quick_add: section.settings.quick_add
+                      quick_add: section.settings.quick_add,
+                      show_badge: section.settings.show_badges,
+                      default_badge: section.settings.default_badge
                     %}
                   </li>
                   {%- assign skip_card_product_styles = true -%}
@@ -268,48 +272,6 @@
 </div>
 
 <style>
-  /* ===== Header ===== */
-  #collection-{{ section.id }} .fc22-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-  #collection-{{ section.id }} .fc22-header__text { text-align: left; }
-  #collection-{{ section.id }} .fc22-eyebrow {
-    margin: 0 0 0.4rem;
-    color: #8a2b2b;
-    font-weight: 700;
-    font-size: 1.6rem;
-    text-transform: uppercase;
-  }
-  #collection-{{ section.id }} .fc22-heading {
-    margin: 0;
-    color: #16161a;
-    font-family: var(--font-heading-family);
-    font-weight: 700;
-    font-size: 3.6rem;
-  }
-  #collection-{{ section.id }} .fc22-view-all {
-    display: inline-block;
-    background: #fff;
-    border: 1.5px solid #16161a;
-    color: #16161a;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 0.7rem 1.4rem;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background 0.2s, color 0.2s;
-  }
-  #collection-{{ section.id }} .fc22-view-all:hover {
-    background: #16161a;
-    color: #fff;
-  }
-
   /* ===== Tabs ===== */
   #collection-{{ section.id }} .fc22-tabs { margin-bottom: 1.75rem; }
   #collection-{{ section.id }} .fc22-tabs__row {
@@ -338,11 +300,6 @@
   /* ===== Panels ===== */
   #collection-{{ section.id }} .fc22-panel--hidden { display: none; }
 
-  @media screen and (max-width: 749px) {
-    #collection-{{ section.id }} .fc22-header { align-items: flex-start; }
-    #collection-{{ section.id }} .fc22-heading { font-size: 1.8rem; }
-  }
-
   /* ===== Swiper grid fallback ===== */
   .fc-swiper--grid .swiper-wrapper {
     display: grid;
@@ -353,8 +310,13 @@
   }
   @media screen and (min-width: 750px) {
     .fc-swiper--grid .swiper-wrapper {
-      grid-template-columns: repeat(var(--fc-cols-desktop, 4), 1fr);
+      grid-template-columns: repeat(var(--fc-cols-tablet, 3), 1fr);
       gap: 20px;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    .fc-swiper--grid .swiper-wrapper {
+      grid-template-columns: repeat(var(--fc-cols-desktop, 4), 1fr);
     }
   }
   .fc-swiper--grid .swiper-slide { width: auto !important; margin: 0 !important; }
@@ -365,33 +327,8 @@
   .fc-swiper-section { position: relative; }
   .fc-swiper-inner { display: flex; align-items: center; gap: 12px; }
   .fc-swiper-inner .swiper { flex: 1; min-width: 0; }
-  .fc-swiper-btn {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    background: transparent;
-    cursor: pointer;
-    color: inherit;
-    transition: background 0.2s, color 0.2s;
-  }
-  .fc-swiper-btn:hover { background: rgba(0,0,0,0.08); }
-  .fc-swiper-btn.swiper-button-disabled { opacity: 0.35; cursor: default; }
-  .fc-swiper-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 16px;
-  }
-  .fc-swiper-pagination .swiper-pagination-bullet {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: currentColor; opacity: 0.3; cursor: pointer;
-  }
-  .fc-swiper-pagination .swiper-pagination-bullet-active { opacity: 1; }
+  /* Arrow buttons use the global .yard-swiper-btn style (yard-globals.css) */
+  /* Pagination styling is global — see .yard-swiper-pagination in yard-globals.css */
   .fc-swiper-arrows--bottom-center {
     display: flex;
     justify-content: center;
@@ -408,6 +345,7 @@
   var USE_SWIPER_DESKTOP = {{ use_swiper_desktop | json }};
   var USE_SWIPER_MOBILE  = {{ use_swiper_mobile  | json }};
   var COLS_DESKTOP       = {{ section.settings.columns_desktop }};
+  var COLS_TABLET        = {{ section.settings.columns_tablet  }};
   var COLS_MOBILE        = {{ section.settings.columns_mobile  }};
   var ARROWS_DESKTOP     = {{ section.settings.show_arrows_desktop    | json }};
   var ARROWS_MOBILE      = {{ section.settings.show_arrows_mobile     | json }};
@@ -415,6 +353,7 @@
   var PAGI_MOBILE        = {{ section.settings.show_pagination_mobile  | json }};
   var ARROW_POS          = '{{ section.settings.arrow_position }}';
   var LAYOUT_MODE        = '{{ section.settings.layout_mode }}';
+  var AUTOPLAY           = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction: false, pauseOnMouseEnter: true }{% else %}false{% endif %};
 
   /* ---- Init a single Swiper panel ---- */
   function initPanelSwiper(panelIndex) {
@@ -430,11 +369,15 @@
     var showArrows  = isMobile ? ARROWS_MOBILE  : ARROWS_DESKTOP;
     var showPagi    = isMobile ? PAGI_MOBILE    : PAGI_DESKTOP;
 
+    // Mobile (22 Yard pattern): peek the next card, pagination only, no arrows.
+    if (isMobile) { showArrows = false; showPagi = true; }
+
     var container = swiperEl.closest('.fc-swiper-section');
 
     if (!enabled) {
       container.classList.add('fc-swiper--grid');
       container.style.setProperty('--fc-cols-desktop', COLS_DESKTOP);
+      container.style.setProperty('--fc-cols-tablet',  COLS_TABLET);
       container.style.setProperty('--fc-cols-mobile',  COLS_MOBILE);
       return;
     }
@@ -466,12 +409,14 @@
     if (!showPagi && pagiEl) pagiEl.style.display = 'none';
 
     new Swiper('.fc-swiper-' + SECTION_ID + '-' + panelIndex, {
-      slidesPerView: COLS_MOBILE,
+      slidesPerView: COLS_MOBILE + 0.2,   // peek next card on mobile
       spaceBetween: 16,
+      autoplay: AUTOPLAY,
       navigation: showArrows ? { nextEl: nextBtn, prevEl: prevBtn } : false,
       pagination: showPagi  ? { el: pagiEl, clickable: true } : false,
       breakpoints: {
-        750: { slidesPerView: COLS_DESKTOP, spaceBetween: 20 }
+        750: { slidesPerView: COLS_TABLET, spaceBetween: 20 },
+        990: { slidesPerView: COLS_DESKTOP, spaceBetween: 20 }
       }
     });
   }
@@ -617,6 +562,23 @@
       "default": true
     },
     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slide every",
+      "default": 5
+    },
+    {
       "type": "header",
       "content": "Heading"
     },
@@ -657,6 +619,30 @@
     },
     {
       "type": "header",
+      "content": "Badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show product badges",
+      "default": true,
+      "info": "Badges follow product tags: 'top rated', 'new in', 'best seller'."
+    },
+    {
+      "type": "select",
+      "id": "default_badge",
+      "label": "Default badge",
+      "info": "Shown on products that have no badge tag. Choose 'None' to hide badges on untagged products.",
+      "options": [
+        { "value": "none",       "label": "None" },
+        { "value": "bestseller", "label": "Best Seller" },
+        { "value": "toprated",   "label": "Top Rated" },
+        { "value": "newin",      "label": "New In" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
       "content": "Products"
     },
     {
@@ -691,6 +677,12 @@
       "id": "columns_desktop",
       "min": 1, "max": 6, "step": 1, "default": 4,
       "label": "Columns on desktop"
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1, "max": 6, "step": 1, "default": 3,
+      "label": "Columns on tablet (iPad)"
     },
     {
       "type": "select",

@@ -36,6 +36,33 @@ class HeaderMenu extends DetailsDisclosure {
   constructor() {
     super();
     this.header = document.querySelector('.header-wrapper');
+    this.setupHover();
+  }
+
+  // 22 Yard: open the mega/dropdown on hover as well as on click.
+  // Only on devices that actually hover (desktop with a fine pointer) — touch
+  // devices keep the native click-to-toggle behaviour.
+  setupHover() {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    this.addEventListener('mouseenter', this.open.bind(this));
+    this.addEventListener('mouseleave', this.close.bind(this));
+
+    // While hover controls open/close, stop summary clicks from toggling the
+    // panel shut underneath the cursor so hover and click behave the same.
+    const summary = this.mainDetailsToggle.querySelector('summary');
+    if (summary) {
+      summary.addEventListener('click', (event) => {
+        if (this.mainDetailsToggle.open) event.preventDefault();
+      });
+    }
+  }
+
+  open() {
+    if (this.mainDetailsToggle.open) return;
+    this.mainDetailsToggle.setAttribute('open', '');
+    const summary = this.mainDetailsToggle.querySelector('summary');
+    if (summary) summary.setAttribute('aria-expanded', true);
   }
 
   onToggle() {

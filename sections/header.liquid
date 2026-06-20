@@ -15,15 +15,7 @@
 
 {%- if section.settings.menu_type_desktop == 'mega' or section.blocks.size > 0 -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
-  {%- comment -%} Load Swiper if any override block uses a layout that may need it {%- endcomment -%}
-  {%- for block in section.blocks -%}
-    {%- assign _ml = block.settings.mega_layout -%}
-    {%- if _ml == 'slider' or _ml == 'collection-list' or _ml == 'featured-collection' -%}
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
-      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
+  {%- comment -%} No Swiper needed — none of the 3 layouts use a slider {%- endcomment -%}
 {%- endif -%}
 
 <style>
@@ -39,7 +31,7 @@
   {%- endif -%}
 
   {%- if section.settings.menu_type_desktop != "drawer" -%}
-    @media screen and (min-width: 990px) {
+    @media screen and (min-width: 1200px) {
       header-drawer {
         display: none;
       }
@@ -95,7 +87,7 @@
     background: #ffffff;
   }
 
-  /* White top bar: logo left, centered search, icons right */
+  /* White top bar: logo left, centered search, icons right — 1200px+ only */
   .header.header--layout-22yard {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -125,6 +117,61 @@
 
   .header.header--layout-22yard header-drawer {
     grid-area: logo;
+    display: none;
+  }
+
+/* Below 1200px: toggle left | logo center | icons right ── */
+  @media screen and (max-width: 1199px) {
+    .header.header--layout-22yard {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: 'drawer logo icons';
+      column-gap: 1rem;
+    }
+
+    /* Show the hamburger drawer toggle on the left */
+    .header.header--layout-22yard header-drawer {
+      grid-area: drawer;
+      display: flex;
+      align-items: center;
+      margin-left: -0.6rem;
+    }
+
+    /* Logo centered */
+    .header.header--layout-22yard .header__heading {
+      grid-area: logo;
+      margin: 0;
+      justify-self: center;
+    }
+
+    /* Icons on the right — tighter gap */
+    .header.header--layout-22yard .header__icons {
+      grid-area: icons;
+      column-gap: 0.8rem;
+    }
+
+    /* Hide all text labels — icons only */
+    .header.header--layout-22yard .header__icon-label {
+      display: none !important;
+    }
+
+    /* Remove circle border on mobile icons to save space */
+    .header.header--layout-22yard .header__icons .header__icon > .svg-wrapper,
+    .header.header--layout-22yard .header__icons .header__icon account-icon .svg-wrapper {
+      width: 3.6rem;
+      height: 3.6rem;
+      border: none;
+    }
+
+    /* Hide desktop-only icons on mobile */
+    .header.header--layout-22yard .header__icon--wishlist,
+    .header.header--layout-22yard .header__icon--account {
+      display: none;
+    }
+
+    /* Hide the inline search bar below 1200px (search icon opens modal) */
+    .header.header--layout-22yard .header__search-inline {
+      display: none;
+    }
   }
 
   /* Search: light-grey filled box, magnifier on the left, no submit button */
@@ -218,15 +265,14 @@
     width: 4rem;
     height: 4rem;
     flex: 0 0 auto;
-    border: 1px solid #d9d9d9;
     border-radius: 50%;
     color: #16161a;
   }
 
   .header__icons .header__icon > .svg-wrapper svg,
   .header__icons .header__icon account-icon .svg-wrapper svg {
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 100%;
+    height: 100%;
   }
 
   .header__icon-label {
@@ -275,9 +321,9 @@
   }
 
   .header__nav-bar .header__menu-item {
-    color: #16161a;
+    color: #222222;
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     letter-spacing: 0;
     text-transform: none;
     padding: 1.3rem 1.6rem;
@@ -285,7 +331,7 @@
   }
 
   .header__nav-bar .header__menu-item span {
-    color: #16161a;
+    color: #222222;
   }
 
   .header__nav-bar .header__menu-item:hover,
@@ -302,8 +348,8 @@
     color: #8a2b2b;
   }
 
-  /* Hide the desktop nav bar on mobile — links live in the drawer */
-  @media screen and (max-width: 989px) {
+  /* Hide the desktop nav bar below 1200px — links live in the drawer */
+  @media screen and (max-width: 1199px) {
     .header__nav-bar {
       display: none;
     }
@@ -384,7 +430,7 @@
   -%}
 
   <header
-    class="header header--layout-{{ header_layout }} header--mobile-{{ section.settings.mobile_logo_position }}{% if has_inline_search %} header--has-inline-search{% endif %} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}"
+    class="header header--layout-{{ header_layout }}{% if has_inline_search %} header--has-inline-search{% endif %} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}"
   >
     {%- liquid
       if section.settings.menu != blank
@@ -501,7 +547,12 @@
         aria-label="{{ 'general.wishlist' | t | default: 'Wishlist' }}"
       >
         <span class="svg-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        <svg class="icon icon-wishlist" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="#F9F9F9"/>
+<rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#B2B2B2"/>
+<path d="M29.9998 16.862C30.0032 18.4007 29.4104 19.881 28.3458 20.992C25.9048 23.523 23.5367 26.162 21.0057 28.6C20.4247 29.15 19.5038 29.13 18.9488 28.555L11.6537 20.993C9.44875 18.707 9.44875 15.017 11.6537 12.732C12.1749 12.185 12.8017 11.7495 13.4961 11.452C14.1906 11.1544 14.9382 11.001 15.6937 11.001C16.4493 11.001 17.1969 11.1544 17.8914 11.452C18.5858 11.7495 19.2126 12.185 19.7338 12.732L19.9998 13.006L20.2648 12.732C20.7865 12.1857 21.4134 11.7507 22.1077 11.453C22.802 11.1554 23.5493 11.0013 24.3048 11C25.8248 11 27.2777 11.624 28.3447 12.732C29.4097 13.8428 30.0029 15.3231 29.9998 16.862Z" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>
+
         </span>
         <span class="header__icon-label">Wishlist(0)</span>
       </a>
@@ -561,7 +612,7 @@
 
       this.setHeaderHeight();
 
-      window.matchMedia('(max-width: 990px)').addEventListener('change', this.setHeaderHeight.bind(this));
+      window.matchMedia('(max-width: 1199px)').addEventListener('change', this.setHeaderHeight.bind(this));
 
       if (this.headerIsAlwaysSticky) {
         this.header.classList.add('shopify-section-header-sticky');
@@ -709,29 +760,6 @@
     {
       "type": "header",
       "content": "Logo"
-    },
-    {
-      "type": "select",
-      "id": "header_layout",
-      "label": "Header layout",
-      "options": [
-        { "value": "logo-left",        "label": "Logo left" },
-        { "value": "logo-left-search", "label": "Logo left + Search open" },
-        { "value": "logo-top",         "label": "Logo top (search + logo + menu row)" },
-        { "value": "logo-center",      "label": "Logo center" }
-      ],
-      "default": "logo-left",
-      "info": "Controls the position of logo, navigation menu, and search bar."
-    },
-    {
-      "type": "select",
-      "id": "mobile_logo_position",
-      "options": [
-        { "value": "center", "label": "t:sections.header.settings.mobile_logo_position.options__1.label" },
-        { "value": "left",   "label": "t:sections.header.settings.mobile_logo_position.options__2.label" }
-      ],
-      "default": "center",
-      "label": "t:sections.header.settings.mobile_logo_position.label"
     },
     {
       "type": "header",
@@ -898,29 +926,13 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Match this block to a top-level nav item by entering its handle below. The handle is the link title lowercased with spaces replaced by hyphens — e.g. 'Shop All' → 'shop-all'. You can also use the last segment of the link URL."
+          "content": "Match this block to a nav item by its handle. The handle is the title lowercased with spaces as hyphens, e.g. 'Shop All' → 'shop-all'."
         },
         {
           "type": "text",
           "id": "menu_item_handle",
           "label": "Menu item handle",
-          "info": "e.g. 'catalog', 'shop-all', 'collections'. Must match the top-level menu item."
-        },
-        {
-          "type": "header",
-          "content": "Nav item appearance"
-        },
-        {
-          "type": "checkbox",
-          "id": "item_show_icon",
-          "label": "Show icon next to label",
-          "default": false
-        },
-        {
-          "type": "image_picker",
-          "id": "item_icon_image",
-          "label": "Nav item icon image",
-          "info": "Small image shown beside the menu item label (24×24px recommended)."
+          "info": "e.g. 'cricket-bats', 'sale', 'clothing'"
         },
         {
           "type": "header",
@@ -929,12 +941,12 @@
         {
           "type": "select",
           "id": "menu_type",
-          "label": "Menu type for this item",
+          "label": "Menu type",
           "options": [
-            { "value": "default",  "label": "Use section default" },
+            { "value": "default", "label": "Use section default" },
+            { "value": "mega", "label": "Mega menu" },
             { "value": "dropdown", "label": "Dropdown" },
-            { "value": "mega",     "label": "Mega menu" },
-            { "value": "none",     "label": "No submenu (link only)" }
+            { "value": "none", "label": "Plain link (no submenu)" }
           ],
           "default": "default"
         },
@@ -945,99 +957,70 @@
         {
           "type": "select",
           "id": "mega_layout",
-          "label": "Mega menu layout",
+          "label": "Layout",
           "options": [
-            { "value": "columns",             "label": "Columns" },
-            { "value": "grid",                "label": "Grid with images" },
-            { "value": "icon-links",          "label": "Icon + label links" },
-            { "value": "image-links",         "label": "Image cards + label" },
-            { "value": "slider",              "label": "Swiper slider" },
-            { "value": "featured-product",    "label": "Featured product panel" },
-            { "value": "featured-collection", "label": "Featured collection products" },
-            { "value": "collection-list",     "label": "Collection cards list" },
-            { "value": "featured",            "label": "Featured image + links" },
-            { "value": "fullwidth",           "label": "Full-width banner" }
+            { "value": "columns-with-products", "label": "Columns + Featured Products" },
+            { "value": "columns-with-promo", "label": "Columns + Flash Deals + Promo Banner" },
+            { "value": "columns-with-image", "label": "Columns + Promo Image" }
           ],
-          "default": "columns",
-          "info": "Only applies when menu type is Mega menu."
+          "default": "columns-with-image"
         },
         {
           "type": "range",
           "id": "mega_columns",
           "min": 2,
-          "max": 6,
+          "max": 5,
           "step": 1,
-          "label": "Columns / slides count",
-          "default": 4,
-          "info": "Number of columns (Columns, Grid, Image cards, Collection list) or slides per view (Slider)."
+          "label": "Number of link columns",
+          "default": 3
         },
         {
           "type": "checkbox",
           "id": "mega_show_description",
-          "label": "Show link descriptions",
-          "default": false,
-          "info": "Shows truncated description from the linked object (collection/product)."
+          "label": "Show descriptions under links",
+          "default": false
         },
         {
           "type": "header",
-          "content": "Featured product (for 'Featured product panel')"
-        },
-        {
-          "type": "product",
-          "id": "mega_product_handle",
-          "label": "Featured product"
-        },
-        {
-          "type": "header",
-          "content": "Featured collection panel"
+          "content": "Right panel — Collection (Layouts 1 & 2)"
         },
         {
           "type": "collection",
           "id": "mega_collection_handle",
-          "label": "Featured collection"
+          "label": "Collection",
+          "info": "Layout 1: shows up to 2 product cards + View All. Layout 2: shows flash deals product list."
         },
         {
           "type": "header",
-          "content": "Promo panel (Columns layout)"
-        },
-        {
-          "type": "image_picker",
-          "id": "promo_image",
-          "label": "Promo image"
-        },
-        {
-          "type": "text",
-          "id": "promo_heading",
-          "label": "Promo heading"
-        },
-        {
-          "type": "inline_richtext",
-          "id": "promo_text",
-          "label": "Promo text"
-        },
-        {
-          "type": "url",
-          "id": "promo_link",
-          "label": "Promo image link"
-        },
-        {
-          "type": "header",
-          "content": "Featured image (Featured / Fullwidth)"
+          "content": "Right panel — Promo image (Layouts 2 & 3)"
         },
         {
           "type": "image_picker",
           "id": "mega_featured_image",
-          "label": "Featured image"
+          "label": "Promo image"
         },
         {
           "type": "text",
           "id": "mega_featured_heading",
-          "label": "Featured heading"
+          "label": "Eyebrow / badge label",
+          "info": "Small label above the main heading (e.g. 'CUSTOM TEAMWEAR', 'END OF SEASON')"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading",
+          "label": "Main heading",
+          "info": "Large bold heading on the promo panel"
+        },
+        {
+          "type": "text",
+          "id": "promo_text",
+          "label": "CTA button label",
+          "default": "Shop Now →"
         },
         {
           "type": "url",
-          "id": "mega_featured_link",
-          "label": "Featured image link"
+          "id": "promo_link",
+          "label": "CTA button link"
         }
       ]
     }

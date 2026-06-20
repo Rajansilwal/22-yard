@@ -68,6 +68,44 @@
   @media (prefers-reduced-motion: reduce) {
     .yard-utility-{{ section.id }} .yard-ticker__track { animation: none; }
   }
+
+  /* ===== Social icons — color & size ===== */
+  .yard-utility-{{ section.id }} .list-social__link { color: {{ section.settings.social_icon_color }}; }
+  .yard-utility-{{ section.id }} .list-social__link:hover { color: {{ section.settings.social_icon_hover_color }}; }
+  .yard-utility-{{ section.id }} .list-social__item .icon {
+    width: 24px;
+    height: 24px;
+    scale: 1;
+  }
+
+  /* ===== Announcement fills the row beside the icons (not centered) ===== */
+  @media screen and (min-width: 990px) {
+    /* Icons take their own width; announcement takes the rest of the row */
+    .yard-utility-{{ section.id }} .utility-bar__grid--3-col {
+      grid-template-columns: auto 1fr auto;
+      column-gap: 2rem;
+    }
+    /* Announcement / ticker starts right after the icons, left-aligned, full width */
+    .yard-utility-{{ section.id }} .announcement-bar { justify-content: flex-start; }
+    .yard-utility-{{ section.id }} .announcement-bar.announcement-bar--one-announcement,
+    .yard-utility-{{ section.id }} .announcement-bar--one-announcement .announcement-bar__link {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  /* ===== Social icons — position (desktop) ===== */
+  {%- if section.settings.social_position == 'right' -%}
+  @media screen and (min-width: 990px) {
+    .yard-utility-{{ section.id }} .utility-bar__grid--3-col { grid-template-areas: 'language-currency announcements social-icons'; }
+    .yard-utility-{{ section.id }} .utility-bar__grid--2-col { grid-template-areas: 'language-currency social-icons'; }
+    .yard-utility-{{ section.id }} .utility-bar__grid .list-social {
+      justify-content: flex-end;
+      margin-left: 0;
+      margin-right: -1.2rem;
+    }
+  }
+  {%- endif -%}
 {%- endstyle -%}
 
 <div
@@ -202,6 +240,29 @@
       "default": false,
       "label": "t:sections.announcement-bar.settings.show_social.label",
       "info": "t:sections.announcement-bar.settings.show_social.info"
+    },
+    {
+      "type": "select",
+      "id": "social_position",
+      "label": "Social icons position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left",
+      "info": "Shown on desktop. Uses the social links from Theme settings > Social media."
+    },
+    {
+      "type": "color",
+      "id": "social_icon_color",
+      "label": "Social icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_hover_color",
+      "label": "Social icon hover color",
+      "default": "#f1c40f"
     },
     {
       "type": "checkbox",

@@ -583,7 +583,7 @@ table:not([class]) th {
   }
 }
 
-@media screen and (min-width: 990px) {
+@media screen and (min-width: 1200px) {
   .large-up-hide {
     display: none !important;
   }
@@ -3016,7 +3016,7 @@ details[open] > .header__menu-item .icon-caret {
 }
 
 .header__menu-item .icon-caret {
-  right: 0.8rem;
+  right: 0;
 }
 
 .header__submenu .icon-caret {
@@ -3415,11 +3415,6 @@ details-disclosure > details {
     100% {
       transform: rotate(360deg) translateX(1em) rotate(-360deg) scale(1.2);
     }
-  }
-
-  .scroll-trigger.animate--fade-in,
-  .scroll-trigger.animate--slide-in {
-    opacity: 0.01;
   }
 
   .scroll-trigger.animate--slide-in {

@@ -39,7 +39,7 @@
   /* Override Dawn's flex-based .grid with a proper CSS grid */
   .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
     display: grid;
-    gap: 2.5rem 3rem;
+    gap: 2.5rem 2.4rem;
   }
 
   /* Grid items must not overflow their column */
@@ -47,24 +47,27 @@
     min-width: 0;
   }
 
-  /* 5-column desktop layout */
-  @media screen and (min-width: 990px) {
+  /* 5-column layout — only from 1200px where there's enough room */
+  @media screen and (min-width: 1200px) {
     .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
-      grid-template-columns: minmax(358px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(160px, 1.2fr);
+      grid-template-columns: 1.6fr 1fr 1fr 1fr 1.3fr;
       align-items: start;
     }
   }
 
-  @media screen and (min-width: 750px) and (max-width: 989px) {
+  /* Tablet: 3 columns */
+  @media screen and (min-width: 750px) and (max-width: 1199px) {
     .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: start;
     }
   }
 
-  /* Mobile: single column */
+  /* Mobile: single column with accordion */
   @media screen and (max-width: 749px) {
     .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom {
       grid-template-columns: 1fr;
+      gap: 0;
     }
   }
 
@@ -249,6 +252,20 @@
     color: #8a2b2b;
   }
 
+  /* Tablet bottom bar — stack payments under copyright */
+  @media screen and (min-width: 750px) and (max-width: 1199px) {
+    .footer__bottom-bar .footer__copyright {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__bottom-bar .footer__payment {
+      justify-self: start;
+    }
+    .footer__bottom-policies {
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+    }
+  }
+
   /* Mobile: stack the three groups */
   @media screen and (max-width: 749px) {
     .footer__bottom-bar .footer__copyright {
@@ -263,6 +280,75 @@
 
     .footer__bottom-policies {
       justify-content: center;
+    }
+  }
+
+  /* ── Mobile accordion for link/text footer blocks ── */
+  @media screen and (max-width: 749px) {
+
+    /* Each non-brand block gets a border bottom */
+    .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom > .footer-block:not(.footer-block--brand-info) {
+      border-bottom: 1px solid #e7e7e7;
+    }
+    .footer .footer__blocks-wrapper.footer__blocks-wrapper--custom > .footer-block:first-child {
+      border-top: 1px solid #e7e7e7;
+      margin-top: 2rem;
+    }
+
+    /* Heading becomes a tappable toggle */
+    .footer .footer-block__heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 0;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      white-space: normal;
+    }
+
+    /* Caret icon */
+    .footer .footer-block__heading::after {
+      content: '';
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border-right: 2px solid #16161a;
+      border-bottom: 2px solid #16161a;
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+
+    /* Open state — caret flips up */
+    .footer .footer-block--open .footer-block__heading::after {
+      transform: rotate(-135deg);
+    }
+
+    /* Collapse the content by default */
+    .footer .footer-block__details-content,
+    .footer .footer-block__details-content.rte {
+      display: none;
+      padding-bottom: 1.2rem;
+    }
+
+    /* Show when open */
+    .footer .footer-block--open .footer-block__details-content,
+    .footer .footer-block--open .footer-block__details-content.rte {
+      display: block;
+    }
+
+    /* Brand block — always visible, no toggle */
+    .footer .footer-block.footer-block__brand-info-wrap .footer-block__heading {
+      cursor: default;
+    }
+    .footer .footer-block.footer-block__brand-info-wrap .footer-block__heading::after {
+      display: none;
+    }
+    .footer .footer-block__brand-info {
+      display: block !important;
+      margin-bottom: 2rem;
     }
   }
 {%- endstyle -%}
@@ -349,7 +435,7 @@
                         }}
                       </div>
                     {%- elsif settings.logo != blank -%}
-                      <div class="footer-block__image-wrapper" style="max-width: min(100%, 140px);">
+                      <div class="footer-block__image-wrapper" style="max-width: min(100%, 80px);">
                         <a href="{{ routes.root_url }}" class="footer__logo-link">
                           {{
                             settings.logo
@@ -473,6 +559,36 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  function initFooterAccordion() {
+    if (window.innerWidth > 749) return;
+
+    var blocks = document.querySelectorAll(
+      '.footer__blocks-wrapper--custom > .footer-block:not(.footer-block--brand-info-wrap)'
+    );
+
+    blocks.forEach(function (block) {
+      var heading = block.querySelector('.footer-block__heading');
+      if (!heading) return;
+
+      // Skip brand_information blocks — always visible
+      if (block.querySelector('.footer-block__brand-info')) return;
+
+      heading.addEventListener('click', function () {
+        block.classList.toggle('footer-block--open');
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterAccordion);
+  } else {
+    initFooterAccordion();
+  }
+})();
+</script>
 
 {% schema %}
 {

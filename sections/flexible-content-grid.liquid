@@ -41,32 +41,6 @@
 {%- endif -%}
 
 <style>
-  /* ---------- Header ---------- */
-  #bl-{{ uid }} .bl-header{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:1.5rem; margin-bottom:2.4rem;
-  }
-  #bl-{{ uid }} .bl-eyebrow{
-    display:block; margin:0 0 .4rem; font-size:1.6rem; font-weight:700;
-    letter-spacing:.12em; text-transform:uppercase; color:#8a2b2b;
-  }
-  #bl-{{ uid }} .bl-heading{
-    margin:0; font-family:var(--font-heading-family); font-weight:800;
-    line-height:1.05; color:#16161a; font-size:3.6rem;
-  }
-  #bl-{{ uid }} .bl-viewall{
-    flex-shrink:0; display:inline-block; background:#fff;
-    border:1.5px solid #16161a; color:#16161a; text-decoration:none;
-    text-transform:uppercase; font-weight:700; letter-spacing:.08em;
-    font-size:.85rem; padding:.7rem 1.4rem; border-radius:4px;
-    transition:background .15s, color .15s;
-  }
-  #bl-{{ uid }} .bl-viewall:hover{ background:#16161a; color:#fff; }
-  @media screen and (max-width:749px){
-    #bl-{{ uid }} .bl-header{ flex-direction:column; align-items:flex-start; }
-    #bl-{{ uid }} .bl-heading{ font-size:1.8rem; }
-  }
-
   /* ---------- Brand card ---------- */
   #bl-{{ uid }} .bl-card{
     display:flex; align-items:center; justify-content:center;
@@ -106,43 +80,33 @@
   #bl-{{ uid }} .swiper.bl-swiper{ width:100%; overflow:hidden; position:relative; }
   #bl-{{ uid }} .swiper.bl-swiper .swiper-slide{ height:auto; box-sizing:border-box; }
 
-  #bl-{{ uid }} .bl-arrow{
-    position:absolute; top:50%; z-index:10; width:4rem; height:4rem;
-    display:flex; align-items:center; justify-content:center;
-    background:rgb(var(--color-background));
-    border:.1rem solid rgba(var(--color-foreground),.15);
-    border-radius:50%; cursor:pointer; color:rgb(var(--color-foreground));
-    padding:0; transition:background .15s, border-color .15s, opacity .15s;
-  }
-  #bl-{{ uid }} .bl-arrow:hover{ background:rgba(var(--color-foreground),.06); border-color:rgba(var(--color-foreground),.3); }
-  #bl-{{ uid }} .bl-arrow.swiper-button-disabled,
-  #bl-{{ uid }} .bl-arrow.swiper-button-lock{ opacity:.3; cursor:default; pointer-events:none; }
+  /* Arrow visuals use the global .yard-swiper-btn style (yard-globals.css);
+     only positioning is section-specific (arrows overlay the slider edges). */
+  #bl-{{ uid }} .bl-arrow{ position:absolute; top:50%; z-index:10; }
+  /* Nothing to slide (slides fit the view): hide arrows entirely */
+  #bl-{{ uid }} .bl-arrow.swiper-button-lock{ display:none !important; }
+  /* Drop the side gutter reserved for arrows when the slider is locked */
+  #bl-{{ uid }} .bl-slider-wrap.bl-locked{ padding-left:0 !important; padding-right:0 !important; }
   #bl-{{ uid }} .bl-arrow--prev{ left:0; transform:translate(-50%,-50%); }
   #bl-{{ uid }} .bl-arrow--next{ right:0; transform:translate(50%,-50%); }
-  #bl-{{ uid }} .bl-arrow svg{ width:1.4rem; height:1.4rem; display:block; }
   #bl-{{ uid }} .bl-arrow--prev svg{ transform:rotate(180deg); }
   #bl-{{ uid }} .bl-arrow::after,
   #bl-{{ uid }} .bl-arrow::before{ content:none !important; display:none !important; }
 
-  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination{
-    position:static; margin-top:1.6rem; display:flex; justify-content:center;
-    align-items:center; gap:.5rem; width:100%;
-  }
-  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination-bullet{ background:rgb(var(--color-foreground)); opacity:.35; }
-  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination-bullet-active{ background:rgb(var(--color-base-accent-1, var(--color-foreground))); opacity:1; }
+  /* Pagination — dot/pill styling is global (.yard-swiper-pagination in yard-globals.css).
+     Only the static positioning is section-specific (overrides Swiper's absolute default). */
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination{ position:static; }
 
   {%- unless section.settings.arrows_desktop -%}
   @media (min-width:750px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
   {%- endunless -%}
-  {%- unless section.settings.arrows_mobile -%}
+  {%- comment -%} Mobile (22 Yard pattern): never show arrows — pagination only. {%- endcomment -%}
   @media (max-width:749px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
-  {%- endunless -%}
   {%- unless section.settings.pagination_desktop -%}
   @media (min-width:750px){ #bl-{{ uid }} .swiper-pagination{ display:none !important; } }
   {%- endunless -%}
-  {%- unless section.settings.pagination_mobile -%}
-  @media (max-width:749px){ #bl-{{ uid }} .swiper-pagination{ display:none !important; } }
-  {%- endunless -%}
+  {%- comment -%} Mobile (22 Yard pattern): always show pagination dots. {%- endcomment -%}
+  @media (max-width:749px){ #bl-{{ uid }} .swiper-pagination{ display:flex !important; } }
 
   #bl-{{ uid }} .bl-empty{ text-align:center; padding:4rem 2rem; color:rgba(var(--color-foreground),.6); }
 </style>
@@ -151,13 +115,13 @@
   <div class="page-width section-{{ uid }}-padding">
 
     {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.button_label != blank -%}
-      <div class="bl-header">
-        <div class="bl-header__text">
-          {%- if section.settings.eyebrow != blank -%}<span class="bl-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
-          {%- if section.settings.heading != blank -%}<h2 class="bl-heading">{{ section.settings.heading }}</h2>{%- endif -%}
+      <div class="bl-header yard-section-header">
+        <div class="bl-header__text yard-section-header__text">
+          {%- if section.settings.eyebrow != blank -%}<span class="yard-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          {%- if section.settings.heading != blank -%}<h2 class="yard-heading">{{ section.settings.heading }}</h2>{%- endif -%}
         </div>
         {%- if section.settings.button_label != blank -%}
-          <a class="bl-viewall" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
+          <a class="yard-btn--outline" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -166,10 +130,10 @@
       {%- if mode == 'slider' -%}
         <div class="bl-slider-wrap">
           {%- if show_arrows -%}
-            <button type="button" class="bl-arrow bl-arrow--prev" aria-label="Previous">
+            <button type="button" class="bl-arrow yard-swiper-btn bl-arrow--prev" aria-label="Previous">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
-            <button type="button" class="bl-arrow bl-arrow--next" aria-label="Next">
+            <button type="button" class="bl-arrow yard-swiper-btn bl-arrow--next" aria-label="Next">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           {%- endif -%}
@@ -188,7 +152,8 @@
                 </div>
               {%- endfor -%}
             </div>
-            {%- if show_pagination -%}<div class="swiper-pagination"></div>{%- endif -%}
+            {%- comment -%} Always rendered — mobile always shows dots; desktop visibility controlled by setting. {%- endcomment -%}
+            <div class="swiper-pagination yard-swiper-pagination"></div>
           </div>
         </div>
       {%- else -%}
@@ -224,8 +189,10 @@
       var GAP   = {{ gap }};
       var AUTOPLAY = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction:false, pauseOnMouseEnter:true }{% else %}false{% endif %};
 
-      // 2-row grid config for a given number of columns (slides-per-view)
+      // 2-row grid config for a given number of columns (slides-per-view) — tablet/desktop
       function gridCfg(spv){ return { slidesPerView:spv, slidesPerGroup:spv, grid:{ rows:2, fill:'row' }, spaceBetween:GAP }; }
+      // Mobile: keep 2 rows, but peek a quarter of the next column (matches other sliders)
+      function mobileCfg(spv){ return { slidesPerView:spv + 0.2, slidesPerGroup:spv, grid:{ rows:2, fill:'row' }, spaceBetween:GAP }; }
 
       function init(){
         if(typeof Swiper==='undefined'){ setTimeout(init,80); return; }
@@ -234,13 +201,18 @@
         var wrap = el.closest('.bl-slider-wrap') || el.parentNode;
         if(el._sw){ try{ el._sw.destroy(true,true); }catch(e){} el._sw=null; }
 
-        el._sw = new Swiper(el, Object.assign(gridCfg(SPV_M), {
+        // Sync the wrapper class so the arrow gutter collapses when there's
+        // nothing to slide (e.g. brand count fits within the slides-per-view).
+        function syncLock(sw){ if(wrap){ wrap.classList.toggle('bl-locked', !!sw.isLocked); } }
+
+        el._sw = new Swiper(el, Object.assign(mobileCfg(SPV_M), {
           loop:false,                 // Swiper grid (2 rows) does NOT support loop
           watchOverflow:true,         // auto-disables nav when there's nothing to slide
           autoplay:AUTOPLAY,
           pagination:{ el: el.querySelector('.swiper-pagination'), clickable:true },
           navigation:{ nextEl: wrap.querySelector('.bl-arrow--next'), prevEl: wrap.querySelector('.bl-arrow--prev') },
-          breakpoints:{ 750: gridCfg(SPV_T), 990: gridCfg(SPV_D) }
+          breakpoints:{ 750: gridCfg(SPV_T), 990: gridCfg(SPV_D) },
+          on:{ afterInit:syncLock, lock:syncLock, unlock:syncLock, breakpoint:syncLock, resize:syncLock }
         }));
       }
 

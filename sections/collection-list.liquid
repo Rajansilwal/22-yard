@@ -48,6 +48,11 @@
     }
     @media screen and (min-width: 750px) {
       .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
+        width: calc((100% - ({{ section.settings.columns_tablet | minus: 1 }} * 20px)) / {{ section.settings.columns_tablet }});
+      }
+    }
+    @media screen and (min-width: 990px) {
+      .cl-swiper-section[data-section-id="{{ section.id }}"] .swiper-slide {
         width: calc((100% - ({{ section.settings.columns_desktop | minus: 1 }} * 20px)) / {{ section.settings.columns_desktop }});
       }
     }
@@ -70,19 +75,19 @@
   <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
 
     {%- unless section.settings.title == blank -%}
-      <div class="title-wrapper-with-link cl-header-row{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
-        <div class="cl-header-text">
+      <div class="title-wrapper-with-link yard-section-header{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
+        <div class="yard-section-header__text">
           {%- if section.settings.eyebrow != blank -%}
-            <p class="cl-eyebrow">{{ section.settings.eyebrow }}</p>
+            <p class="yard-eyebrow">{{ section.settings.eyebrow }}</p>
           {%- endif -%}
           <h2
             id="SectionHeading-{{ section.id }}"
-            class="collection-list-title cl-heading inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            class="collection-list-title yard-heading inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           >
             {{ section.settings.title }}
           </h2>
         </div>
-        <a href="{{ routes.collections_url }}" class="cl-outline-btn">ALL CATEGORIES</a>
+        <a href="{{ routes.collections_url }}" class="yard-btn--outline">ALL CATEGORIES</a>
         {%- if section.settings.show_view_all and show_mobile_slider -%}
           <a
             href="{{ routes.collections_url }}"
@@ -104,6 +109,7 @@
         data-swiper-desktop="{{ use_swiper_desktop }}"
         data-swiper-mobile="{{ use_swiper_mobile }}"
         data-columns-desktop="{{ section.settings.columns_desktop }}"
+        data-columns-tablet="{{ section.settings.columns_tablet }}"
         data-columns-mobile="{{ section.settings.columns_mobile }}"
         data-arrows-desktop="{{ section.settings.show_arrows_desktop }}"
         data-arrows-mobile="{{ section.settings.show_arrows_mobile }}"
@@ -112,7 +118,7 @@
         data-arrow-position="{{ section.settings.arrow_position }}"
       >
         <div class="cl-swiper-inner">
-          <button type="button" class="cl-swiper-btn cl-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <button type="button" class="cl-swiper-btn yard-swiper-btn cl-swiper-btn-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
           <div class="swiper cl-swiper-{{ section.id }}" style="overflow: hidden;">
@@ -137,25 +143,26 @@
               {%- endfor -%}
             </div>
           </div>
-          <button type="button" class="cl-swiper-btn cl-swiper-btn-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <button type="button" class="cl-swiper-btn yard-swiper-btn cl-swiper-btn-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
         {%- if section.settings.arrow_position == 'bottom_center' -%}
           <div class="cl-swiper-arrows--bottom-center">
-            <button type="button" class="cl-swiper-btn cl-swiper-btn-bc-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <button type="button" class="cl-swiper-btn yard-swiper-btn cl-swiper-btn-bc-prev-{{ section.id }}" aria-label="{{ 'general.slider.previous_slide' | t }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
-            <button type="button" class="cl-swiper-btn cl-swiper-btn-bc-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
+            <button type="button" class="cl-swiper-btn yard-swiper-btn cl-swiper-btn-bc-next-{{ section.id }}" aria-label="{{ 'general.slider.next_slide' | t }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
         {%- endif -%}
-        <div class="cl-swiper-pagination-{{ section.id }} cl-swiper-pagination"></div>
+        <div class="cl-swiper-pagination-{{ section.id }} cl-swiper-pagination yard-swiper-pagination"></div>
       </div>
 
       <script>
         (function () {
+          var CL_AUTOPLAY = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction: false, pauseOnMouseEnter: true }{% else %}false{% endif %};
           function initClSwiper() {
             if (typeof Swiper === 'undefined') {
               setTimeout(initClSwiper, 100);
@@ -168,6 +175,7 @@
             var enableDesktop = el.dataset.swiperDesktop === 'true';
             var enableMobile = el.dataset.swiperMobile === 'true';
             var colsDesktop = parseInt(el.dataset.columnsDesktop) || 3;
+            var colsTablet = parseInt(el.dataset.columnsTablet) || 2;
             var colsMobile = parseInt(el.dataset.columnsMobile) || 1;
             var arrowsDesktop = el.dataset.arrowsDesktop === 'true';
             var arrowsMobile = el.dataset.arrowsMobile === 'true';
@@ -179,6 +187,7 @@
             if (!enabled) {
               el.classList.add('cl-swiper--grid');
               el.style.setProperty('--cl-cols-desktop', colsDesktop);
+              el.style.setProperty('--cl-cols-tablet', colsTablet);
               el.style.setProperty('--cl-cols-mobile', colsMobile);
               el.setAttribute('data-swiper-ready', 'true');
               return;
@@ -186,6 +195,9 @@
 
             var showArrows = isMobile ? arrowsMobile : arrowsDesktop;
             var showPagination = isMobile ? paginationMobile : paginationDesktop;
+
+            // Mobile (22 Yard pattern): peek the next card, pagination only, no arrows.
+            if (isMobile) { showArrows = false; showPagination = true; }
 
             var prevBtn, nextBtn;
             var bcPrevBtn = el.querySelector('.cl-swiper-btn-bc-prev-{{ section.id }}');
@@ -217,8 +229,9 @@
             }
 
             new Swiper('.cl-swiper-{{ section.id }}', {
-              slidesPerView: colsMobile,
+              slidesPerView: colsMobile + 0.2,   // peek next card on mobile
               spaceBetween: 16,
+              autoplay: CL_AUTOPLAY,
               navigation: showArrows ? {
                 nextEl: nextBtn,
                 prevEl: prevBtn,
@@ -245,6 +258,10 @@
               },
               breakpoints: {
                 750: {
+                  slidesPerView: colsTablet,
+                  spaceBetween: 20,
+                },
+                990: {
                   slidesPerView: colsDesktop,
                   spaceBetween: 20,
                 },
@@ -335,54 +352,6 @@
 
 <style>
   /* ===== 22 Yard Category Slider — header + cards ===== */
-  .section-collection-list .cl-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-  .section-collection-list .cl-eyebrow {
-    margin: 0 0 0.4rem;
-    color: #8a2b2b;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 1.6rem;
-    line-height: 1;
-  }
-  .section-collection-list .cl-heading {
-    margin: 0;
-    color: #16161a;
-    font-family: var(--font-heading-family);
-    font-size: 3.6rem;
-    font-weight: 700;
-    line-height: 1.05;
-  }
-  .section-collection-list .cl-outline-btn {
-    display: inline-block;
-    background: #ffffff;
-    border: 1.5px solid #16161a;
-    color: #16161a;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    font-size: 1.6rem;
-    line-height: 1;
-    padding: 1.4rem 2.4rem;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-  }
-  .section-collection-list .cl-outline-btn:hover {
-    background: #16161a;
-    color: #ffffff;
-  }
-  @media screen and (max-width: 749px) {
-    .section-collection-list .cl-header-row {
-      align-items: flex-start;
-    }
-  }
 
   /* Category cards: rounded image, dark bottom gradient, white-ish label box */
   .section-collection-list .card--collection,
@@ -459,8 +428,13 @@
   }
   @media screen and (min-width: 750px) {
     .cl-swiper--grid .swiper-wrapper {
-      grid-template-columns: repeat(var(--cl-cols-desktop, 3), 1fr);
+      grid-template-columns: repeat(var(--cl-cols-tablet, 2), 1fr);
       gap: 20px;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    .cl-swiper--grid .swiper-wrapper {
+      grid-template-columns: repeat(var(--cl-cols-desktop, 3), 1fr);
     }
   }
   .cl-swiper--grid .swiper-slide {
@@ -472,59 +446,12 @@
     display: none !important;
   }
 
-  /* Slider layout */
-  .cl-swiper-section {
-    position: relative;
-  }
-  .cl-swiper-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .cl-swiper-inner .swiper {
-    flex: 1;
-    min-width: 0;
-  }
-  .cl-swiper-btn {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    background: transparent;
-    cursor: pointer;
-    color: inherit;
-    transition: background 0.2s, color 0.2s;
-  }
-  .cl-swiper-btn:hover {
-    background: rgba(0,0,0,0.08);
-  }
-  .cl-swiper-btn.swiper-button-disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-  .cl-swiper-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 16px;
-  }
-  .cl-swiper-pagination .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.3;
-    cursor: pointer;
-  }
-  .cl-swiper-pagination .swiper-pagination-bullet-active {
-    opacity: 1;
-  }
-
-  /* Bottom-center arrow position */
+  /* Slider layout — arrow/pagination styles now in yard-globals.css */
+  .cl-swiper-section { position: relative; }
+  .cl-swiper-inner { display: flex; align-items: center; gap: 1.2rem; }
+  .cl-swiper-inner .swiper { flex: 1; min-width: 0; }
+  /* Arrow buttons use the global .yard-swiper-btn style (yard-globals.css) */
+  /* Pagination styling is global — see .yard-swiper-pagination in yard-globals.css */
   .cl-swiper-arrows--bottom-center {
     display: flex;
     justify-content: center;
@@ -532,12 +459,8 @@
     gap: 1.2rem;
     margin-top: 16px;
   }
-  .cl-swiper-arrows--bottom-center .cl-swiper-btn {
-    flex-shrink: 0;
-  }
-  .cl-swiper--grid .cl-swiper-arrows--bottom-center {
-    display: none !important;
-  }
+  .cl-swiper--grid .cl-swiper-btn,
+  .cl-swiper--grid .cl-swiper-arrows--bottom-center { display: none !important; }
 </style>
 
 {% schema %}
@@ -644,6 +567,23 @@
       "info": "Only applies when Layout mode is Slider."
     },
     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false,
+      "info": "Only applies when Layout mode is Slider."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slide every",
+      "default": 5
+    },
+    {
       "type": "header",
       "content": "t:sections.collection-list.settings.header_layout.content"
     },
@@ -666,6 +606,15 @@
       "step": 1,
       "default": 3,
       "label": "t:sections.collection-list.settings.columns_desktop.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2,
+      "label": "Number of columns on tablet (iPad)"
     },
     {
       "type": "color_scheme",
