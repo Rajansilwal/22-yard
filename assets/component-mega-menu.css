@@ -202,6 +202,7 @@
 .mega-menu__col-link:hover,
 .mega-menu__col-link--active {
   text-decoration: underline;
+  color: #7e1a22;
 }
 
 /* ============================================================
