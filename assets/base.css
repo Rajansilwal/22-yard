@@ -2678,6 +2678,8 @@ input[type='checkbox'] {
 .header__icon .svg-wrapper {
   width: 40px;
   height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
 }
 
 .header__icon::after {
