@@ -177,8 +177,7 @@
 
 .mega-menu__col-heading {
   font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
   text-transform: uppercase;
   color: #222222;
   margin: 0 0 1rem;
@@ -193,6 +192,7 @@
 
 .mega-menu__col-link {
   display: block;
+  font-size: 1.6rem;
   padding: 0.35rem 0;
   font-size: 1.35rem;
   color: #222222;
