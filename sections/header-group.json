@@ -66,6 +66,21 @@
     "header": {
       "type": "header",
       "blocks": {
+        "menu_item_override_wMf6NN": {
+          "type": "menu_item_override",
+          "settings": {
+            "menu_item_handle": "shoes",
+            "menu_type": "mega",
+            "mega_layout": "columns-with-image",
+            "mega_columns": 3,
+            "mega_show_description": false,
+            "mega_collection_handle": "cricket-shoes",
+            "mega_featured_heading": "",
+            "promo_heading": "",
+            "promo_text": "Shop Now →",
+            "promo_link": ""
+          }
+        },
         "menu_item_override_e3V9GT": {
           "type": "menu_item_override",
           "settings": {
@@ -99,6 +114,7 @@
         }
       },
       "block_order": [
+        "menu_item_override_wMf6NN",
         "menu_item_override_e3V9GT",
         "menu_item_override_wYwgtV"
       ],
