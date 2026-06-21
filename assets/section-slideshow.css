@@ -241,7 +241,7 @@
 /* ── Pagination ── */
 .ss-pagination {
   position: absolute;
-  bottom: 2.4rem;
+  bottom: 2.4rem !important;
   left: 0;
   right: 0;
   z-index: 10;
