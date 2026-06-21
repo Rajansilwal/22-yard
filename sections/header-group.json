@@ -55,6 +55,9 @@
         "color_scheme": "scheme-1",
         "show_line_separator": false,
         "show_social": false,
+        "social_position": "left",
+        "social_icon_color": "#ffffff",
+        "social_icon_hover_color": "#f1c40f",
         "enable_country_selector": false,
         "enable_language_selector": false,
         "custom_class": ""
@@ -67,36 +70,31 @@
           "type": "menu_item_override",
           "settings": {
             "menu_item_handle": "",
-            "item_show_icon": false,
             "menu_type": "default",
             "mega_layout": "columns",
             "mega_columns": 4,
             "mega_show_description": false,
-            "mega_product_handle": "",
             "mega_collection_handle": "",
+            "mega_featured_heading": "",
             "promo_heading": "",
             "promo_text": "",
-            "promo_link": "",
-            "mega_featured_heading": "",
-            "mega_featured_link": ""
+            "promo_link": ""
           }
         },
         "menu_item_override_wYwgtV": {
           "type": "menu_item_override",
           "settings": {
             "menu_item_handle": "",
-            "item_show_icon": false,
             "menu_type": "default",
             "mega_layout": "columns",
             "mega_columns": 4,
             "mega_show_description": false,
-            "mega_product_handle": "",
             "mega_collection_handle": "",
-            "promo_heading": "",
-            "promo_text": "",
-            "promo_link": "",
+            "mega_featured_image": "shopify://shop_images/Mask_group_2.png",
             "mega_featured_heading": "",
-            "mega_featured_link": ""
+            "promo_heading": "",
+            "promo_text": "shop bat",
+            "promo_link": "#"
           }
         }
       },
@@ -105,8 +103,6 @@
         "menu_item_override_wYwgtV"
       ],
       "settings": {
-        "header_layout": "logo-left",
-        "mobile_logo_position": "center",
         "menu": "main-menu",
         "menu_type_desktop": "mega",
         "search_max_width": 720,
