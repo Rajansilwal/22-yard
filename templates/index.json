@@ -37,6 +37,7 @@
           "type": "slide",
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/bat_repair_services_banner_1.png",
             "video_url": "",
             "mobile_video_url": "",
             "overlay_opacity": 30,
@@ -57,6 +58,7 @@
           "type": "slide",
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/cricket_clothing_banner.png",
             "video_url": "",
             "mobile_video_url": "",
             "overlay_opacity": 30,
@@ -97,6 +99,7 @@
           "type": "slide",
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/most_sale_products_banner.png",
             "video_url": "",
             "mobile_video_url": "",
             "overlay_opacity": 30,
