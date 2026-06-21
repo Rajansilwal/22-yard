@@ -14,7 +14,7 @@
     --slide-height-full:   100vh;
   }
   .swiper-slideshow-{{ section.id }} .ss-slide__media {
-    height: var(--slide-height-{{ section.settings.slide_height }});
+    height: 60vh;
   }
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -24,6 +24,9 @@
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .swiper-slideshow-{{ section.id }} .ss-slide__media {
+      height: var(--slide-height-{{ section.settings.slide_height }});
     }
   }
 
