@@ -86,7 +86,7 @@
           "settings": {
             "menu_item_handle": "",
             "menu_type": "default",
-            "mega_layout": "columns",
+            "mega_layout": "columns-with-image",
             "mega_columns": 4,
             "mega_show_description": false,
             "mega_collection_handle": "",
