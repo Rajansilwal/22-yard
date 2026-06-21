@@ -79,10 +79,11 @@
           "type": "slide",
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/Gemini_Generated_Image_tc1r9etc1r9etc1r.png",
             "video_url": "",
             "mobile_video_url": "",
             "overlay_opacity": 30,
-            "heading": "Most sale products / Customers favourate",
+            "heading": "Most sale products",
             "heading_size": "h1",
             "subheading": "",
             "button_label": "Shop the Range!",
