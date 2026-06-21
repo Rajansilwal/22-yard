@@ -748,10 +748,6 @@
 
 /* Green "Save X%" pill — third on the line */
 .fc22-save-pill {
-  
-element.style {
-}
-.fc22-save-pill {
     order: 3;
     display: inline-flex;
     align-items: center;
