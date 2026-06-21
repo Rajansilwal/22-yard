@@ -85,7 +85,7 @@
           "type": "menu_item_override",
           "settings": {
             "menu_item_handle": "",
-            "menu_type": "default",
+            "menu_type": "mega",
             "mega_layout": "columns-with-image",
             "mega_columns": 4,
             "mega_show_description": false,
