@@ -79,6 +79,67 @@
         "padding_bottom": 0
       }
     },
+    "trust_bar_8fPpRr": {
+      "type": "trust-bar",
+      "blocks": {
+        "service_y7N6Em": {
+          "type": "service",
+          "settings": {
+            "icon": "repair",
+            "label": "Bat Repairing Service",
+            "sublabel": "Professional repair available",
+            "link": ""
+          }
+        },
+        "service_mRraX6": {
+          "type": "service",
+          "settings": {
+            "icon": "authentic",
+            "label": "100% Authentic",
+            "sublabel": "Genuine products guaranteed",
+            "link": ""
+          }
+        },
+        "service_LQERtB": {
+          "type": "service",
+          "settings": {
+            "icon": "paylater",
+            "label": "Buy Now & Pay Later",
+            "sublabel": "Flexible payment options",
+            "link": ""
+          }
+        },
+        "service_rrkDT6": {
+          "type": "service",
+          "settings": {
+            "icon": "knocking",
+            "label": "Free Bat Knocking",
+            "sublabel": "Oiling and taping included",
+            "link": ""
+          }
+        },
+        "service_zUGBtJ": {
+          "type": "service",
+          "settings": {
+            "icon": "shipping",
+            "label": "Free Shipping",
+            "sublabel": "On orders over $99",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "service_y7N6Em",
+        "service_mRraX6",
+        "service_LQERtB",
+        "service_rrkDT6",
+        "service_zUGBtJ"
+      ],
+      "name": "22 Yard Services",
+      "settings": {
+        "color_scheme": ""
+      }
+    },
     "collection_list_KDQnYf": {
       "type": "collection-list",
       "blocks": {
@@ -479,6 +540,7 @@
   },
   "order": [
     "slideshow_E34qgP",
+    "trust_bar_8fPpRr",
     "collection_list_KDQnYf",
     "featured_collection",
     "promo_banner_6tzGA3",
