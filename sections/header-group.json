@@ -69,7 +69,7 @@
         "menu_item_override_e3V9GT": {
           "type": "menu_item_override",
           "settings": {
-            "menu_item_handle": "",
+            "menu_item_handle": "helmets",
             "menu_type": "default",
             "mega_layout": "columns",
             "mega_columns": 4,
