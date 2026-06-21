@@ -20,39 +20,39 @@
             "show_social": true
           }
         },
-        "quick_links": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Quick Links",
-            "menu": "quick-links"
-          }
-        },
         "brands": {
           "type": "link_list",
           "settings": {
-            "heading": "BRANDS",
-            "menu": "brands"
+            "heading": "Customer Support",
+            "menu": "customer-support"
+          }
+        },
+        "quick_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Services",
+            "menu": "services"
           }
         },
         "category": {
           "type": "link_list",
           "settings": {
-            "heading": "Category",
-            "menu": "category"
+            "heading": "Why 22 Yard",
+            "menu": "why-22-yard"
           }
         },
         "contact": {
           "type": "text",
           "settings": {
-            "heading": "Contact Information",
-            "subtext": "<p><strong>22 Yard Pvt. Lty.</strong><br/>Consectetur Adipiscing Elit, VIC, Australia</p><p><strong><br/>Call Us: </strong><a href=\"tel:+011123456709\">(+011) 1234 5678 09</a></p><p><strong><br/>Mail Us: </strong><a href=\"mailto:info@yard22.com\">info@yard22.com</a></p>"
+            "heading": "Contact Us",
+            "subtext": "<p><strong>22 Yard Pvt. Lty.</strong><br/>Consectetur Adipiscing Elit, VIC, Australia</p><p><strong><br/>Call Us: </strong><a href=\"tel:+61 451090255\" title=\"tel:+61 451090255\">+61 451090255</a></p><p><strong><br/>Mail Us: </strong><a href=\"mailto:22yardsports22@gmail.com\" title=\"mailto:22yardsports22@gmail.com\">22yardsports22@gmail.com</a></p>"
           }
         }
       },
       "block_order": [
         "brand",
-        "quick_links",
         "brands",
+        "quick_links",
         "category",
         "contact"
       ],
