@@ -14,6 +14,13 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_y6eaYB": {
+          "type": "announcement",
+          "settings": {
+            "text": "Bat Repairing Service Available",
+            "link": ""
+          }
+        },
         "announcement-bar-0": {
           "type": "announcement",
           "settings": {
@@ -24,14 +31,14 @@
         "announcement-bar-1": {
           "type": "announcement",
           "settings": {
-            "text": "30 Days Easy Return",
+            "text": "Buy now & Pay later",
             "link": ""
           }
         },
         "announcement-bar-2": {
           "type": "announcement",
           "settings": {
-            "text": "Expert Advice & Customer Support",
+            "text": "Free Bat Knocking, Oiling and Taping",
             "link": ""
           }
         },
@@ -44,6 +51,7 @@
         }
       },
       "block_order": [
+        "announcement_y6eaYB",
         "announcement-bar-0",
         "announcement-bar-1",
         "announcement-bar-2",
