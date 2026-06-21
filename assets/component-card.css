@@ -748,15 +748,19 @@
 
 /* Green "Save X%" pill — third on the line */
 .fc22-save-pill {
-  order: 3;
-  display: inline-flex;
-  align-items: center;
-  background: #d8f1de;
-  color: #1f9254;
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  line-height: 1.4;
-  align-self: center;
+  
+element.style {
+}
+.fc22-save-pill {
+    order: 3;
+    display: inline-flex;
+    align-items: center;
+    background: #2caf6336;
+    color: #2CAF63;
+    font-weight: 400;
+    font-size: 12px;
+    padding: .4rem .6rem;
+    border-radius: 8px;
+    line-height: 1.4;
+    align-self: center;
 }
