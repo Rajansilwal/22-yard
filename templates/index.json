@@ -40,9 +40,9 @@
             "video_url": "",
             "mobile_video_url": "",
             "overlay_opacity": 30,
-            "heading": "New Season Kit Has Landed",
+            "heading": "Bat Repairing Services",
             "heading_size": "h1",
-            "subheading": "Bats, balls & apparel ready for match day",
+            "subheading": "",
             "button_label": "Shop new arrivals",
             "link": "",
             "button_label_2": "Shop Sale",
@@ -52,11 +52,74 @@
             "text_alignment_mobile": "center",
             "color_scheme": ""
           }
+        },
+        "slide_PbkrJB": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "video_url": "",
+            "mobile_video_url": "",
+            "overlay_opacity": 30,
+            "heading": "Customised Clothing Services",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "Shop the Range!",
+            "link": "",
+            "button_label_2": "Shop Sale",
+            "link_2": "",
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "slide_fyAVEY": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "video_url": "",
+            "mobile_video_url": "",
+            "overlay_opacity": 30,
+            "heading": "Most sale products / Customers favourate",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "Shop the Range!",
+            "link": "",
+            "button_label_2": "Shop Sale",
+            "link_2": "",
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "slide_FcXNnH": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "video_url": "",
+            "mobile_video_url": "",
+            "overlay_opacity": 30,
+            "heading": "Sale",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "Shop the Range!",
+            "link": "",
+            "button_label_2": "Shop Sale",
+            "link_2": "",
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-1"
+          }
         }
       },
       "block_order": [
         "slide_PcLfhD",
-        "slide_fn7bi7"
+        "slide_fn7bi7",
+        "slide_PbkrJB",
+        "slide_fyAVEY",
+        "slide_FcXNnH"
       ],
       "name": "Slideshow",
       "settings": {
