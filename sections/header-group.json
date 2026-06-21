@@ -75,10 +75,11 @@
             "mega_columns": 3,
             "mega_show_description": false,
             "mega_collection_handle": "cricket-shoes",
+            "mega_featured_image": "shopify://shop_images/Mask_group_2.png",
             "mega_featured_heading": "",
             "promo_heading": "",
             "promo_text": "Shop Now →",
-            "promo_link": ""
+            "promo_link": "#"
           }
         },
         "menu_item_override_e3V9GT": {
