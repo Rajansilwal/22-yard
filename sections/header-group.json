@@ -84,7 +84,7 @@
         "menu_item_override_wYwgtV": {
           "type": "menu_item_override",
           "settings": {
-            "menu_item_handle": "",
+            "menu_item_handle": "bats",
             "menu_type": "mega",
             "mega_layout": "columns-with-image",
             "mega_columns": 4,
