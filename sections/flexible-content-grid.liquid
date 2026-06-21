@@ -41,74 +41,140 @@
 {%- endif -%}
 
 <style>
-  /* ---------- Brand card ---------- */
-  #bl-{{ uid }} .bl-card{
-    display:flex; align-items:center; justify-content:center;
-    background:#fff; border:1px solid #e7e7e7; border-radius:8px;
-    box-shadow:0 1px 3px rgba(22,22,26,.06);
-    aspect-ratio:3 / 2; padding:1.6rem;
-    text-decoration:none; color:inherit;
-    transition:box-shadow .2s ease, border-color .2s ease;
+  /* ---------- Brand card ----------
+     Safari fix: replaced aspect-ratio (buggy on flex children in Safari)
+     with the classic padding-top percentage hack for a 3:2 ratio.
+  ---------------------------------------- */
+  #bl-{{ uid }} .bl-card {
+    display: block;
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(22,22,26,.06);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .2s ease, border-color .2s ease;
+    overflow: hidden;
   }
-  #bl-{{ uid }} .bl-card:hover{
-    box-shadow:0 4px 14px rgba(22,22,26,.10); border-color:#d8d8d8;
+
+  /* Padding-top trick — forces 3:2 ratio on every browser incl. Safari */
+  #bl-{{ uid }} .bl-card::before {
+    content: '';
+    display: block;
+    padding-top: 66.666%; /* 2 ÷ 3 = 66.666% → 3:2 */
   }
-  #bl-{{ uid }} .bl-card__img{
-    max-width:100%; max-height:100%; object-fit:contain;
-    {% if section.settings.logo_grayscale %}filter:grayscale(100%); opacity:.75; transition:filter .25s ease, opacity .25s ease;{% endif %}
+
+  /* Inner wrapper sits on top of the ::before spacer */
+  #bl-{{ uid }} .bl-card__inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.6rem;
   }
-  {% if section.settings.logo_grayscale %}#bl-{{ uid }} .bl-card:hover .bl-card__img{ filter:none; opacity:1; }{% endif %}
-  #bl-{{ uid }} .bl-card__name{ font-weight:700; font-size:1.4rem; text-align:center; color:#16161a; }
+
+  #bl-{{ uid }} .bl-card:hover {
+    box-shadow: 0 4px 14px rgba(22,22,26,.10);
+    border-color: #d8d8d8;
+  }
+
+  #bl-{{ uid }} .bl-card__img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    {% if section.settings.logo_grayscale %}
+      filter: grayscale(100%);
+      opacity: .75;
+      transition: filter .25s ease, opacity .25s ease;
+    {% endif %}
+  }
+
+  {% if section.settings.logo_grayscale %}
+    #bl-{{ uid }} .bl-card:hover .bl-card__img {
+      filter: none;
+      opacity: 1;
+    }
+  {% endif %}
+
+  #bl-{{ uid }} .bl-card__name {
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    color: #16161a;
+  }
 
   /* ---------- Grid ---------- */
-  #bl-{{ uid }} .bl-grid{
-    display:grid; gap:{{ gap }}px;
-    grid-template-columns:repeat({{ cols_m }}, minmax(0,1fr));
+  #bl-{{ uid }} .bl-grid {
+    display: grid;
+    gap: {{ gap }}px;
+    grid-template-columns: repeat({{ cols_m }}, minmax(0,1fr));
   }
-  @media screen and (min-width:750px){
-    #bl-{{ uid }} .bl-grid{ grid-template-columns:repeat({{ cols_t }}, minmax(0,1fr)); }
+  @media screen and (min-width: 750px) {
+    #bl-{{ uid }} .bl-grid {
+      grid-template-columns: repeat({{ cols_t }}, minmax(0,1fr));
+    }
   }
-  @media screen and (min-width:990px){
-    #bl-{{ uid }} .bl-grid{ grid-template-columns:repeat({{ cols_d }}, minmax(0,1fr)); }
+  @media screen and (min-width: 990px) {
+    #bl-{{ uid }} .bl-grid {
+      grid-template-columns: repeat({{ cols_d }}, minmax(0,1fr));
+    }
   }
 
   /* ---------- Slider ---------- */
-  #bl-{{ uid }} .bl-slider-wrap{
-    position:relative;
-    {% if show_arrows %}padding:0 {{ section.settings.arrow_gutter }}px;{% endif %}
+  #bl-{{ uid }} .bl-slider-wrap {
+    position: relative;
+    {% if show_arrows %}padding: 0 {{ section.settings.arrow_gutter }}px;{% endif %}
   }
-  #bl-{{ uid }} .swiper.bl-swiper{ width:100%; overflow:hidden; position:relative; }
-  #bl-{{ uid }} .swiper.bl-swiper .swiper-slide{ height:auto; box-sizing:border-box; }
+  #bl-{{ uid }} .swiper.bl-swiper { width: 100%; overflow: hidden; position: relative; }
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-slide { height: auto; box-sizing: border-box; }
 
   /* Arrow visuals use the global .yard-swiper-btn style (yard-globals.css);
-     only positioning is section-specific (arrows overlay the slider edges). */
-  #bl-{{ uid }} .bl-arrow{ position:absolute; top:50%; z-index:10; }
-  /* Nothing to slide (slides fit the view): hide arrows entirely */
-  #bl-{{ uid }} .bl-arrow.swiper-button-lock{ display:none !important; }
-  /* Drop the side gutter reserved for arrows when the slider is locked */
-  #bl-{{ uid }} .bl-slider-wrap.bl-locked{ padding-left:0 !important; padding-right:0 !important; }
-  #bl-{{ uid }} .bl-arrow--prev{ left:0; transform:translate(-50%,-50%); }
-  #bl-{{ uid }} .bl-arrow--next{ right:0; transform:translate(50%,-50%); }
-  #bl-{{ uid }} .bl-arrow--prev svg{ transform:rotate(180deg); }
+     only positioning is section-specific. */
+  #bl-{{ uid }} .bl-arrow { position: absolute; top: 50%; z-index: 10; }
+  #bl-{{ uid }} .bl-arrow.swiper-button-lock { display: none !important; }
+  #bl-{{ uid }} .bl-slider-wrap.bl-locked { padding-left: 0 !important; padding-right: 0 !important; }
+  #bl-{{ uid }} .bl-arrow--prev { left: 0; transform: translate(-50%, -50%); }
+  #bl-{{ uid }} .bl-arrow--next { right: 0; transform: translate(50%, -50%); }
+  #bl-{{ uid }} .bl-arrow--prev svg { transform: rotate(180deg); }
   #bl-{{ uid }} .bl-arrow::after,
-  #bl-{{ uid }} .bl-arrow::before{ content:none !important; display:none !important; }
+  #bl-{{ uid }} .bl-arrow::before { content: none !important; display: none !important; }
 
-  /* Pagination — dot/pill styling is global (.yard-swiper-pagination in yard-globals.css).
-     Only the static positioning is section-specific (overrides Swiper's absolute default). */
-  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination{ position:static; }
+  /* Pagination */
+  #bl-{{ uid }} .swiper.bl-swiper .swiper-pagination { position: static; }
 
   {%- unless section.settings.arrows_desktop -%}
-  @media (min-width:750px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
+  @media (min-width: 750px) {
+    #bl-{{ uid }} .bl-arrow { display: none !important; }
+    #bl-{{ uid }} .bl-slider-wrap { padding-left: 0; padding-right: 0; }
+  }
   {%- endunless -%}
-  {%- comment -%} Mobile (22 Yard pattern): never show arrows — pagination only. {%- endcomment -%}
-  @media (max-width:749px){ #bl-{{ uid }} .bl-arrow{ display:none !important; } #bl-{{ uid }} .bl-slider-wrap{ padding-left:0; padding-right:0; } }
-  {%- unless section.settings.pagination_desktop -%}
-  @media (min-width:750px){ #bl-{{ uid }} .swiper-pagination{ display:none !important; } }
-  {%- endunless -%}
-  {%- comment -%} Mobile (22 Yard pattern): always show pagination dots. {%- endcomment -%}
-  @media (max-width:749px){ #bl-{{ uid }} .swiper-pagination{ display:flex !important; } }
 
-  #bl-{{ uid }} .bl-empty{ text-align:center; padding:4rem 2rem; color:rgba(var(--color-foreground),.6); }
+  @media (max-width: 749px) {
+    #bl-{{ uid }} .bl-arrow { display: none !important; }
+    #bl-{{ uid }} .bl-slider-wrap { padding-left: 0; padding-right: 0; }
+  }
+
+  {%- unless section.settings.pagination_desktop -%}
+  @media (min-width: 750px) {
+    #bl-{{ uid }} .swiper-pagination { display: none !important; }
+  }
+  {%- endunless -%}
+
+  @media (max-width: 749px) {
+    #bl-{{ uid }} .swiper-pagination { display: flex !important; }
+  }
+
+  #bl-{{ uid }} .bl-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(var(--color-foreground), .6);
+  }
 </style>
 
 <div class="color-{{ section.settings.color_scheme }} gradient" id="bl-{{ uid }}">
@@ -117,8 +183,12 @@
     {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.button_label != blank -%}
       <div class="bl-header yard-section-header">
         <div class="bl-header__text yard-section-header__text">
-          {%- if section.settings.eyebrow != blank -%}<span class="yard-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
-          {%- if section.settings.heading != blank -%}<h2 class="yard-heading">{{ section.settings.heading }}</h2>{%- endif -%}
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="yard-eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="yard-heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
         </div>
         {%- if section.settings.button_label != blank -%}
           <a class="yard-btn--outline" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label }}</a>
@@ -131,10 +201,14 @@
         <div class="bl-slider-wrap">
           {%- if show_arrows -%}
             <button type="button" class="bl-arrow yard-swiper-btn bl-arrow--prev" aria-label="Previous">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </button>
             <button type="button" class="bl-arrow yard-swiper-btn bl-arrow--next" aria-label="Next">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </button>
           {%- endif -%}
           <div class="swiper bl-swiper" id="bl-swiper-{{ uid }}">
@@ -143,33 +217,38 @@
                 {%- assign brand_img = brand.brand_image.value -%}
                 <div class="swiper-slide">
                   <a class="bl-card" href="{{ brand.brand_url.value | default: '#' }}" aria-label="{{ brand.brand_name.value | escape }}">
-                    {%- if brand_img != blank -%}
-                      {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
-                    {%- else -%}
-                      <span class="bl-card__name">{{ brand.brand_name.value }}</span>
-                    {%- endif -%}
+                    <div class="bl-card__inner">
+                      {%- if brand_img != blank -%}
+                        {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
+                      {%- else -%}
+                        <span class="bl-card__name">{{ brand.brand_name.value }}</span>
+                      {%- endif -%}
+                    </div>
                   </a>
                 </div>
               {%- endfor -%}
             </div>
-            {%- comment -%} Always rendered — mobile always shows dots; desktop visibility controlled by setting. {%- endcomment -%}
             <div class="swiper-pagination yard-swiper-pagination"></div>
           </div>
         </div>
+
       {%- else -%}
         <div class="bl-grid">
           {%- for brand in brands -%}
             {%- assign brand_img = brand.brand_image.value -%}
             <a class="bl-card" href="{{ brand.brand_url.value | default: '#' }}" aria-label="{{ brand.brand_name.value | escape }}">
-              {%- if brand_img != blank -%}
-                {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
-              {%- else -%}
-                <span class="bl-card__name">{{ brand.brand_name.value }}</span>
-              {%- endif -%}
+              <div class="bl-card__inner">
+                {%- if brand_img != blank -%}
+                  {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
+                {%- else -%}
+                  <span class="bl-card__name">{{ brand.brand_name.value }}</span>
+                {%- endif -%}
+              </div>
             </a>
           {%- endfor -%}
         </div>
       {%- endif -%}
+
     {%- else -%}
       {%- if request.design_mode -%}
         <div class="bl-empty">No brands found. Add entries to the <strong>brand_listing</strong> metaobject under Content &rsaquo; Metaobjects (and make sure they're Active).</div>
@@ -189,9 +268,9 @@
       var GAP   = {{ gap }};
       var AUTOPLAY = {% if section.settings.autoplay %}{ delay: {{ section.settings.autoplay_speed | times: 1000 }}, disableOnInteraction:false, pauseOnMouseEnter:true }{% else %}false{% endif %};
 
-      // 2-row grid config for a given number of columns (slides-per-view) — tablet/desktop
+      // 2-row grid config for a given number of columns — tablet/desktop
       function gridCfg(spv){ return { slidesPerView:spv, slidesPerGroup:spv, grid:{ rows:2, fill:'row' }, spaceBetween:GAP }; }
-      // Mobile: keep 2 rows, but peek a quarter of the next column (matches other sliders)
+      // Mobile: 2 rows + peek a quarter of the next column
       function mobileCfg(spv){ return { slidesPerView:spv + 0.2, slidesPerGroup:spv, grid:{ rows:2, fill:'row' }, spaceBetween:GAP }; }
 
       function init(){
@@ -201,18 +280,16 @@
         var wrap = el.closest('.bl-slider-wrap') || el.parentNode;
         if(el._sw){ try{ el._sw.destroy(true,true); }catch(e){} el._sw=null; }
 
-        // Sync the wrapper class so the arrow gutter collapses when there's
-        // nothing to slide (e.g. brand count fits within the slides-per-view).
         function syncLock(sw){ if(wrap){ wrap.classList.toggle('bl-locked', !!sw.isLocked); } }
 
         el._sw = new Swiper(el, Object.assign(mobileCfg(SPV_M), {
-          loop:false,                 // Swiper grid (2 rows) does NOT support loop
-          watchOverflow:true,         // auto-disables nav when there's nothing to slide
-          autoplay:AUTOPLAY,
-          pagination:{ el: el.querySelector('.swiper-pagination'), clickable:true },
-          navigation:{ nextEl: wrap.querySelector('.bl-arrow--next'), prevEl: wrap.querySelector('.bl-arrow--prev') },
-          breakpoints:{ 750: gridCfg(SPV_T), 990: gridCfg(SPV_D) },
-          on:{ afterInit:syncLock, lock:syncLock, unlock:syncLock, breakpoint:syncLock, resize:syncLock }
+          loop: false,
+          watchOverflow: true,
+          autoplay: AUTOPLAY,
+          pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+          navigation: { nextEl: wrap.querySelector('.bl-arrow--next'), prevEl: wrap.querySelector('.bl-arrow--prev') },
+          breakpoints: { 750: gridCfg(SPV_T), 990: gridCfg(SPV_D) },
+          on: { afterInit:syncLock, lock:syncLock, unlock:syncLock, breakpoint:syncLock, resize:syncLock }
         }));
       }
 
@@ -228,13 +305,13 @@
 
 {%- style -%}
   .section-{{ uid }}-padding{
-    padding-top:{{ section.settings.padding_top_mobile }}px;
-    padding-bottom:{{ section.settings.padding_bottom_mobile }}px;
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
   }
-  @media screen and (min-width:750px){
+  @media screen and (min-width: 750px){
     .section-{{ uid }}-padding{
-      padding-top:{{ section.settings.padding_top }}px;
-      padding-bottom:{{ section.settings.padding_bottom }}px;
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
