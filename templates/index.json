@@ -287,7 +287,7 @@
         "show_view_all": true,
         "view_all_label": "VIEW ALL",
         "show_badges": true,
-        "default_badge": "none",
+        "default_badge": "newin",
         "image_ratio": "adapt",
         "image_shape": "default",
         "columns_desktop": 4,
