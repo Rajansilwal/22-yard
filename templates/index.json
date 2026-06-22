@@ -434,7 +434,7 @@
       }
     },
     "flexible_content_grid_6ijBtb": {
-      "type": "flexible-content-grid",
+      "type": "brand-listing-carousal",
       "name": "22 Yard Brand Slider",
       "settings": {
         "eyebrow": "Shop By",
