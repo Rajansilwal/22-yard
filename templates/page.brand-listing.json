@@ -22,7 +22,7 @@
       "type": "brand-listing",
       "name": "Brand Listing Page",
       "settings": {
-        "eyebrow": "Our Partners",
+        "eyebrow": "",
         "heading": "Shop By Brand",
         "columns_desktop": 6,
         "columns_tablet": 4,
