@@ -11,13 +11,34 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 28,
-        "padding_bottom": 28
+        "padding_bottom": 28,
+        "custom_class": ""
+      }
+    },
+    "brand_listing_HwW7RG": {
+      "type": "brand-listing",
+      "name": "Brand Listing Page",
+      "settings": {
+        "eyebrow": "Our Partners",
+        "heading": "Shop By Brand",
+        "columns_desktop": 6,
+        "columns_tablet": 4,
+        "columns_mobile": 2,
+        "grid_gap": 24,
+        "logo_grayscale": false,
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "padding_top_mobile": 36,
+        "padding_bottom_mobile": 36
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "brand_listing_HwW7RG"
   ]
 }
