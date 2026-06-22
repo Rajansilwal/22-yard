@@ -23,8 +23,8 @@
       "name": "Brand Listing Page",
       "settings": {
         "eyebrow": "",
-        "heading": "Shop By Brand",
-        "columns_desktop": 6,
+        "heading": "Brands",
+        "columns_desktop": 8,
         "columns_tablet": 4,
         "columns_mobile": 2,
         "grid_gap": 24,
