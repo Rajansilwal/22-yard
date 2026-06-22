@@ -1,0 +1,201 @@
+{%- comment -%}
+  22 Yard — Brand Listing (Dedicated Page Version)
+  ---------------------------------------------------------------
+  Brands are pulled from the `brand_listing` metaobject:
+     • brand_image  (Image / File)
+     • brand_name   (Single line text)
+     • brand_url    (URL) -> Links to specific collection page
+     • order        (Integer) -> Used for sorting
+
+  Forces a clean grid layout showing all brands across multiple rows.
+{%- endcomment -%}
+
+{%- liquid
+  assign uid    = section.id
+  assign cols_d = section.settings.columns_desktop
+  assign cols_t = section.settings.columns_tablet
+  assign cols_m = section.settings.columns_mobile
+  assign gap    = section.settings.grid_gap
+
+  # ---- Pull + order the brand entries ----
+  assign brands = shop.metaobjects.brand_listing.values | sort: 'order'
+-%}
+
+<style>
+  /* ---------- Brand card ---------- */
+  #bl-{{ uid }} .bl-card {
+    display: block;
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(22,22,26,.06);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .2s ease, border-color .2s ease;
+    overflow: hidden;
+  }
+
+  /* Padding-top trick — forces a consistent 3:2 aspect ratio */
+  #bl-{{ uid }} .bl-card::before {
+    content: '';
+    display: block;
+    padding-top: 66.666%; /* 3:2 ratio */
+  }
+
+  /* Inner wrapper alignment */
+  #bl-{{ uid }} .bl-card__inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.6rem;
+  }
+
+  #bl-{{ uid }} .bl-card:hover {
+    box-shadow: 0 4px 14px rgba(22,22,26,.10);
+    border-color: #d8d8d8;
+  }
+
+  #bl-{{ uid }} .bl-card__img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    {% if section.settings.logo_grayscale %}
+      filter: grayscale(100%);
+      opacity: .75;
+      transition: filter .25s ease, opacity .25s ease;
+    {% endif %}
+  }
+
+  {% if section.settings.logo_grayscale %}
+    #bl-{{ uid }} .bl-card:hover .bl-card__img {
+      filter: none;
+      opacity: 1;
+    }
+  {% endif %}
+
+  #bl-{{ uid }} .bl-card__name {
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    color: #16161a;
+  }
+
+  /* ---------- Grid Layout (Infinite Rows) ---------- */
+  #bl-{{ uid }} .bl-grid {
+    display: grid;
+    gap: {{ gap }}px;
+    grid-template-columns: repeat({{ cols_m }}, minmax(0,1fr));
+  }
+  @media screen and (min-width: 750px) {
+    #bl-{{ uid }} .bl-grid {
+      grid-template-columns: repeat({{ cols_t }}, minmax(0,1fr));
+    }
+  }
+  @media screen and (min-width: 990px) {
+    #bl-{{ uid }} .bl-grid {
+      grid-template-columns: repeat({{ cols_d }}, minmax(0,1fr));
+    }
+  }
+
+  #bl-{{ uid }} .bl-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(var(--color-foreground), .6);
+  }
+</style>
+
+<div class="color-{{ section.settings.color_scheme }} gradient" id="bl-{{ uid }}">
+  <div class="page-width section-{{ uid }}-padding">
+
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="bl-header yard-section-header">
+        <div class="bl-header__text yard-section-header__text">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="yard-eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="yard-heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if brands.size > 0 -%}
+      <div class="bl-grid">
+        {%- for brand in brands -%}
+          {%- assign brand_img = brand.brand_image.value -%}
+          <a class="bl-card" href="{{ brand.brand_url.value | default: '#' }}" aria-label="{{ brand.brand_name.value | escape }}">
+            <div class="bl-card__inner">
+              {%- if brand_img != blank -%}
+                {{ brand_img | image_url: width: 400 | image_tag: loading: 'lazy', widths: '100, 200, 300, 400', alt: brand.brand_name.value, class: 'bl-card__img' }}
+              {%- else -%}
+                <span class="bl-card__name">{{ brand.brand_name.value }}</span>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      {%- if request.design_mode -%}
+        <div class="bl-empty">No brands found. Add entries to the <strong>brand_listing</strong> metaobject under Content &rsaquo; Metaobjects (and make sure they're Active).</div>
+      {%- endif -%}
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ uid }}-padding{
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  @media screen and (min-width: 750px){
+    .section-{{ uid }}-padding{
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Brand Listing Page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "paragraph", "content": "Displays all brands in a multi-row grid view. Links pull directly from the 'brand_url' field in your Content > Metaobjects > brand_listing configuration." },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our Partners" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Shop By Brand" },
+
+    { "type": "header", "content": "Grid Layout Config" },
+    { "type": "range", "id": "columns_desktop", "min": 2, "max": 10, "step": 1, "label": "Columns — desktop", "default": 6 },
+    { "type": "range", "id": "columns_tablet",  "min": 2, "max": 6,  "step": 1, "label": "Columns — tablet",  "default": 4 },
+    { "type": "range", "id": "columns_mobile",  "min": 1, "max": 4,  "step": 1, "label": "Columns — mobile",  "default": 2 },
+    { "type": "range", "id": "grid_gap", "min": 0, "max": 48, "step": 2, "unit": "px", "label": "Gap between items", "default": 24 },
+
+    { "type": "header", "content": "Logos" },
+    { "type": "checkbox", "id": "logo_grayscale", "label": "Grayscale logos (color on hover)", "default": false },
+
+    { "type": "header", "content": "Appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+
+    { "type": "header", "content": "Section padding" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding top (desktop)", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding bottom (desktop)", "default": 60 },
+    { "type": "range", "id": "padding_top_mobile", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding top (mobile)", "default": 36 },
+    { "type": "range", "id": "padding_bottom_mobile", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding bottom (mobile)", "default": 36 }
+  ],
+  "presets": [
+    { "name": "Brand Listing Page" }
+  ]
+}
+{% endschema %}
