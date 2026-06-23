@@ -20,6 +20,8 @@
   assign sort_by = results.sort_by | default: results.default_sort_by
   assign total_active_values = 0
   assign default_presentation = 'text'
+  # Default state of the vertical sidebar filter groups: open_all | close_all | open_first
+  assign filter_open_state = filter_open_state | default: 'open_first'
   if results.url
     assign results_url = results.url
   else
@@ -126,17 +128,18 @@
               {% case filter.type %}
                 {% when 'boolean', 'list' %}
                   <details
-                      id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
-                      class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
-                      data-index="{{ forloop.index }}"
-                      {% if filter_type == 'vertical' and forloop.index == 1 %}
-                        open
-                      {% endif %}
-
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    open
+                    {% if filter_type == 'vertical' %}
+                      {%- if filter_open_state == 'open_all' -%}
+                        open
+                      {%- elsif filter_open_state == 'open_first' and forloop.index == 1 -%}
+                        open
+                      {%- endif -%}
+                    {% else %}
+                      open
+                    {% endif %}
                   >
                     <summary
                       class="facets__summary caption-large focus-offset"
@@ -306,7 +309,15 @@
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    open
+                    {% if filter_type == 'vertical' %}
+                      {%- if filter_open_state == 'open_all' -%}
+                        open
+                      {%- elsif filter_open_state == 'open_first' and forloop.index == 1 -%}
+                        open
+                      {%- endif -%}
+                    {% else %}
+                      open
+                    {% endif %}
                   >
                     <summary class="facets__summary caption-large focus-offset">
                       <div>

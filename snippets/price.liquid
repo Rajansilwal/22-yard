@@ -114,8 +114,19 @@
       {%- endif -%}
     </div>
     {%- if show_badges -%}
+      {%- liquid
+        assign save_pct = 0
+        if compare_at_price > price and compare_at_price > 0
+          assign save_diff = compare_at_price | minus: price
+          assign save_pct = save_diff | times: 100.0 | divided_by: compare_at_price | round
+        endif
+      -%}
       <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
-        {{ 'products.product.on_sale' | t }}
+        {%- if save_pct > 0 -%}
+          Save {{ save_pct }}%
+        {%- else -%}
+          {{ 'products.product.on_sale' | t }}
+        {%- endif -%}
       </span>
 
       <span class="badge price__badge-sold-out color-{{ settings.sold_out_badge_color_scheme }}">

@@ -103,8 +103,12 @@
           >
             {%- liquid
               assign media_position = media_position | default: 0 | plus: 1
+              # 22 Yard: eager-load the first few main images so switching from a
+              # thumbnail is instant (items are display:none until active, and lazy
+              # images would otherwise only fetch on click). Beyond the first 6,
+              # fall back to lazy to keep the initial page load reasonable.
               assign lazy_load = false
-              if media_position > 1
+              if media_position > 6
                 assign lazy_load = true
               endif
             -%}

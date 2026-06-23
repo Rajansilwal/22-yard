@@ -1,0 +1,245 @@
+{% comment %}
+  22 Yard — Sticky Add to Cart bar (bottom)
+
+  Appears fixed at the bottom of the viewport once the main buy
+  buttons scroll out of view. Its button proxies a click to the
+  real product form submit, so the currently selected variant is
+  added. The price mirrors the main price block (kept in sync on
+  variant change).
+
+  Accepts:
+  - product: {Object}
+  - section_id: {String}
+{% endcomment %}
+
+<div
+  class="yard-sticky-atc"
+  id="YardStickyATC-{{ section_id }}"
+  data-section-id="{{ section_id }}"
+>
+  <div class="page-width yard-sticky-atc__inner">
+    <div class="yard-sticky-atc__product">
+      {%- if product.featured_media -%}
+        <img
+          class="yard-sticky-atc__img"
+          src="{{ product.featured_media | image_url: width: 120 }}"
+          width="52"
+          height="52"
+          alt="{{ product.featured_media.alt | escape | default: product.title | escape }}"
+          loading="lazy"
+        >
+      {%- endif -%}
+      <div class="yard-sticky-atc__text">
+        <span class="yard-sticky-atc__title">{{ product.title | escape }}</span>
+        <span class="yard-sticky-atc__price" id="YardStickyPrice-{{ section_id }}">
+          {%- render 'price', product: product, use_variant: true, show_badges: false -%}
+        </span>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="yard-sticky-atc__btn button button--primary"
+      data-yard-sticky-add
+      aria-label="{{ 'products.product.add_to_cart' | t }}"
+    >
+      {{ 'products.product.add_to_cart' | t }}
+    </button>
+  </div>
+</div>
+
+{%- style -%}
+  .yard-sticky-atc {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    background: #ffffff;
+    border-top: 1px solid rgba(22, 22, 26, 0.12);
+    box-shadow: 0 -4px 16px rgba(22, 22, 26, 0.08);
+    transform: translateY(110%);
+    transition: transform 0.28s ease;
+    padding: 0.8rem 0;
+  }
+
+  .yard-sticky-atc.is-visible {
+    transform: translateY(0);
+  }
+
+  .yard-sticky-atc__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+  }
+
+  .yard-sticky-atc__product {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    min-width: 0;
+  }
+
+  .yard-sticky-atc__img {
+    width: 5.2rem;
+    height: 5.2rem;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid rgba(22, 22, 26, 0.1);
+    flex-shrink: 0;
+  }
+
+  .yard-sticky-atc__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .yard-sticky-atc__title {
+    font-family: var(--font-heading-family);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #16161a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 38rem;
+  }
+
+  .yard-sticky-atc__price .price {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .yard-sticky-atc__price .price__container {
+    margin: 0;
+  }
+
+  /* Match the home-page button (.yard-btn--solid): white fill,
+     ink border, inverts to ink on hover. */
+  .yard-sticky-atc__btn {
+    flex-shrink: 0;
+    min-width: 18rem;
+    min-height: 0;
+    padding: 1.2rem 2.4rem;
+    background: #ffffff;
+    color: #16161a;
+    border: 1.5px solid #16161a;
+    border-radius: 2px;
+    box-shadow: none;
+    text-transform: uppercase;
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .yard-sticky-atc__btn::before,
+  .yard-sticky-atc__btn::after {
+    display: none;
+  }
+
+  .yard-sticky-atc__btn:hover:not([disabled]) {
+    background: #16161a;
+    color: #ffffff;
+    border-color: #16161a;
+  }
+
+  @media screen and (max-width: 749px) {
+    .yard-sticky-atc__img {
+      width: 4.4rem;
+      height: 4.4rem;
+    }
+    .yard-sticky-atc__title {
+      max-width: 16rem;
+      font-size: 1.3rem;
+    }
+    .yard-sticky-atc__btn {
+      min-width: auto;
+      flex: 1;
+      padding: 1.2rem 1.6rem;
+      font-size: 1.1rem;
+    }
+    .yard-sticky-atc__inner {
+      gap: 1rem;
+    }
+  }
+{%- endstyle -%}
+
+<script>
+  (function () {
+    var sectionId = {{ section_id | json }};
+    var bar = document.getElementById('YardStickyATC-' + sectionId);
+    if (!bar) return;
+
+    var root = document.getElementById('MainProduct-' + sectionId);
+    if (!root) return;
+
+    var mainSubmit = root.querySelector('.product-form__submit');
+    var anchor = root.querySelector('.product-form__buttons') || mainSubmit;
+    var stickyBtn = bar.querySelector('[data-yard-sticky-add]');
+    var stickyPrice = document.getElementById('YardStickyPrice-' + sectionId);
+    var mainPrice = document.getElementById('price-' + sectionId);
+
+    // Proxy the sticky button to the real Add to cart button.
+    if (stickyBtn && mainSubmit) {
+      stickyBtn.addEventListener('click', function () {
+        mainSubmit.click();
+      });
+    }
+
+    // Mirror the main submit's disabled / label state (e.g. Sold out).
+    function syncButton() {
+      if (!mainSubmit || !stickyBtn) return;
+      stickyBtn.disabled = mainSubmit.disabled;
+      var label = mainSubmit.querySelector('span:not(.sold-out-message)');
+      if (label && label.textContent.trim()) {
+        stickyBtn.textContent = label.textContent.trim();
+      }
+    }
+
+    // Keep the sticky price in sync with the main price block.
+    function syncPrice() {
+      if (stickyPrice && mainPrice) {
+        var priceEl = mainPrice.querySelector('.price');
+        if (priceEl) stickyPrice.innerHTML = priceEl.outerHTML;
+      }
+    }
+
+    if (mainSubmit) {
+      new MutationObserver(syncButton).observe(mainSubmit, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+    if (mainPrice) {
+      new MutationObserver(syncPrice).observe(mainPrice, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    // Show the bar only once the buy buttons have scrolled above the viewport.
+    if ('IntersectionObserver' in window && anchor) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            var aboveViewport = entry.boundingClientRect.top < 0;
+            if (!entry.isIntersecting && aboveViewport) {
+              bar.classList.add('is-visible');
+            } else {
+              bar.classList.remove('is-visible');
+            }
+          });
+        },
+        { threshold: 0 }
+      );
+      io.observe(anchor);
+    }
+  })();
+</script>

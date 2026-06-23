@@ -1,0 +1,296 @@
+/* =============================================================
+   22 Yard — Product details page
+   Aligns the PDP with the home-page design system defined in
+   yard-globals.css.
+
+   Design tokens:
+     maroon accent  #8a2b2b
+     ink / heading  #16161a
+     headings use   var(--font-heading-family)
+     labels         uppercase, letter-spaced, weight 700
+   Loaded last by sections/main-product.liquid so it wins the
+   cascade. Scoped under .product to stay on the PDP.
+   ============================================================= */
+
+/* =============================================================
+   MEDIA GALLERY — smooth thumbnail → main image switching
+   ============================================================= */
+@media screen and (min-width: 750px) {
+  /* Fade the newly active main image in (the switch is a display
+     toggle, so animate opacity each time it becomes active). */
+  .product--thumbnail .product__media-item.is-active,
+  .product--thumbnail_slider .product__media-item.is-active {
+    animation: yardMediaFade 0.32s ease;
+  }
+
+  .product--thumbnail .product__media-item .product__media img,
+  .product--thumbnail_slider .product__media-item .product__media img {
+    transition: opacity 0.32s ease;
+  }
+}
+
+@keyframes yardMediaFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Active thumbnail — brand maroon highlight */
+.product .thumbnail {
+  border-radius: 2px;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.product .thumbnail[aria-current] {
+  box-shadow: 0 0 0 0.2rem #8a2b2b;
+  border-color: #8a2b2b;
+}
+
+.product .thumbnail[aria-current]::after {
+  border-color: #8a2b2b;
+}
+
+.product .thumbnail:hover {
+  opacity: 0.82;
+}
+
+/* ── Vendor / eyebrow above the title ── */
+.product .product__text.caption-with-letter-spacing {
+  color: #8a2b2b;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Product title — heading font, capitalized, moderate size ── */
+.product .product__title h1,
+.product .product__title h2,
+.product .product__title .h1 {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 800;
+  text-transform: capitalize;
+  letter-spacing: 0.005em;
+  line-height: 1.15;
+  color: #16161a;
+  font-size: 2.2rem;
+}
+
+@media screen and (min-width: 990px) {
+  .product .product__title h1,
+  .product .product__title h2,
+  .product .product__title .h1 {
+    font-size: 2.6rem;
+  }
+}
+
+/* ── Price ── */
+.product .price,
+.product .price .price-item {
+  color: #16161a;
+}
+
+.product .price--large .price-item {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+}
+
+/* Sale price + savings in brand maroon */
+.product .price--on-sale .price-item--sale,
+.product .price__sale .price-item--last {
+  color: #8a2b2b;
+}
+
+.product .price--on-sale .price-item--regular {
+  color: rgba(22, 22, 26, 0.5);
+}
+
+/* "Save X%" badge — match the product-card save pill (green) */
+.product .price__badge-sale {
+  background: #2caf6336;
+  color: #2caf63;
+  border: 0;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+}
+
+/* Tax / shipping note — muted */
+.product .product__tax,
+.product .product__sku,
+.product .volume-pricing-note {
+  color: rgba(22, 22, 26, 0.55);
+}
+
+/* =============================================================
+   VARIANT PICKER
+   ============================================================= */
+
+/* Option labels (Size, Color…) — eyebrow treatment */
+.product .product-form__input .form__label {
+  font-family: var(--font-heading-family);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: #16161a;
+}
+
+/* Pills */
+.product .product-form__input--pill input[type='radio'] + label {
+  font-weight: 600;
+  border-radius: 2px;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.product .product-form__input--pill input[type='radio'] + label:hover {
+  border-color: #8a2b2b;
+  color: #8a2b2b;
+}
+
+/* Selected pill — solid maroon */
+.product .product-form__input--pill input[type='radio']:checked + label {
+  background-color: #8a2b2b;
+  border-color: #8a2b2b;
+  color: #ffffff;
+}
+
+/* Dropdown select focus */
+.product .product-form__input--dropdown .select__select:focus,
+.product .product-form__input--dropdown .select__select:focus-visible {
+  outline-color: #8a2b2b;
+}
+
+/* =============================================================
+   QUANTITY SELECTOR
+   ============================================================= */
+
+.product .quantity {
+  color: #16161a;
+}
+
+/* Maroon border highlight when the quantity field is focused */
+.product .quantity:focus-within:after {
+  box-shadow: 0 0 0 var(--inputs-border-width) #8a2b2b;
+}
+
+.product .quantity__button:hover {
+  color: #8a2b2b;
+}
+
+/* =============================================================
+   BUY BUTTONS  —  match the home-page button (.yard-btn--solid):
+   white fill + ink border, inverts to ink on hover.
+   ============================================================= */
+
+.product .product-form__submit,
+.product .product-form__submit.button--primary,
+.product .product-form__submit.button--secondary {
+  background: #ffffff;
+  color: #16161a;
+  border: 1.5px solid #16161a;
+  border-radius: 2px;
+  box-shadow: none;
+  min-height: 0;
+  padding: 1.4rem 1.8rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+/* Drop Dawn's pseudo-element background / border layers */
+.product .product-form__submit::before,
+.product .product-form__submit::after {
+  display: none;
+}
+
+.product .product-form__submit > span {
+  color: inherit;
+}
+
+.product .product-form__submit:hover:not([disabled]) {
+  background: #16161a;
+  color: #ffffff;
+  border-color: #16161a;
+}
+
+.product .product-form__submit[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 749px) {
+  .product .product-form__submit,
+  .product .product-form__submit.button--primary,
+  .product .product-form__submit.button--secondary {
+    font-size: 1.1rem;
+    padding: 1.3rem 1.4rem;
+  }
+}
+
+/* Dynamic "Buy it now" stays the merchant's payment-button style,
+   but match the label casing of the primary button. */
+.product .shopify-payment-button__button {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Pickup availability link */
+.product .pickup-availability-button,
+.product .product__pickup-availabilities .button {
+  color: #8a2b2b;
+}
+
+/* =============================================================
+   ACCORDION / COLLAPSIBLE TABS
+   ============================================================= */
+
+.product__accordion .accordion__title,
+.product__accordion .summary__title h2 {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.4rem;
+  color: #16161a;
+}
+
+.product__accordion summary .icon-caret,
+.product__accordion summary .svg-wrapper {
+  color: #8a2b2b;
+}
+
+.product__accordion summary:hover .accordion__title {
+  color: #8a2b2b;
+}
+
+/* =============================================================
+   DESCRIPTION, RATING, SHARE
+   ============================================================= */
+
+.product .product__description {
+  color: rgba(22, 22, 26, 0.85);
+  line-height: 1.7;
+}
+
+/* Inline rating stars in brand maroon */
+.product .rating-star {
+  --color-rating-star: #8a2b2b;
+}
+
+/* Share link */
+.product .share-button__button {
+  color: #8a2b2b;
+}

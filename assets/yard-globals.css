@@ -82,6 +82,8 @@
   color: #16161a;
   text-decoration: none;
   text-transform: uppercase;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
   font-weight: 700;
   font-size: 1.2rem;
   letter-spacing: 0.08em;
@@ -116,6 +118,8 @@
   color: #16161a;
   text-decoration: none;
   text-transform: uppercase;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
   font-weight: 700;
   font-size: 1.2rem;
   letter-spacing: 0.08em;

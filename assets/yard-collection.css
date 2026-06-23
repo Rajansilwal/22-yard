@@ -1,0 +1,200 @@
+
+/* =============================================================
+   22 Yard — Collection page styling
+   Aligns collections/all (banner, sorting, vertical sidebar
+   filters) with the home-page design system defined in
+   yard-globals.css.
+
+   Design tokens:
+     maroon accent  #8a2b2b
+     ink / heading  #16161a
+     headings use   var(--font-heading-family)
+     labels         uppercase, letter-spaced, weight 700
+   Loaded by sections/main-collection-product-grid.liquid.
+   ============================================================= */
+
+/* Collection banner is a self-contained section: see
+   sections/main-collection-banner.liquid (.yard-collection-banner). */
+
+/* =============================================================
+   SORTING (top-of-page sort dropdown — vertical & horizontal)
+   ============================================================= */
+
+.facet-filters__label label,
+.mobile-facets__sort label {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: #8a2b2b;
+}
+
+.facet-filters__sort,
+.mobile-facets__sort .select__select {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  color: #16161a;
+  text-transform: none;
+}
+
+.facet-filters__field .select .icon-caret,
+.mobile-facets__sort .select .icon-caret {
+  color: #8a2b2b;
+}
+
+/* =============================================================
+   VERTICAL SIDEBAR FILTERS
+   ============================================================= */
+
+/* ── "Filter by" heading — eyebrow/heading treatment ── */
+.facets__heading--vertical {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #16161a;
+  font-size: 1.6rem !important;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid #16161a;
+}
+
+/* ── Filter group dividers ── */
+@media screen and (min-width: 750px) {
+  .facets__disclosure-vertical {
+    border-top: 1px solid rgba(22, 22, 26, 0.12);
+  }
+}
+
+/* ── Filter group titles (Size, Color, Price…) ── */
+.facets-vertical .facets__summary-label,
+.facets__disclosure-vertical .facets__summary-label {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 1.3rem;
+  color: #16161a;
+}
+
+.facets__disclosure-vertical .facets__summary {
+  color: #16161a;
+}
+
+.facets__disclosure-vertical .facets__summary:hover .facets__summary-label {
+  color: #8a2b2b;
+  text-decoration: none;
+}
+
+/* Caret in brand maroon */
+.facets__disclosure-vertical .facets__summary .icon-caret {
+  color: #8a2b2b;
+}
+
+/* Selected-count badge next to group title */
+.facets__disclosure-vertical .facets__selected {
+  color: #8a2b2b;
+  font-weight: 700;
+}
+
+/* ── Filter value rows ── */
+.facets-vertical .facet-checkbox__text-label {
+  color: rgba(22, 22, 26, 0.85);
+  transition: color 0.15s ease;
+}
+
+.facets-vertical .facets__label:hover .facet-checkbox__text-label,
+.facets-vertical .facets__label.active .facet-checkbox__text-label {
+  color: #8a2b2b;
+}
+
+/* Checked state — maroon box + checkmark */
+.facets-vertical .facet-checkbox.active > svg,
+.facets-vertical .facets__label.active > svg {
+  color: #8a2b2b;
+}
+
+.facets-vertical .facet-checkbox > input[type='checkbox']:checked ~ .svg-wrapper > .icon-checkmark {
+  color: #8a2b2b;
+}
+
+/* ── Show more / show less link ── */
+.button-show-more .label-text {
+  color: #8a2b2b;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+
+/* =============================================================
+   ACTIVE FILTER PILLS  —  match .yard-btn--outline
+   ============================================================= */
+
+.active-facets span.active-facets__button-inner {
+  background: #ffffff;
+  border: 1.5px solid #16161a;
+  color: #16161a;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  border-radius: 2px;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.active-facets .active-facets__button:hover span.active-facets__button-inner,
+.active-facets .active-facets__button:focus-within span.active-facets__button-inner {
+  background: #16161a;
+  color: #ffffff;
+  border-color: #16161a;
+}
+
+/* "Clear all" link — maroon, uppercase */
+.active-facets__button-remove span,
+.active-facets__button-remove {
+  color: #8a2b2b;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-decoration-color: #8a2b2b;
+}
+
+/* =============================================================
+   PRODUCT COUNT TEXT
+   ============================================================= */
+
+.product-count__text,
+.product-count-vertical .product-count__text {
+  color: rgba(22, 22, 26, 0.6);
+  font-size: 1.3rem;
+}
+
+/* Price filter block is styled inline in snippets/price-facet.liquid. */
+
+/* =============================================================
+   MOBILE FILTER / SORT DRAWER
+   ============================================================= */
+
+.mobile-facets__open-label,
+.mobile-facets__heading {
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.mobile-facets__summary span,
+.mobile-facets__close-button span {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #16161a;
+}
+
+/* Apply button in mobile drawer — solid maroon */
+.mobile-facets__footer .button--primary {
+  --color-button: 138, 43, 43;
+  --color-button-text: 255, 255, 255;
+}

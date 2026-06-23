@@ -1,3 +1,10 @@
+/* =============================================================
+   22 Yard — Pagination
+   Bounded, rounded bordered page buttons + circular arrow
+   buttons, highlighted current page. Brand maroon #8a2b2b,
+   ink #16161a. Shared across collection / search / blog.
+   ============================================================= */
+
 .pagination-wrapper {
   margin-top: 4rem;
 }
@@ -12,71 +19,124 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
 }
 
+/* Reset Dawn's fixed track sizing — buttons size themselves */
 .pagination__list > li {
-  flex: 1 0 4.4rem;
-  max-width: 4.4rem;
+  flex: 0 0 auto;
+  max-width: none;
+  margin: 0;
 }
 
 .pagination__list > li:not(:last-child) {
-  margin-right: 1rem;
+  margin-right: 0;
 }
 
+/* ── Base item (numbers / gap) — plain text, no box ── */
 .pagination__item {
-  color: rgb(var(--color-foreground));
+  --yard-pg-size: 4rem;
+  color: #16161a;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 4.4rem;
-  width: 100%;
-  padding: 0;
+  box-sizing: border-box;
+  min-width: 3rem;
+  height: var(--yard-pg-size);
+  padding: 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
   text-decoration: none;
+  border: 0;
+  background: transparent;
+  transition: color 0.18s ease;
 }
 
-a.pagination__item:hover::after {
-  height: 0.1rem;
+/* ── Number links — hover in maroon (text only) ── */
+a.pagination__item:not(.pagination__item-arrow):hover {
+  color: #8a2b2b;
 }
 
-.pagination__item .icon-caret {
-  height: 0.6rem;
+/* ── Current page — maroon text highlight, no box ── */
+.pagination__item--current {
+  color: #8a2b2b;
+  font-weight: 800;
+  cursor: default;
 }
 
-.pagination__item--current::after {
-  height: 0.1rem;
+/* ── Gap / ellipsis (…) — muted plain text ── */
+span.pagination__item {
+  min-width: auto;
+  padding: 0 0.2rem;
+  color: rgba(22, 22, 26, 0.45);
 }
 
-.pagination__item--current::after,
-.pagination__item:hover::after {
-  content: '';
+/* ── Prev / Next — circular bordered arrow buttons ── */
+.pagination__item-arrow {
+  min-width: var(--yard-pg-size);
+  width: var(--yard-pg-size);
+  border: 1.5px solid rgba(22, 22, 26, 0.18);
+  border-radius: 50%;
+  padding: 0;
+  color: #16161a;
+}
+
+.pagination__item-arrow .svg-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.pagination__item-arrow svg {
+  width: 1.8rem;
+  height: 1.8rem;
   display: block;
-  width: 2rem;
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: currentColor;
 }
 
-.pagination__item--next .icon {
-  margin-left: -0.2rem;
-  transform: rotate(90deg);
+.pagination__item-arrow:not(.pagination__item--disabled):hover {
+  background: #8a2b2b;
+  border-color: #8a2b2b;
+  color: #ffffff;
 }
 
-.pagination__item--next:hover .icon {
-  transform: rotate(90deg) scale(1.07);
+.pagination__item-arrow:not(.pagination__item--disabled):hover svg {
+  stroke: #ffffff;
 }
 
-.pagination__item--prev .icon {
-  margin-right: -0.2rem;
-  transform: rotate(-90deg);
+/* ── Disabled prev/next — visible but greyed out, not clickable ── */
+.pagination__item--disabled {
+  color: rgba(22, 22, 26, 0.25);
+  border-color: rgba(22, 22, 26, 0.1);
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
 }
 
-.pagination__item--prev:hover .icon {
-  transform: rotate(-90deg) scale(1.07);
+/* Keyboard focus visibility */
+.pagination__item:focus-visible {
+  outline: 0.2rem solid #8a2b2b;
+  outline-offset: 0.2rem;
 }
 
-.pagination__item-arrow:hover::after {
-  display: none;
+/* ── Mobile: slightly smaller ── */
+@media screen and (max-width: 749px) {
+  .pagination__list {
+    gap: 0.6rem;
+  }
+
+  .pagination__item {
+    --yard-pg-size: 3.6rem;
+    font-size: 1.4rem;
+  }
+
+  .pagination__item-arrow .svg-wrapper,
+  .pagination__item-arrow svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
 }

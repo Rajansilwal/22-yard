@@ -25,6 +25,9 @@
     {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
 
+  {%- comment -%} 22 Yard branding overrides — load last so they win the cascade {%- endcomment -%}
+  {{ 'yard-product.css' | asset_url | stylesheet_tag }}
+
   {%- style -%}
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -735,6 +738,10 @@
     <script type="application/ld+json">
       {{ product | structured_data }}
     </script>
+
+    {%- if section.settings.enable_sticky_atc -%}
+      {%- render 'sticky-add-to-cart', product: product, section_id: section.id -%}
+    {%- endif -%}
   </div>
 </product-info>
 
@@ -2254,6 +2261,13 @@
       "id": "enable_video_looping",
       "default": false,
       "label": "t:sections.main-product.settings.enable_video_looping.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_atc",
+      "default": true,
+      "label": "Enable sticky Add to cart bar",
+      "info": "Shows a fixed bottom bar with the product and an Add to cart button once the main buttons scroll out of view."
     },
     {
       "type": "header",

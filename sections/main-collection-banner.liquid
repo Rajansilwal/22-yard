@@ -1,46 +1,201 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
-{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Resolve the banner background image: explicit override first, else the
+  # collection image (when enabled). No image -> solid background colour.
+  assign bg_image = section.settings.background_image
+  if bg_image == blank and section.settings.show_collection_image and collection.image
+    assign bg_image = collection.image
+  endif
+
+  assign has_image = false
+  if bg_image != blank
+    assign has_image = true
+  endif
+
+  # Only render the overlay when it can actually be seen (image + opacity > 0).
+  assign show_overlay = false
+  if has_image and section.settings.overlay_opacity > 0
+    assign show_overlay = true
+  endif
+
+  # Custom background colour for the no-image case. A color setting returns ''
+  # when unset and 'rgba(0,0,0,0)' when "none" is chosen.
+  assign bg_color = section.settings.background_color
+  assign use_bg_color = false
+  if has_image == false and bg_color != blank and bg_color != 'rgba(0,0,0,0)'
+    assign use_bg_color = true
+  endif
+
+  assign align = section.settings.content_alignment | default: 'left'
+
+  # The /collections/all page is Shopify's auto-generated "all products"
+  # collection (handle "all"), whose title is "Products". Show a friendlier
+  # label there; every other collection keeps its own name.
+  assign banner_title = collection.title
+  if collection.handle == 'all'
+    assign banner_title = section.settings.all_collection_title | default: 'Shop All'
+  endif
+-%}
 
 {%- style -%}
-  @media screen and (max-width: 749px) {
-    .collection-hero--with-image .collection-hero__inner {
-      padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
+  #YardCollectionBanner-{{ section.id }} {
+    --yard-banner-min-height: {{ section.settings.min_height_mobile }}px;
+    --yard-banner-overlay-color: {{ section.settings.overlay_color }};
+    --yard-banner-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --yard-banner-text-color: {{ section.settings.text_color }};
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  @media screen and (min-width: 750px) {
+    #YardCollectionBanner-{{ section.id }} {
+      --yard-banner-min-height: {{ section.settings.min_height }}px;
     }
+  }
+
+  #YardCollectionBanner-{{ section.id }} .yard-collection-banner__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  /* Overlay as a pseudo-element — avoids an empty <div>, which the global
+     `div:empty { display: none }` rule in base.css would hide. */
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--yard-banner-overlay-color);
+    opacity: var(--yard-banner-overlay-opacity);
+    pointer-events: none;
+  }
+
+  #YardCollectionBanner-{{ section.id }} .yard-collection-banner__inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--yard-banner-min-height);
+    padding-top: 3.2rem;
+    padding-bottom: 3.2rem;
+    gap: 1.2rem;
+  }
+
+  #YardCollectionBanner-{{ section.id }} .yard-collection-banner__title {
+    margin: 0;
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 2.8rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    #YardCollectionBanner-{{ section.id }} .yard-collection-banner__title {
+      font-size: 4rem;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    #YardCollectionBanner-{{ section.id }} .yard-collection-banner__title {
+      font-size: 4.8rem;
+    }
+  }
+
+  #YardCollectionBanner-{{ section.id }} .yard-collection-banner__description {
+    margin: 0;
+    max-width: 60rem;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    opacity: 0.92;
+  }
+
+  @media screen and (min-width: 750px) {
+    #YardCollectionBanner-{{ section.id }} .yard-collection-banner__description {
+      font-size: 1.6rem;
+    }
+  }
+
+  /* Image banner: force chosen text colour over the overlay */
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--image {
+    color: var(--yard-banner-text-color);
+  }
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--image .yard-collection-banner__title,
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--image .yard-collection-banner__description {
+    color: var(--yard-banner-text-color);
+  }
+
+  /* ── Alignment ── */
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--center .yard-collection-banner__inner {
+    align-items: center;
+    text-align: center;
+  }
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--center .yard-collection-banner__description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--right .yard-collection-banner__inner {
+    align-items: flex-end;
+    text-align: right;
+  }
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--right .yard-collection-banner__description {
+    margin-left: auto;
+  }
+  #YardCollectionBanner-{{ section.id }}.yard-collection-banner--left .yard-collection-banner__inner {
+    align-items: flex-start;
+    text-align: left;
   }
 {%- endstyle -%}
 
-<div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
-  <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-    <div class="collection-hero__text-wrapper">
-      <h1 class="collection-hero__title">
-        <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
-        {{- collection.title | escape -}}
-      </h1>
+<div
+  id="YardCollectionBanner-{{ section.id }}"
+  class="
+    yard-collection-banner yard-collection-banner--{{ align }}
+    {% if has_image %}yard-collection-banner--image{% elsif use_bg_color %}yard-collection-banner--color{% else %}color-{{ section.settings.color_scheme }} gradient{% endif %}
+    {% if show_overlay %}yard-collection-banner--overlay{% endif %}
+    {{ section.settings.custom_class }}
+  "
+  {%- if use_bg_color %} style="background-color: {{ bg_color }};"{% endif -%}
+>
+  {%- if has_image -%}
+    <img
+      class="yard-collection-banner__bg"
+      srcset="
+        {%- if bg_image.width >= 375 -%}{{ bg_image | image_url: width: 375 }} 375w,{%- endif -%}
+        {%- if bg_image.width >= 750 -%}{{ bg_image | image_url: width: 750 }} 750w,{%- endif -%}
+        {%- if bg_image.width >= 1100 -%}{{ bg_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+        {%- if bg_image.width >= 1500 -%}{{ bg_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+        {%- if bg_image.width >= 2000 -%}{{ bg_image | image_url: width: 2000 }} 2000w,{%- endif -%}
+        {%- if bg_image.width >= 3000 -%}{{ bg_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+        {{ bg_image | image_url }} {{ bg_image.width }}w
+      "
+      src="{{ bg_image | image_url: width: 1500 }}"
+      sizes="100vw"
+      alt="{{ bg_image.alt | escape | default: collection.title | escape }}"
+      width="{{ bg_image.width }}"
+      height="{{ bg_image.height }}"
+      loading="eager"
+      fetchpriority="high"
+    >
+  {%- endif -%}
 
-      {%- if section.settings.show_collection_description -%}
-        <div class="collection-hero__description rte">{{ collection.description }}</div>
-      {%- endif -%}
-    </div>
+  <div class="yard-collection-banner__inner page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+    <h1 class="yard-collection-banner__title">
+      <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+      {{- banner_title | escape -}}
+    </h1>
 
-    {%- if section.settings.show_collection_image and collection.image -%}
-      <div class="collection-hero__image-container media gradient">
-        <img
-          srcset="
-            {%- if collection.image.width >= 165 -%}{{ collection.image | image_url: width: 165 }} 165w,{%- endif -%}
-            {%- if collection.image.width >= 360 -%}{{ collection.image | image_url: width: 360 }} 360w,{%- endif -%}
-            {%- if collection.image.width >= 535 -%}{{ collection.image | image_url: width: 535 }} 535w,{%- endif -%}
-            {%- if collection.image.width >= 750 -%}{{ collection.image | image_url: width: 750 }} 750w,{%- endif -%}
-            {%- if collection.image.width >= 1070 -%}{{ collection.image | image_url: width: 1070 }} 1070w,{%- endif -%}
-            {%- if collection.image.width >= 1500 -%}{{ collection.image | image_url: width: 1500 }} 1500w,{%- endif -%}
-            {{ collection.image | image_url }} {{ collection.image.width }}w
-          "
-          src="{{ collection.image | image_url: width: 750 }}"
-          sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc(50vw - 130px), calc(50vw - 55px)"
-          alt="{{ collection.image.alt | escape }}"
-          width="{{ collection.image.width }}"
-          height="{{ collection.image.height }}"
-        >
-      </div>
+    {%- if section.settings.show_collection_description and collection.description != blank -%}
+      <div class="yard-collection-banner__description rte">{{ collection.description }}</div>
     {%- endif -%}
   </div>
 </div>
@@ -55,23 +210,110 @@
       "content": "t:sections.main-collection-banner.settings.paragraph.content"
     },
     {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "all_collection_title",
+      "label": "\"All\" collection title",
+      "default": "Shop All",
+      "info": "Shown on the /collections/all page in place of the default \"Products\" title. Other collections always show their own name."
+    },
+    {
       "type": "checkbox",
       "id": "show_collection_description",
       "default": true,
       "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
     },
     {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color (over image)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Optional. If empty, the collection image is used when the option below is on; otherwise the background color is shown."
+    },
+    {
       "type": "checkbox",
       "id": "show_collection_image",
-      "default": false,
-      "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+      "default": true,
+      "label": "Use collection image as background",
+      "info": "Used only when no background image is set above."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "info": "Used when no image is shown. Leave as \"none\" to use the color scheme below instead."
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay color",
+      "default": "#16161a"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 40
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
+      "info": "Used as the background when no image is shown.",
       "default": "scheme-1"
-    }    ,{
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 160,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner height (desktop)",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "min": 120,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner height (mobile)",
+      "default": 220
+    },
+    {
       "type": "header",
       "content": "Custom CSS class"
     },

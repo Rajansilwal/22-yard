@@ -2,6 +2,7 @@
   assign min_value = filter.min_value.value | default: 0 | money_without_currency | replace: ',', '' | ceil
   assign max_value = filter.max_value.value | default: filter.range_max | money_without_currency | replace: ',', '' | ceil
   assign range_max = filter.range_max | money_without_currency | replace: ',', '' | ceil
+  assign currency_symbol = cart.currency.symbol
 -%}
 
 <price-range class="price-slider-wrapper">
@@ -16,6 +17,7 @@
       max="{{ range_max }}"
       value="{{ min_value }}"
       step="1"
+      aria-label="{{ 'products.facets.from' | t | default: 'From' }}"
     >
 
     <input
@@ -25,101 +27,83 @@
       max="{{ range_max }}"
       value="{{ max_value }}"
       step="1"
+      aria-label="{{ 'products.facets.to' | t | default: 'To' }}"
     >
   </div>
 
   <div class="price-inputs-display">
-    <div class="field">
+    <div class="price-field">
+      <span class="price-field__currency">{{ currency_symbol }}</span>
       <input
         class="field__input"
         type="number"
+        inputmode="numeric"
         name="{{ filter.min_value.param_name }}"
         value="{{ min_value }}"
         min="0"
         max="{{ range_max }}"
+        aria-label="{{ 'products.facets.from' | t | default: 'Minimum price' }}"
       >
     </div>
-    <p>-</p>
-    <div class="field">
+    <span class="price-field__sep" aria-hidden="true">–</span>
+    <div class="price-field">
+      <span class="price-field__currency">{{ currency_symbol }}</span>
       <input
         class="field__input"
         type="number"
+        inputmode="numeric"
         name="{{ filter.max_value.param_name }}"
         value="{{ max_value }}"
         min="0"
         max="{{ range_max }}"
+        aria-label="{{ 'products.facets.to' | t | default: 'Maximum price' }}"
       >
     </div>
   </div>
-
-  <div class="price-range-display">
-    <p class="price-display-wrapper">
-      Price:
-      <span
-        id="price-display"
-        data-currency-symbol="{{ cart.currency.symbol }}"
-        data-currency-format="before"
-      >{{ min_value | money }}<span class="line2"></span>{{ max_value | money }}</span>
-    </p>
-  </div>
 </price-range>
 
-
-
 <style>
-  .price-separator{
-    background-color: #141414;
-    width: 10px;
-    height: 1px;
-    display: inline-block;
-  }
-  .price-display-wrapper{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  #price-display{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .price-range-display{
-    font-size: 14px;
-    color: #141414;
-  }
-  .price-range-display p{
-    margin: 0;
-  }
-  .price-slider-wrapper{
+  /* =============================================================
+     22 Yard — Sidebar price filter
+     Brand maroon #8a2b2b accent, ink #16161a, clean bordered
+     number fields. Matches the home-page design system.
+     ============================================================= */
+  .price-slider-wrapper {
     width: 100%;
+    display: block;
+    padding-top: 0.6rem;
   }
-  .price-slider-wrapper .range-track, .price-slider-wrapper .range-track-active{
+
+  .price-slider-wrapper .range-track,
+  .price-slider-wrapper .range-track-active {
     display: block;
   }
+
   .range-container {
     position: relative;
-    height: 30px;
+    height: 3rem;
     display: flex;
     align-items: center;
+    margin-bottom: 1.6rem;
   }
 
-  /* Gray track behind slider */
+  /* Gray base track */
   .range-track {
     position: absolute;
-    height: 4px;
+    height: 0.4rem;
     width: 100%;
-    background: #E2E8F0;
+    background: rgba(22, 22, 26, 0.12);
     border-radius: 2px;
     z-index: 1;
     top: 50%;
     transform: translateY(-50%);
   }
 
-  /* Active fill between sliders */
+  /* Active fill — brand maroon */
   .range-track-active {
     position: absolute;
-    height: 4px;
-    background: #000; /* Change to your desi#000 color */
+    height: 0.4rem;
+    background: #8a2b2b;
     border-radius: 2px;
     z-index: 1;
     top: 50%;
@@ -138,46 +122,103 @@
     margin: 0;
   }
 
-  /* Slider thumb for Webkit */
+  /* Slider thumb — Webkit */
   .range-slider-input::-webkit-slider-thumb {
-    height: 14px;
-    width: 14px;
+    height: 1.6rem;
+    width: 1.6rem;
     border-radius: 50%;
-    background: #fff; /* Thumb color */
+    background: #ffffff;
     cursor: pointer;
     pointer-events: auto;
     appearance: none;
     -webkit-appearance: none;
-    border: 5px solid #000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 0.4rem solid #8a2b2b;
+    box-shadow: 0 1px 4px rgba(22, 22, 26, 0.25);
+    transition: transform 0.12s ease;
   }
 
-  /* Slider thumb for Firefox */
+  .range-slider-input::-webkit-slider-thumb:hover,
+  .range-slider-input::-webkit-slider-thumb:active {
+    transform: scale(1.12);
+  }
+
+  /* Slider thumb — Firefox */
   .range-slider-input::-moz-range-thumb {
-    height: 14px;
-    width: 14px;
+    height: 1.6rem;
+    width: 1.6rem;
     border-radius: 50%;
-    background: #fff; /* Thumb color */
+    background: #ffffff;
     cursor: pointer;
     pointer-events: auto;
     appearance: none;
     -webkit-appearance: none;
-    border: 5px solid #000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 0.4rem solid #8a2b2b;
+    box-shadow: 0 1px 4px rgba(22, 22, 26, 0.25);
   }
 
-  /* Input boxes below slider */
+  /* ── Number input fields ── */
   .price-inputs-display {
     display: flex;
+    align-items: center;
     gap: 1rem;
   }
 
-  .price-inputs-display .field {
+  .price-field {
     display: flex;
     align-items: center;
+    flex: 1;
+    min-width: 0;
+    background: #ffffff;
+    border: 1.5px solid rgba(22, 22, 26, 0.2);
+    border-radius: 2px;
+    padding: 0 1rem;
+    height: 4rem;
+    transition: border-color 0.15s ease;
   }
 
-  .price-inputs-display .field-currency {
-    margin-right: 0.25rem;
+  .price-field:focus-within {
+    border-color: #8a2b2b;
+  }
+
+  .price-field__currency {
+    color: rgba(22, 22, 26, 0.55);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-right: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .price-inputs-display .price-field .field__input {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    height: auto;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #16161a;
+    box-shadow: none;
+    -moz-appearance: textfield;
+  }
+
+  .price-inputs-display .price-field .field__input:focus,
+  .price-inputs-display .price-field .field__input:focus-visible {
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .price-inputs-display .price-field .field__input::-webkit-outer-spin-button,
+  .price-inputs-display .price-field .field__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .price-field__sep {
+    flex-shrink: 0;
+    color: rgba(22, 22, 26, 0.5);
+    font-weight: 600;
   }
 </style>
