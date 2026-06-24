@@ -1,0 +1,382 @@
+/* =============================================================
+   22 Yard — Page Restyle (contact, pages, cart, cart drawer, search)
+   Aligns these templates with the homepage design language:
+   near-black ink, maroon accent, heading-font display type,
+   uppercase bordered buttons (2px radius, hover inversion).
+   Loaded globally via theme.liquid (after yard-globals.css).
+   ============================================================= */
+
+:root {
+  --yard-ink: #16161a;
+  --yard-accent: #8a2b2b;
+  --yard-accent-dark: #6f2121;
+  --yard-border: #e3e3e3;
+  --yard-muted: #6b6b6b;
+  --yard-field-bg: #ffffff;
+  --yard-radius: 2px;
+}
+
+/* =============================================================
+   1. Shared display headings
+   ============================================================= */
+.contact .title,
+.main-page-title,
+.page-title,
+.cart-items .title--primary,
+.template-search__header h1,
+.cart-drawer .drawer__heading,
+.cart-drawer .cart__empty-text,
+.cart__empty-text {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 800;
+  color: var(--yard-ink);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+/* =============================================================
+   2. Shared button identity — matches the product page buy
+   button & homepage .yard-btn--solid: white fill + ink border,
+   inverts to ink fill on hover.
+   ============================================================= */
+.contact__button .button,
+.cart__warnings .button,
+.cart__checkout-button,
+.cart__ctas .button,
+.cart-drawer__empty-content .button,
+.template-search .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: var(--yard-ink);
+  border: 1.5px solid var(--yard-ink);
+  border-radius: var(--yard-radius);
+  box-shadow: none;
+  min-height: 0;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+/* Drop Dawn's pseudo-element background / border layers */
+.contact__button .button::before,
+.contact__button .button::after,
+.cart__warnings .button::before,
+.cart__warnings .button::after,
+.cart__checkout-button::before,
+.cart__checkout-button::after,
+.cart__ctas .button::before,
+.cart__ctas .button::after,
+.cart-drawer__empty-content .button::before,
+.cart-drawer__empty-content .button::after,
+.template-search .button::before,
+.template-search .button::after {
+  display: none;
+}
+
+.contact__button .button > span,
+.cart__warnings .button > span,
+.cart__checkout-button > span,
+.cart__ctas .button > span,
+.cart-drawer__empty-content .button > span,
+.template-search .button > span {
+  color: inherit;
+}
+
+.contact__button .button:not([disabled]):hover,
+.cart__warnings .button:not([disabled]):hover,
+.cart__checkout-button:not([disabled]):hover,
+.cart__ctas .button:not([disabled]):hover,
+.cart-drawer__empty-content .button:not([disabled]):hover,
+.template-search .button:not([disabled]):hover {
+  background: var(--yard-ink);
+  border-color: var(--yard-ink);
+  color: #ffffff;
+}
+
+.contact__button .button[disabled],
+.cart__checkout-button[disabled],
+.cart__ctas .button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =============================================================
+   3. Accent links (continue shopping, underlined links)
+   ============================================================= */
+.cart-items .underlined-link,
+.cart__login-paragraph a,
+.template-search a.link,
+.template-search .underlined-link {
+  color: var(--yard-accent);
+  text-underline-offset: 0.3rem;
+  text-decoration-thickness: 0.1rem;
+  transition: color 0.16s ease;
+}
+
+.cart-items .underlined-link:hover,
+.cart__login-paragraph a:hover,
+.template-search a.link:hover {
+  color: var(--yard-accent-dark);
+}
+
+/* =============================================================
+   4. Contact page
+   ============================================================= */
+.contact .title {
+  margin-bottom: 2.4rem;
+}
+
+.contact .custom-field__input,
+.contact .field__input,
+.contact .text-area {
+  border: 1px solid var(--yard-border);
+  border-radius: var(--yard-radius);
+  background: var(--yard-field-bg);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.contact .custom-field__input:focus,
+.contact .field__input:focus,
+.contact .text-area:focus {
+  outline: none;
+  border-color: var(--yard-ink);
+  box-shadow: 0 0 0 1px var(--yard-ink);
+}
+
+.contact .custom-field__label,
+.contact .custom-field__label-text {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--yard-ink);
+}
+
+.contact__button .button {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.3rem 2.4rem;
+  font-size: 1.3rem;
+}
+
+/* =============================================================
+   5. Generic pages (page.title + rte body)
+   ============================================================= */
+.main-page-title,
+.shopify-section .page-title {
+  position: relative;
+}
+
+.rte a {
+  color: var(--yard-accent);
+  text-underline-offset: 0.3rem;
+}
+
+.rte a:hover {
+  color: var(--yard-accent-dark);
+}
+
+.rte h1,
+.rte h2,
+.rte h3,
+.rte h4 {
+  font-family: var(--font-heading-family);
+  font-weight: 800;
+  color: var(--yard-ink);
+}
+
+.rte blockquote {
+  border-left: 3px solid var(--yard-accent);
+  padding-left: 1.6rem;
+  color: var(--yard-ink);
+}
+
+/* =============================================================
+   6. Cart page
+   ============================================================= */
+.cart-items .title--primary {
+  font-size: 3rem;
+}
+
+@media screen and (min-width: 750px) {
+  .cart-items .title--primary {
+    font-size: 3.6rem;
+  }
+}
+
+.cart-items thead th,
+.cart-items .caption-with-letter-spacing {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yard-muted);
+}
+
+.cart-items .cart-item__name {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  color: var(--yard-ink);
+}
+
+.cart-items .cart-item__name:hover {
+  color: var(--yard-accent);
+  text-decoration-color: var(--yard-accent);
+}
+
+.cart-item__final-price,
+.cart-item .price--end {
+  color: var(--yard-ink);
+  font-weight: 600;
+}
+
+.cart-item__old-price {
+  color: var(--yard-muted);
+}
+
+/* Totals — make the estimated total read like a homepage figure */
+.totals__total {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--yard-ink);
+}
+
+.cart__footer .totals__total-value {
+  font-family: var(--font-heading-family);
+  font-weight: 800;
+  color: var(--yard-ink);
+  font-size: 2.2rem;
+}
+
+.cart__checkout-button {
+  padding: 1.4rem 2.4rem;
+  font-size: 1.4rem;
+  width: 100%;
+}
+
+.cart__note label,
+.cart__note .field__label {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  color: var(--yard-ink);
+}
+
+.cart__note .text-area,
+.cart__note .field__input {
+  border: 1px solid var(--yard-border);
+  border-radius: var(--yard-radius);
+}
+
+/* =============================================================
+   7. Cart drawer
+   ============================================================= */
+.cart-drawer .drawer__heading {
+  font-size: 2.2rem;
+}
+
+.cart-drawer .cart-item__name {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  color: var(--yard-ink);
+}
+
+.cart-drawer .cart-item__name:hover {
+  color: var(--yard-accent);
+}
+
+.cart-drawer .totals__total {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cart-drawer .totals__total-value {
+  font-family: var(--font-heading-family);
+  font-weight: 800;
+  color: var(--yard-ink);
+}
+
+.cart-drawer .cart__checkout-button {
+  width: 100%;
+  padding: 1.4rem 2.4rem;
+  font-size: 1.4rem;
+}
+
+.cart-drawer .drawer__header {
+  border-bottom: 1px solid var(--yard-border);
+}
+
+.cart-drawer .drawer__footer {
+  border-top: 1px solid var(--yard-border);
+}
+
+.cart-drawer summary .summary__title,
+.cart-drawer .cart__note label {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  color: var(--yard-ink);
+}
+
+/* =============================================================
+   8. Search results page
+   ============================================================= */
+.template-search__header h1 {
+  font-size: 3rem;
+}
+
+@media screen and (min-width: 750px) {
+  .template-search__header h1 {
+    font-size: 4rem;
+  }
+}
+
+.template-search .search__input,
+.template-search .field__input {
+  border: 1.5px solid var(--yard-border);
+  border-radius: var(--yard-radius);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.template-search .search__input:focus,
+.template-search .field:focus-within .field__input {
+  border-color: var(--yard-ink);
+  box-shadow: 0 0 0 1px var(--yard-ink);
+}
+
+.template-search .search__button .icon,
+.template-search .search__button .svg-wrapper svg {
+  color: var(--yard-ink);
+}
+
+.template-search .search__button:hover .icon,
+.template-search .search__button:hover .svg-wrapper svg {
+  color: var(--yard-accent);
+}
+
+/* Result count + facet labels */
+.template-search__header p[role="status"] {
+  color: var(--yard-muted);
+  font-size: 1.4rem;
+}
+
+.template-search .facets__heading,
+.template-search .facet-filters__label label,
+.template-search .product-count__text {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  color: var(--yard-ink);
+}
+
+/* "Page" result badge accent */
+.template-search .badge {
+  border-radius: var(--yard-radius);
+}
