@@ -542,7 +542,7 @@
       {%- endfor -%}
 
       <a
-        href="{{ settings.wishlist_url | default: routes.search_url }}"
+        href="{{ settings.wishlist_url | default: 'https://22yardcricket.com.au/pages/wishlistsuite-wishlist' }}"
         class="header__icon header__icon--wishlist link focus-inset small-hide"
         aria-label="{{ 'general.wishlist' | t | default: 'Wishlist' }}"
       >
