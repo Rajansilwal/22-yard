@@ -162,7 +162,7 @@
         "disabled": false,
         "settings": {
           "custom_cart_icon_selector": ".header__icon--account",
-          "customcss": "",
+          "customcss": "#wishlist-header-block-AM2dRVkVMTkdLQnVWS__3746619903770602455 .wh-trigger:hover{\n    transform: scale(1);\n}",
           "customjs": ""
         }
       }
