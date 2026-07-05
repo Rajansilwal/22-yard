@@ -159,9 +159,9 @@
       },
       "3746619903770602455": {
         "type": "shopify://apps/wishlistsuite/blocks/wishlist-header-icon/c2905ea4-a4c7-46db-b02a-fc294afa02e5",
-        "disabled": false,
+        "disabled": true,
         "settings": {
-          "custom_cart_icon_selector": "",
+          "custom_cart_icon_selector": ".header__icon--wishlist",
           "customcss": "",
           "customjs": ""
         }
