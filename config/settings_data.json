@@ -146,6 +146,18 @@
       }
     },
     "content_for_index": [],
+    "blocks": {
+      "6129977475812166837": {
+        "type": "shopify://apps/wishlistsuite/blocks/wishlist_embed/c2905ea4-a4c7-46db-b02a-fc294afa02e5",
+        "disabled": false,
+        "settings": {
+          "custom_card_selector": "",
+          "custom_cart_item_selector": "",
+          "customcss": "",
+          "customjs": ""
+        }
+      }
+    },
     "color_schemes": {
       "scheme-1": {
         "settings": {
