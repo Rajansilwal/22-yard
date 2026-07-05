@@ -196,7 +196,7 @@
 
             <span class="caption-large light">{{ block.settings.description | escape }}</span>
 
-            {% comment %} {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
+            {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
               {% liquid
                 assign rating_decimal = 0
                 assign decimal = card_product.metafields.reviews.rating.value.rating | modulo: 1
@@ -230,7 +230,7 @@
                   {{ 'accessibility.total_reviews' | t -}}
                 </span>
               </p>
-            {%- endif -%} {% endcomment %}
+            {%- endif -%}
 
             {%- comment -%} 22 Yard: presentational rating row {%- endcomment -%}
             {% comment %} {%- unless show_rating and card_product.metafields.reviews.rating.value != blank -%}
