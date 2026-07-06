@@ -233,7 +233,7 @@
             {%- endif -%}
 
             {%- comment -%} 22 Yard: presentational rating row {%- endcomment -%}
-            {%- unless show_rating and card_product.metafields.reviews.rating.value != blank -%}
+            {% comment %} {%- unless show_rating and card_product.metafields.reviews.rating.value != blank -%}
               {%- assign fc22_score = card_product.metafields.reviews.rating.value | default: '4.4' -%}
               {%- assign fc22_count = card_product.metafields.reviews.rating_count | default: '124' -%}
               <div class="fc22-rating" aria-hidden="true">
@@ -241,7 +241,12 @@
                 <span class="fc22-rating__score">{{ fc22_score }}</span>
                 <span class="fc22-rating__count">({{ fc22_count }} Reviews)</span>
               </div>
-            {%- endunless -%}
+            {%- endunless -%} {% endcomment %}
+             <!-- Start of Judge.me code -->
+    <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
+        {{ product.metafields.judgeme.badge }}
+    </div>
+<!-- End of Judge.me code -->
 
             {%- liquid
               assign fc22_save_pct = 0

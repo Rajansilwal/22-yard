@@ -210,6 +210,36 @@
                   <span class="visually-hidden">{{ 'products.product.sku' | t }}:</span>
                   {{- product.selected_or_first_available_variant.sku -}}
                 </p>
+              {%- when 'product_specs' -%}
+                {%- liquid
+                  assign spec_keys = 'shape,weight,willow_grade,handle,edge,spine' | split: ','
+                  assign spec_labels = 'Shape,Weight,Willow Grade,Handle,Edge,Spine' | split: ','
+                  assign has_specs = false
+                  for key in spec_keys
+                    if product.metafields.custom[key] != blank
+                      assign has_specs = true
+                      break
+                    endif
+                  endfor
+                -%}
+                {%- if has_specs -%}
+                  <div class="product__specs quick-add-hidden" {{ block.shopify_attributes }}>
+                    {%- if block.settings.heading != blank -%}
+                      <h2 class="product__specs-heading h4">{{ block.settings.heading | escape }}</h2>
+                    {%- endif -%}
+                    <dl class="product__specs-list">
+                      {%- for key in spec_keys -%}
+                        {%- assign spec_value = product.metafields.custom[key] -%}
+                        {%- if spec_value != blank -%}
+                          <div class="product__specs-row">
+                            <dt class="product__specs-label">{{ spec_labels[forloop.index0] }}</dt>
+                            <dd class="product__specs-value">{{ spec_value }}</dd>
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </dl>
+                  </div>
+                {%- endif -%}
               {%- when 'custom_liquid' -%}
                 {{ block.settings.custom_liquid }}
               {%- when 'collapsible_tab' -%}
@@ -790,6 +820,23 @@
       "type": "title",
       "name": "t:sections.main-product.blocks.title.name",
       "limit": 1
+    },
+    {
+      "type": "product_specs",
+      "name": "Product specifications",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Specifications"
+        },
+        {
+          "type": "paragraph",
+          "content": "Shows Shape, Weight, Willow Grade, Handle, Edge and Spine metafields (namespace: custom). Empty values are hidden automatically."
+        }
+      ]
     },
     {
       "type": "price",

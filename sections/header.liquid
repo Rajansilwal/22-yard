@@ -541,8 +541,8 @@
         {%- endcase -%}
       {%- endfor -%}
 
-      <a
-        href="{{ settings.wishlist_url | default: routes.search_url }}"
+      {% comment %} <a
+        href="{{ settings.wishlist_url | default: 'https://22yardcricket.com.au/pages/wishlistsuite-wishlist' }}"
         class="header__icon header__icon--wishlist link focus-inset small-hide"
         aria-label="{{ 'general.wishlist' | t | default: 'Wishlist' }}"
       >
@@ -555,7 +555,7 @@
 
         </span>
         <span class="header__icon-label">Wishlist(0)</span>
-      </a>
+      </a> {% endcomment %}
 
       <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
         {% if cart == empty %}

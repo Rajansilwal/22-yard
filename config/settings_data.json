@@ -11,6 +11,7 @@
   "current": {
     "logo": "shopify://shop_images/84392136-6a81-4b18-b629-0e04634d3187.jpg",
     "logo_width": 90,
+    "favicon": "shopify://shop_images/favicon-32x32.png",
     "type_header_font": "zen_kaku_gothic_new_n7",
     "heading_scale": 100,
     "type_body_font": "instrument_sans_n4",
@@ -145,6 +146,39 @@
       }
     },
     "content_for_index": [],
+    "blocks": {
+      "6129977475812166837": {
+        "type": "shopify://apps/wishlistsuite/blocks/wishlist_embed/c2905ea4-a4c7-46db-b02a-fc294afa02e5",
+        "disabled": false,
+        "settings": {
+          "custom_card_selector": "",
+          "custom_cart_item_selector": "",
+          "customcss": "",
+          "customjs": ""
+        }
+      },
+      "3746619903770602455": {
+        "type": "shopify://apps/wishlistsuite/blocks/wishlist-header-icon/c2905ea4-a4c7-46db-b02a-fc294afa02e5",
+        "disabled": false,
+        "settings": {
+          "custom_cart_icon_selector": ".header__icon--account",
+          "customcss": "#wishlist-header-block-AM2dRVkVMTkdLQnVWS__3746619903770602455 .wh-trigger:hover{\n    transform: scale(1);\n}",
+          "customjs": ""
+        }
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      },
+      "13047258039897440615": {
+        "type": "shopify://apps/judge-me-reviews/blocks/cart_drawer_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {
+          "widget_type": "review-widget"
+        }
+      }
+    },
     "color_schemes": {
       "scheme-1": {
         "settings": {
