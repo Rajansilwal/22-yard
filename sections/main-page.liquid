@@ -1,4 +1,4 @@
-﻿{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -14,7 +14,7 @@
   }
 {%- endstyle -%}
 
-<div class="page-width page-width--narrow section-{{ section.id }}-padding {{ section.settings.custom_class }}">
+<div class="page-width page-width--narrow section-{{ section.id }}-padding">
   <h1 class="main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     {{ page.title | escape }}
   </h1>
@@ -52,15 +52,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
-    }    ,{
-      "type": "header",
-      "content": "Custom CSS class"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper. Useful for custom styling."
     }
   ]
 }

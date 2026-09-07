@@ -11,7 +11,7 @@
     }
   }
 {%- endstyle -%}
-<div class="color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+<div class="color-{{ section.settings.color_scheme }} gradient">
   <div class="section-{{ section.id }}-padding">
     {{ section.settings.custom_liquid }}
   </div>
@@ -58,16 +58,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 52
-    },
-    {
-      "type": "header",
-      "content": "Custom CSS"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper."
     }
   ],
   "presets": [

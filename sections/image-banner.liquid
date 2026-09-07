@@ -27,111 +27,6 @@
   #Banner-{{ section.id }}::after {
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
-
-  /* ===== 22 Yard Promo Banner ===== */
-  #Banner-{{ section.id }}.banner {
-    position: relative;
-  }
-  /* Dark left-to-right gradient so white text stays readable over any photo */
-  #Banner-{{ section.id }} .banner__media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.78) 0%,
-      rgba(0, 0, 0, 0.55) 35%,
-      rgba(0, 0, 0, 0.15) 65%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-  }
-  #Banner-{{ section.id }} .banner__content {
-    z-index: 2;
-  }
-  /* Transparent text box: text sits directly on the photographic background */
-  #Banner-{{ section.id }} .banner__box {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    padding: 0;
-    max-width: 640px;
-    text-align: left;
-    align-items: flex-start;
-  }
-  #Banner-{{ section.id }} .banner__box * {
-    color: #ffffff;
-  }
-  /* Eyebrow (the text block styled as caption) */
-  #Banner-{{ section.id }} .banner__text.caption-with-letter-spacing {
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 0.6rem;
-  }
-  #Banner-{{ section.id }} .banner__text.caption-with-letter-spacing p {
-    margin: 0;
-  }
-  /* Huge bold heading */
-  #Banner-{{ section.id }} .banner__heading {
-    font-family: var(--font-heading-family);
-    font-weight: var(--font-heading-weight);
-    color: #ffffff;
-    line-height: 1.02;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    margin: 0 0 1.2rem;
-    font-size: clamp(2.6rem, 6vw, 5rem);
-  }
-  /* Muted white subtext */
-  #Banner-{{ section.id }} .banner__text:not(.caption-with-letter-spacing) {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.05rem;
-    line-height: 1.5;
-    margin: 0 0 1.6rem;
-  }
-  /* Solid white button with dark text */
-  #Banner-{{ section.id }} .banner__buttons .btn {
-    background: #ffffff;
-    color: #16161a;
-    border: 0;
-    border-radius: 4px;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 0.95rem 2.2rem;
-    box-shadow: none;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-  #Banner-{{ section.id }} .banner__buttons .btn::after,
-  #Banner-{{ section.id }} .banner__buttons .btn::before {
-    display: none;
-  }
-  #Banner-{{ section.id }} .banner__buttons .btn:hover {
-    background: #16161a;
-    color: #ffffff;
-  }
-  /* Secondary button: transparent with white outline (when a 2nd button is used) */
-  #Banner-{{ section.id }} .banner__buttons .btn--secondary {
-    background: transparent;
-    color: #ffffff;
-    border: 1.5px solid #ffffff;
-  }
-  #Banner-{{ section.id }} .banner__buttons .btn--secondary:hover {
-    background: #ffffff;
-    color: #16161a;
-  }
-  @media screen and (max-width: 749px) {
-    #Banner-{{ section.id }} .banner__heading {
-      font-size: clamp(1.9rem, 9vw, 2.8rem);
-    }
-    #Banner-{{ section.id }} .banner__box {
-      max-width: 100%;
-    }
-  }
 {%- endstyle -%}
 
 {%- liquid
@@ -158,7 +53,7 @@
 
 <div
   id="Banner-{{ section.id }}"
-  class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.custom_class }}"
+  class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
 >
   {%- if section.settings.image != blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
@@ -247,7 +142,7 @@
                   {% else %}
                     href="{{ block.settings.button_link_1 }}"
                   {% endif %}
-                  class="{% if block.settings.button_style_1 == 'link' %}link underlined-link{% else %}btn btn--{{ block.settings.button_style_1 }}{% endif %}"
+                  class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                 >
                   {{- block.settings.button_label_1 | escape -}}
                 </a>
@@ -259,7 +154,7 @@
                   {% else %}
                     href="{{ block.settings.button_link_2 }}"
                   {% endif %}
-                  class="{% if block.settings.button_style_2 == 'link' %}link underlined-link{% else %}btn btn--{{ block.settings.button_style_2 }}{% endif %}"
+                  class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
                 >
                   {{- block.settings.button_label_2 | escape -}}
                 </a>
@@ -273,7 +168,7 @@
 
 {% schema %}
 {
-  "name": "22 Yard Promo Banner",
+  "name": "t:sections.image-banner.name",
   "tag": "section",
   "class": "section",
   "disabled_on": {
@@ -393,7 +288,7 @@
           "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label"
         }
       ],
-      "default": "middle-left",
+      "default": "middle-center",
       "label": "t:sections.image-banner.settings.desktop_content_position.label"
     },
     {
@@ -413,13 +308,13 @@
           "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "center",
       "label": "t:sections.image-banner.settings.desktop_content_alignment.label"
     },
     {
       "type": "checkbox",
       "id": "show_text_box",
-      "default": false,
+      "default": true,
       "label": "t:sections.image-banner.settings.show_text_box.label"
     },
     {
@@ -455,7 +350,7 @@
           "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "center",
       "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
     },
     {
@@ -463,16 +358,6 @@
       "id": "show_text_below",
       "default": true,
       "label": "t:sections.image-banner.settings.show_text_below.label"
-    },
-    {
-      "type": "header",
-      "content": "Custom CSS"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper."
     }
   ],
   "blocks": [
@@ -572,17 +457,10 @@
           "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label"
         },
         {
-          "type": "select",
-          "id": "button_style_1",
-          "label": "Button style",
-          "options": [
-            { "value": "primary", "label": "Primary" },
-            { "value": "secondary", "label": "Secondary" },
-            { "value": "primary-outline", "label": "Primary outline" },
-            { "value": "secondary-outline", "label": "Secondary outline" },
-            { "value": "link", "label": "Link" }
-          ],
-          "default": "primary"
+          "type": "checkbox",
+          "id": "button_style_secondary_1",
+          "default": false,
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
         },
         {
         "type": "header",
@@ -601,24 +479,17 @@
           "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label"
         },
         {
-          "type": "select",
-          "id": "button_style_2",
-          "label": "Button style",
-          "options": [
-            { "value": "primary", "label": "Primary" },
-            { "value": "secondary", "label": "Secondary" },
-            { "value": "primary-outline", "label": "Primary outline" },
-            { "value": "secondary-outline", "label": "Secondary outline" },
-            { "value": "link", "label": "Link" }
-          ],
-          "default": "secondary"
+          "type": "checkbox",
+          "id": "button_style_secondary_2",
+          "default": false,
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "22 Yard Promo Banner",
+      "name": "t:sections.image-banner.presets.name",
       "blocks": [
         {
           "type": "heading"

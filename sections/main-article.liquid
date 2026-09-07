@@ -1,6 +1,6 @@
-﻿{{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+{{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
 
-<article class="article-template {{ section.settings.custom_class }}">
+<article class="article-template">
   {%- for block in section.blocks -%}
     {%- case block.type -%}
       {%- when '@app' -%}
@@ -368,18 +368,6 @@
           "default": "t:sections.main-article.blocks.share.settings.text.default"
         }
       ]
-    }
-  ],
-  "settings": [
-    {
-      "type": "header",
-      "content": "Custom CSS"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper."
     }
   ]
 }

@@ -32,10 +32,11 @@ class FacetFiltersForm extends HTMLElement {
   static renderPage(searchParams, event, updateURLHash = true) {
     FacetFiltersForm.searchParamsPrev = searchParams;
     const sections = FacetFiltersForm.getSections();
+    const updateEvent = FacetFiltersForm.startUpdateEvent(searchParams);
     const countContainer = document.getElementById('ProductCount');
     const countContainerDesktop = document.getElementById('ProductCountDesktop');
     const loadingSpinners = document.querySelectorAll(
-      '.facets-container .loading__spinner, facet-filters-form .loading__spinner'
+      '.facets-container .loading__spinner, facet-filters-form .loading__spinner',
     );
     loadingSpinners.forEach((spinner) => spinner.classList.remove('hidden'));
     document.getElementById('ProductGridContainer').querySelector('.collection').classList.add('loading');
@@ -51,31 +52,87 @@ class FacetFiltersForm extends HTMLElement {
       const filterDataUrl = (element) => element.url === url;
 
       FacetFiltersForm.filterData.some(filterDataUrl)
-        ? FacetFiltersForm.renderSectionFromCache(filterDataUrl, event)
-        : FacetFiltersForm.renderSectionFromFetch(url, event);
+        ? FacetFiltersForm.renderSectionFromCache(filterDataUrl, event, updateEvent)
+        : FacetFiltersForm.renderSectionFromFetch(url, event, updateEvent);
     });
 
     if (updateURLHash) FacetFiltersForm.updateURLHash(searchParams);
   }
 
-  static renderSectionFromFetch(url, event) {
+  static startUpdateEvent(searchParams) {
+    const { SearchUpdateEvent, CollectionUpdateEvent } = window.StandardEvents || {};
+    if (!SearchUpdateEvent && !CollectionUpdateEvent) return;
+
+    const facetsForm = document.querySelector('facet-filters-form');
+    const facetsContainer = document.querySelector('.facets-container');
+    const collectionId = facetsContainer?.dataset.collectionId || null;
+    const collectionHandle = facetsContainer?.dataset.collectionHandle || '';
+    const currentCount = parseInt(document.getElementById('ProductCount')?.dataset.productCount) || 0;
+    const urlSearchParams = new URLSearchParams(searchParams);
+    const isSearchPage = facetsContainer?.dataset.template === 'search';
+    const isCollectionPage = facetsContainer?.dataset.template === 'collection';
+    const dispatchTarget = facetsForm || document;
+
+    let deferred;
+
+    if (isSearchPage) {
+      deferred = SearchUpdateEvent.createPromise();
+      dispatchTarget.dispatchEvent(
+        new SearchUpdateEvent({
+          search: {
+            query: urlSearchParams.get('q') || '',
+            productFilters: SearchUpdateEvent.parseProductFilters(urlSearchParams),
+            sortKey: SearchUpdateEvent.getSortKey(urlSearchParams),
+          },
+          promise: deferred.promise,
+        }),
+      );
+    } else if (isCollectionPage) {
+      // collectionId is null for auto-generated collections (/collections/all,
+      // /collections/vendors/<x>, etc.) — the SSE schema accepts that.
+      deferred = CollectionUpdateEvent.createPromise();
+      dispatchTarget.dispatchEvent(
+        new CollectionUpdateEvent({
+          collection: { id: collectionId, handle: collectionHandle, productsCount: currentCount },
+          productFilters: CollectionUpdateEvent.parseProductFilters(urlSearchParams),
+          sortKey: CollectionUpdateEvent.getSortKey(urlSearchParams),
+          promise: deferred.promise,
+        }),
+      );
+    }
+
+    if (!deferred) return;
+
+    return {
+      resolve: (filteredCount) => {
+        deferred.resolve({ [isSearchPage ? 'totalCount' : 'productsCount']: filteredCount });
+      },
+      reject: deferred.reject,
+    };
+  }
+
+  static renderSectionFromFetch(url, event, updateEvent) {
     fetch(url)
       .then((response) => response.text())
-      .then((responseText) => {
-        const html = responseText;
+      .then((html) => {
         FacetFiltersForm.filterData = [...FacetFiltersForm.filterData, { html, url }];
-        FacetFiltersForm.renderFilters(html, event);
-        FacetFiltersForm.renderProductGridContainer(html);
-        FacetFiltersForm.renderProductCount(html);
-        if (typeof initializeScrollAnimationTrigger === 'function') initializeScrollAnimationTrigger(html.innerHTML);
+        FacetFiltersForm.renderSection(html, event, updateEvent);
+      })
+      .catch((error) => {
+        console.error(error);
+        updateEvent?.reject(error);
       });
   }
 
-  static renderSectionFromCache(filterDataUrl, event) {
+  static renderSectionFromCache(filterDataUrl, event, updateEvent) {
     const html = FacetFiltersForm.filterData.find(filterDataUrl).html;
+    FacetFiltersForm.renderSection(html, event, updateEvent);
+  }
+
+  static renderSection(html, event, updateEvent) {
     FacetFiltersForm.renderFilters(html, event);
     FacetFiltersForm.renderProductGridContainer(html);
-    FacetFiltersForm.renderProductCount(html);
+    FacetFiltersForm.renderProductCount(html, updateEvent);
     if (typeof initializeScrollAnimationTrigger === 'function') initializeScrollAnimationTrigger(html.innerHTML);
   }
 
@@ -92,29 +149,35 @@ class FacetFiltersForm extends HTMLElement {
       });
   }
 
-  static renderProductCount(html) {
-    const count = new DOMParser().parseFromString(html, 'text/html').getElementById('ProductCount').innerHTML;
+  static renderProductCount(html, updateEvent) {
+    const parsedHtml = new DOMParser().parseFromString(html, 'text/html');
+    const sourceCount = parsedHtml.getElementById('ProductCount');
+    const count = sourceCount.innerHTML;
     const container = document.getElementById('ProductCount');
     const containerDesktop = document.getElementById('ProductCountDesktop');
     container.innerHTML = count;
+    container.dataset.productCount = sourceCount.dataset.productCount || '';
+    container.dataset.totalCount = sourceCount.dataset.totalCount || '';
     container.classList.remove('loading');
     if (containerDesktop) {
       containerDesktop.innerHTML = count;
       containerDesktop.classList.remove('loading');
     }
     const loadingSpinners = document.querySelectorAll(
-      '.facets-container .loading__spinner, facet-filters-form .loading__spinner'
+      '.facets-container .loading__spinner, facet-filters-form .loading__spinner',
     );
     loadingSpinners.forEach((spinner) => spinner.classList.add('hidden'));
+
+    updateEvent?.resolve(parseInt(sourceCount.dataset.productCount) || 0);
   }
 
   static renderFilters(html, event) {
     const parsedHTML = new DOMParser().parseFromString(html, 'text/html');
     const facetDetailsElementsFromFetch = parsedHTML.querySelectorAll(
-      '#FacetFiltersForm .js-filter, #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter'
+      '#FacetFiltersForm .js-filter, #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter',
     );
     const facetDetailsElementsFromDom = document.querySelectorAll(
-      '#FacetFiltersForm .js-filter, #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter'
+      '#FacetFiltersForm .js-filter, #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter',
     );
 
     // Remove facets that are no longer returned from the server
@@ -164,17 +227,30 @@ class FacetFiltersForm extends HTMLElement {
         FacetFiltersForm.renderMobileCounts(countsToRender, document.getElementById(closestJSFilterID));
 
         const newFacetDetailsElement = document.getElementById(closestJSFilterID);
-        const newElementSelector = newFacetDetailsElement.classList.contains('mobile-facets__details')
-          ? `.mobile-facets__close-button`
-          : `.facets__summary`;
-        const newElementToActivate = newFacetDetailsElement.querySelector(newElementSelector);
 
         const isTextInput = event.target.getAttribute('type') === 'text';
 
-        if (newElementToActivate && !isTextInput) newElementToActivate.focus();
+        if (!isTextInput) {
+          // Try to return focus to the same checkbox the user just toggled,
+          // re-selecting it from the freshly rendered HTML by its id.
+          const originatingInputId = event.target.id;
+          const matchingInput = originatingInputId
+            ? newFacetDetailsElement.querySelector(`#${CSS.escape(originatingInputId)}`)
+            : null;
+
+          if (matchingInput) {
+            matchingInput.focus();
+          } else {
+            // Fallback to summary/close button if the checkbox can't be found
+            const fallbackSelector = newFacetDetailsElement.classList.contains('mobile-facets__details')
+              ? `.mobile-facets__close-button`
+              : `.facets__summary`;
+            const fallbackElement = newFacetDetailsElement.querySelector(fallbackSelector);
+            if (fallbackElement) fallbackElement.focus();
+          }
+        }
       }
     }
-    
   }
 
   static renderActiveFacets(html) {
@@ -300,181 +376,49 @@ FacetFiltersForm.searchParamsPrev = window.location.search.slice(1);
 customElements.define('facet-filters-form', FacetFiltersForm);
 FacetFiltersForm.setListeners();
 
-
-// class PriceRange extends HTMLElement {
-//   constructor() {
-//     super();
-
-//     this.sliders = this.querySelectorAll('input[type="range"]');
-//     this.inputs = this.querySelectorAll('input[type="number"]');
-//     this.activeTrack = this.querySelector('.range-track-active');
-
-
-
-//     if (this.sliders.length !== 2) return;
-
-//     this.sliders.forEach(slider => {
-//       slider.addEventListener('input', () => this.onSliderInput());
-//       slider.addEventListener('change', () => this.onSliderChange());
-//     });
-
-//     this.inputs.forEach(input => {
-//       input.addEventListener('change', () => this.onInputChange());
-//     });
-
-//     this.updateTrack();
-//   }
-
-//   onSliderInput() {
-//     let min = parseInt(this.sliders[0].value);
-//     let max = parseInt(this.sliders[1].value);
-
-//     if (min > max) [min, max] = [max, min];
-
-//     this.sliders[0].value = min;
-//     this.sliders[1].value = max;
-
-//     this.inputs[0].value = min;
-//     this.inputs[1].value = max;
-
-//     this.updateTrack();
-//       const display = this.querySelector('#price-display');
-//   if (display) display.textContent = `${min}-${max}`;
-
-//   }
-
-//   onSliderChange() {
-//     this.inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-//     this.inputs[1].dispatchEvent(new Event('input', { bubbles: true }));
-//   }
-
-//   onInputChange() {
-//     this.sliders[0].value = this.inputs[0].value;
-//     this.sliders[1].value = this.inputs[1].value;
-
-//     this.updateTrack();
-//       // 🔥 Update price display
-//   const display = this.querySelector('#price-display');
-//   if (display) display.textContent = `${min}-${max}`;
-
-//     this.inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-//     this.inputs[1].dispatchEvent(new Event('input', { bubbles: true }));
-//   }
-
-//   updateTrack() {
-//     const min = this.sliders[0].value;
-//     const max = this.sliders[1].value;
-//     const rangeMax = this.sliders[0].max;
-
-//     const left = (min / rangeMax) * 100;
-//     const width = ((max - min) / rangeMax) * 100;
-
-//     this.activeTrack.style.left = `${left}%`;
-//     this.activeTrack.style.width = `${width}%`;
-//   }
-// }
 class PriceRange extends HTMLElement {
   constructor() {
     super();
-
-    this.sliders = this.querySelectorAll('input[type="range"]');
-    this.inputs = this.querySelectorAll('input[type="number"]');
-    this.activeTrack = this.querySelector('.range-track-active');
-    this.display = this.querySelector('#price-display');
-
-    if (this.sliders.length !== 2) return;
-
-    this.currencySymbol = this.display?.dataset.currencySymbol || '$';
-    this.currencyFormat = this.display?.dataset.currencyFormat || 'before';
-
-    this.sliders.forEach(slider => {
-      slider.addEventListener('input', () => this.onSliderInput());
-      slider.addEventListener('change', () => this.onSliderChange());
+    this.querySelectorAll('input').forEach((element) => {
+      element.addEventListener('change', this.onRangeChange.bind(this));
+      element.addEventListener('keydown', this.onKeyDown.bind(this));
     });
-
-    this.inputs.forEach(input => {
-      input.addEventListener('change', () => this.onInputChange());
-    });
-
-    this.updateDisplay();
-    this.updateTrack();
+    this.setMinAndMaxValues();
   }
 
-  formatMoney(value) {
-    return this.currencyFormat === 'before'
-      ? `${this.currencySymbol}${value}`
-      : `${value}${this.currencySymbol}`;
+  onRangeChange(event) {
+    this.adjustToValidValues(event.currentTarget);
+    this.setMinAndMaxValues();
   }
 
-  updateDisplay() {
-    if (!this.display) return;
+  onKeyDown(event) {
+    if (event.metaKey) return;
 
-    const min = parseInt(this.sliders[0].value);
-    const max = parseInt(this.sliders[1].value);
-
-    // this.display.textContent = `${this.formatMoney(min)}${this.formatMoney(max)}`;
-    this.display.innerHTML = `
-      <span class="price-min">${this.formatMoney(min)}</span>
-      <span class="price-separator"></span>
-      <span class="price-max">${this.formatMoney(max)}</span>`;
+    const pattern = /[0-9]|\.|,|'| |Tab|Backspace|Enter|ArrowUp|ArrowDown|ArrowLeft|ArrowRight|Delete|Escape/;
+    if (!event.key.match(pattern)) event.preventDefault();
   }
 
-  onSliderInput() {
-    let min = parseInt(this.sliders[0].value);
-    let max = parseInt(this.sliders[1].value);
-
-    if (min > max) [min, max] = [max, min];
-
-    this.sliders[0].value = min;
-    this.sliders[1].value = max;
-
-    this.inputs[0].value = min;
-    this.inputs[1].value = max;
-
-    this.updateTrack();
-    this.updateDisplay();
+  setMinAndMaxValues() {
+    const inputs = this.querySelectorAll('input');
+    const minInput = inputs[0];
+    const maxInput = inputs[1];
+    if (maxInput.value) minInput.setAttribute('data-max', maxInput.value);
+    if (minInput.value) maxInput.setAttribute('data-min', minInput.value);
+    if (minInput.value === '') maxInput.setAttribute('data-min', 0);
+    if (maxInput.value === '') minInput.setAttribute('data-max', maxInput.getAttribute('data-max'));
   }
 
-  onSliderChange() {
-    this.inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-    this.inputs[1].dispatchEvent(new Event('input', { bubbles: true }));
-  }
+  adjustToValidValues(input) {
+    const value = Number(input.value);
+    const min = Number(input.getAttribute('data-min'));
+    const max = Number(input.getAttribute('data-max'));
 
-  onInputChange() {
-    let min = parseInt(this.inputs[0].value);
-    let max = parseInt(this.inputs[1].value);
-
-    if (min > max) [min, max] = [max, min];
-
-    this.sliders[0].value = min;
-    this.sliders[1].value = max;
-
-    this.updateTrack();
-    this.updateDisplay();
-
-    this.inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-    this.inputs[1].dispatchEvent(new Event('input', { bubbles: true }));
-  }
-
-  updateTrack() {
-    const min = parseInt(this.sliders[0].value);
-    const max = parseInt(this.sliders[1].value);
-    const rangeMax = parseInt(this.sliders[0].max);
-
-    const left = (min / rangeMax) * 100;
-    const width = ((max - min) / rangeMax) * 100;
-
-    if (this.activeTrack) {
-      this.activeTrack.style.left = `${left}%`;
-      this.activeTrack.style.width = `${width}%`;
-    }
+    if (value < min) input.value = min;
+    if (value > max) input.value = max;
   }
 }
 
-
-
 customElements.define('price-range', PriceRange);
-
 
 class FacetRemove extends HTMLElement {
   constructor() {

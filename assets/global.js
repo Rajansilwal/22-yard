@@ -608,11 +608,7 @@ class ModalDialog extends HTMLElement {
     });
     if (this.classList.contains('media-modal')) {
       this.addEventListener('pointerup', (event) => {
-        if (
-          event.pointerType === 'mouse' &&
-          !event.target.closest('deferred-media, product-model, .slider-button, .slider-counter, .slider-buttons, img')
-        )
-          this.hide();
+        if (event.pointerType === 'mouse' && !event.target.closest('deferred-media, product-model')) this.hide();
       });
     } else {
       this.addEventListener('click', (event) => {
@@ -754,18 +750,10 @@ class SliderComponent extends HTMLElement {
   initPages() {
     this.sliderItemsToShow = Array.from(this.sliderItems).filter((element) => element.clientWidth > 0);
     if (this.sliderItemsToShow.length < 2) return;
-    const isVertical = this.classList.contains('thumbnail-slider--vertical') && window.matchMedia('(min-width: 750px)').matches;
-    if (isVertical) {
-      this.sliderItemOffset = this.sliderItemsToShow[1].offsetTop - this.sliderItemsToShow[0].offsetTop;
-      this.slidesPerPage = Math.floor(
-        (this.slider.clientHeight - this.sliderItemsToShow[0].offsetTop) / this.sliderItemOffset
-      );
-    } else {
-      this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
-      this.slidesPerPage = Math.floor(
-        (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset
-      );
-    }
+    this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
+    this.slidesPerPage = Math.floor(
+      (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset
+    );
     this.totalPages = this.sliderItemsToShow.length - this.slidesPerPage + 1;
     this.update();
   }
@@ -781,12 +769,7 @@ class SliderComponent extends HTMLElement {
     if (!this.slider || !this.nextButton) return;
 
     const previousPage = this.currentPage;
-    const isVertical = this.classList.contains('thumbnail-slider--vertical') && window.matchMedia('(min-width: 750px)').matches;
-    if (isVertical) {
-      this.currentPage = Math.round(this.slider.scrollTop / this.sliderItemOffset) + 1;
-    } else {
-      this.currentPage = Math.round(this.slider.scrollLeft / this.sliderItemOffset) + 1;
-    }
+    this.currentPage = Math.round(this.slider.scrollLeft / this.sliderItemOffset) + 1;
 
     if (this.currentPageElement && this.pageTotalElement) {
       this.currentPageElement.textContent = this.currentPage;
@@ -806,39 +789,20 @@ class SliderComponent extends HTMLElement {
 
     if (this.enableSliderLooping) return;
 
-    if (isVertical) {
-      if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollTop === 0) {
-        this.prevButton.setAttribute('disabled', 'disabled');
-      } else {
-        this.prevButton.removeAttribute('disabled');
-      }
-
-      if (this.isSlideVisible(this.sliderItemsToShow[this.sliderItemsToShow.length - 1])) {
-        this.nextButton.setAttribute('disabled', 'disabled');
-      } else {
-        this.nextButton.removeAttribute('disabled');
-      }
+    if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollLeft === 0) {
+      this.prevButton.setAttribute('disabled', 'disabled');
     } else {
-      if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollLeft === 0) {
-        this.prevButton.setAttribute('disabled', 'disabled');
-      } else {
-        this.prevButton.removeAttribute('disabled');
-      }
+      this.prevButton.removeAttribute('disabled');
+    }
 
-      if (this.isSlideVisible(this.sliderItemsToShow[this.sliderItemsToShow.length - 1])) {
-        this.nextButton.setAttribute('disabled', 'disabled');
-      } else {
-        this.nextButton.removeAttribute('disabled');
-      }
+    if (this.isSlideVisible(this.sliderItemsToShow[this.sliderItemsToShow.length - 1])) {
+      this.nextButton.setAttribute('disabled', 'disabled');
+    } else {
+      this.nextButton.removeAttribute('disabled');
     }
   }
 
   isSlideVisible(element, offset = 0) {
-    const isVertical = this.classList.contains('thumbnail-slider--vertical') && window.matchMedia('(min-width: 750px)').matches;
-    if (isVertical) {
-      const lastVisibleSlide = this.slider.clientHeight + this.slider.scrollTop - offset;
-      return element.offsetTop + element.clientHeight <= lastVisibleSlide && element.offsetTop >= this.slider.scrollTop;
-    }
     const lastVisibleSlide = this.slider.clientWidth + this.slider.scrollLeft - offset;
     return element.offsetLeft + element.clientWidth <= lastVisibleSlide && element.offsetLeft >= this.slider.scrollLeft;
   }
@@ -846,32 +810,17 @@ class SliderComponent extends HTMLElement {
   onButtonClick(event) {
     event.preventDefault();
     const step = event.currentTarget.dataset.step || 1;
-    const isVertical = this.classList.contains('thumbnail-slider--vertical') && window.matchMedia('(min-width: 750px)').matches;
-    if (isVertical) {
-      this.slideScrollPosition =
-        event.currentTarget.name === 'next'
-          ? this.slider.scrollTop + step * this.sliderItemOffset
-          : this.slider.scrollTop - step * this.sliderItemOffset;
-    } else {
-      this.slideScrollPosition =
-        event.currentTarget.name === 'next'
-          ? this.slider.scrollLeft + step * this.sliderItemOffset
-          : this.slider.scrollLeft - step * this.sliderItemOffset;
-    }
+    this.slideScrollPosition =
+      event.currentTarget.name === 'next'
+        ? this.slider.scrollLeft + step * this.sliderItemOffset
+        : this.slider.scrollLeft - step * this.sliderItemOffset;
     this.setSlidePosition(this.slideScrollPosition);
   }
 
   setSlidePosition(position) {
-    const isVertical = this.classList.contains('thumbnail-slider--vertical') && window.matchMedia('(min-width: 750px)').matches;
-    if (isVertical) {
-      this.slider.scrollTo({
-        top: position,
-      });
-    } else {
-      this.slider.scrollTo({
-        left: position,
-      });
-    }
+    this.slider.scrollTo({
+      left: position,
+    });
   }
 }
 
@@ -1121,6 +1070,8 @@ class VariantSelects extends HTMLElement {
       const target = this.getInputForEventTarget(event.target);
       this.updateSelectionMetadata(event);
 
+      this.dispatchProductSelectEvent();
+
       publish(PUB_SUB_EVENTS.optionValueSelectionChange, {
         data: {
           event,
@@ -1129,6 +1080,69 @@ class VariantSelects extends HTMLElement {
         },
       });
     });
+  }
+
+  getAllSelectedOptions() {
+    const options = [];
+    this.querySelectorAll('fieldset, .product-form__input--dropdown').forEach((group) => {
+      const checked = group.querySelector('input:checked') || group.querySelector('select option[selected]');
+      if (checked) {
+        options.push({ name: checked.dataset.optionName || '', value: checked.value });
+      }
+    });
+    return options;
+  }
+
+  dispatchProductSelectEvent() {
+    const { ProductSelectEvent } = window.StandardEvents || {};
+    if (!ProductSelectEvent) return;
+
+    const deferred = ProductSelectEvent.createPromise();
+    this.pendingSelectPromise = deferred;
+
+    this.dispatchEvent(
+      new ProductSelectEvent({
+        product: {
+          id: this.dataset.productId,
+          title: this.dataset.productTitle,
+          handle: this.dataset.productHandle,
+        },
+        selectedOptions: this.getAllSelectedOptions(),
+        promise: deferred.promise,
+      })
+    );
+  }
+
+  takePendingSelectPromise() {
+    const deferred = this.pendingSelectPromise;
+    this.pendingSelectPromise = null;
+    return deferred;
+  }
+
+  resolvePendingSelectPromise(variant, sourceVariantSelects = this) {
+    const deferred = this.takePendingSelectPromise();
+    if (!deferred) return;
+
+    if (variant) {
+      deferred.resolve({
+        variant: {
+          id: variant.id,
+          title: variant.title,
+          availableForSale: variant.available,
+          price: {
+            amount: sourceVariantSelects?.dataset.selectedPriceAmount,
+            currencyCode: sourceVariantSelects?.dataset.currencyCode,
+          },
+          selectedOptions: this.getAllSelectedOptions(),
+        },
+      });
+    } else {
+      deferred.resolve({ variant: null });
+    }
+  }
+
+  rejectPendingSelectPromise(error) {
+    this.takePendingSelectPromise()?.reject(error);
   }
 
   updateSelectionMetadata({ target }) {
@@ -1228,26 +1242,6 @@ class ProductRecommendations extends HTMLElement {
 
 customElements.define('product-recommendations', ProductRecommendations);
 
-class AccountIcon extends HTMLElement {
-  constructor() {
-    super();
-
-    this.icon = this.querySelector('.icon');
-  }
-
-  connectedCallback() {
-    document.addEventListener('storefront:signincompleted', this.handleStorefrontSignInCompleted.bind(this));
-  }
-
-  handleStorefrontSignInCompleted(event) {
-    if (event?.detail?.avatar) {
-      this.icon?.replaceWith(event.detail.avatar.cloneNode());
-    }
-  }
-}
-
-customElements.define('account-icon', AccountIcon);
-
 class BulkAdd extends HTMLElement {
   static ASYNC_REQUEST_DELAY = 250;
 
@@ -1290,6 +1284,69 @@ class BulkAdd extends HTMLElement {
 
   get requestStarted() {
     return this._requestStarted;
+  }
+
+  getCartQuantityForLine(id) {
+    const input = this.querySelector(`#Quantity-${id}`);
+    return parseInt(input?.dataset.cartQuantity || input?.getAttribute('value') || '0', 10) || 0;
+  }
+
+  startCartLinesUpdate(items) {
+    const { CartLinesUpdateEvent } = window.StandardEvents || {};
+    if (!CartLinesUpdateEvent) return;
+
+    const linesByAction = Object.entries(items).reduce((groups, [variantId, quantity]) => {
+      const nextQuantity = parseInt(quantity, 10);
+      const currentQuantity = this.getCartQuantityForLine(variantId);
+
+      if (Number.isNaN(nextQuantity) || currentQuantity === nextQuantity) return groups;
+
+      const action = currentQuantity === 0 ? 'add' : nextQuantity === 0 ? 'remove' : 'update';
+      let line;
+      if (action === 'add') {
+        line = { merchandiseId: variantId, quantity: nextQuantity };
+      } else {
+        const lineKey = this.querySelector(`[data-quantity-variant-id="${variantId}"]`)?.dataset.quantityLineKey;
+        // No AJAX line key on the row — likely cached HTML rendered before this
+        // attribute landed. Skip rather than emit an event with id: ''.
+        if (!lineKey) return groups;
+        line = { id: lineKey, quantity: nextQuantity };
+      }
+
+      if (!groups[action]) groups[action] = [];
+      groups[action].push(line);
+      return groups;
+    }, {});
+
+    const deferreds = Object.entries(linesByAction).map(([action, lines]) => {
+      const deferred = CartLinesUpdateEvent.createPromise();
+      this.dispatchEvent(
+        new CartLinesUpdateEvent({
+          action,
+          context: 'product',
+          lines,
+          promise: deferred.promise,
+        })
+      );
+      return deferred;
+    });
+
+    return {
+      resolve: (parsedState) => {
+        const payload = { cart: CartLinesUpdateEvent.createCartFromAjaxResponse(parsedState) };
+        deferreds.forEach((deferred) => deferred.resolve(payload));
+      },
+      reject: (error) => {
+        deferreds.forEach((deferred) => deferred.reject(error));
+      },
+    };
+  }
+
+  dispatchCartErrorEvent(message, code) {
+    const { CartErrorEvent } = window.StandardEvents || {};
+    if (!CartErrorEvent) return;
+
+    this.dispatchEvent(new CartErrorEvent({ error: message, code }));
   }
 
   resetQuantityInput(id) {

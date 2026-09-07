@@ -14,16 +14,8 @@
   }
 {%- endstyle -%}
 
-{%- liquid
-  assign layout_type = section.settings.label_layout
-  assign field_class = 'field'
-  if layout_type != 'default_dawn'
-    assign field_class = 'custom-form-field'
-  endif
--%}
-
-<div class="color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
-  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding contact--{{ layout_type }}">
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
     {%- if section.settings.heading != blank -%}
       <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         {{ section.settings.heading }}
@@ -31,14 +23,12 @@
     {%- else -%}
       <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
     {%- endif -%}
-
     {%- liquid
       assign contact_form_class = 'isolate'
       if settings.animations_reveal_on_scroll
         assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
       endif
     -%}
-
     {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
       {%- if form.posted_successfully? -%}
         <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
@@ -61,91 +51,85 @@
           </li>
         </ul>
       {%- endif -%}
-
       <div class="contact__fields">
-        {%- comment -%} NAME FIELD {%- endcomment -%}
-        <div class="{{ field_class }}">
-          {%- if layout_type == 'top_bottom' -%}
-            <label class="custom-field__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
-          {%- endif -%}
-
-          {%- if layout_type == 'inside_label' -%}
-            <label class="custom-field__label-wrap" for="ContactForm-name">
-              <span class="custom-field__label-text">{{ 'templates.contact.form.name' | t }}</span>
-              <input class="custom-field__input" autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" placeholder="{{ 'templates.contact.form.name' | t }}">
-            </label>
-          {%- else -%}
-            <input class="{% if layout_type == 'default_dawn' %}field__input{% else %}custom-field__input{% endif %}" autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" placeholder="{{ 'templates.contact.form.name' | t }}">
-            {%- if layout_type == 'default_dawn' -%}
-              <label class="field__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
-            {%- endif -%}
+        <div class="field">
+          <input
+            class="field__input"
+            autocomplete="name"
+            type="text"
+            id="ContactForm-name"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            placeholder="{{ 'templates.contact.form.name' | t }}"
+          >
+          <label class="field__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
+        </div>
+        <div class="field field--with-error">
+          <input
+            autocomplete="email"
+            type="email"
+            id="ContactForm-email"
+            class="field__input"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="ContactForm-email-error"
+            {% endif %}
+            placeholder="{{ 'templates.contact.form.email' | t }}"
+          >
+          <label class="field__label" for="ContactForm-email">
+            {{- 'templates.contact.form.email' | t }}
+            <span aria-hidden="true">*</span></label
+          >
+          {%- if form.errors contains 'email' -%}
+            <small class="contact__field-error" id="ContactForm-email-error">
+              <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+              <span class="form__message">
+                <span class="svg-wrapper">
+                  {{- 'icon-error.svg' | inline_asset_content -}}
+                </span>
+                {{- form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email -}}
+              </span>
+            </small>
           {%- endif -%}
         </div>
-
-        {%- comment -%} EMAIL FIELD {%- endcomment -%}
-        <div class="{{ field_class }}{% if layout_type == 'default_dawn' %} field--with-error{% endif %}">
-          {%- if layout_type == 'top_bottom' -%}
-            <label class="custom-field__label" for="ContactForm-email">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></label>
-          {%- endif -%}
-
-          {%- capture email_input -%}
-            <input autocomplete="email" type="email" id="ContactForm-email" class="{% if layout_type == 'default_dawn' %}field__input{% else %}custom-field__input{% endif %}" name="contact[email]" spellcheck="false" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" aria-required="true" placeholder="{{ 'templates.contact.form.email' | t }} *">
-          {%- endcapture -%}
-
-          {%- if layout_type == 'inside_label' -%}
-            <label class="custom-field__label-wrap" for="ContactForm-email">
-              <span class="custom-field__label-text">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></span>
-              {{ email_input }}
-            </label>
-          {%- else -%}
-            {{ email_input }}
-            {%- if layout_type == 'default_dawn' -%}
-              <label class="field__label" for="ContactForm-email">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></label>
-            {%- endif -%}
-          {%- endif -%}
-        </div>
       </div>
-
-      {%- comment -%} PHONE FIELD {%- endcomment -%}
-      <div class="{{ field_class }}">
-        {%- if layout_type == 'top_bottom' -%}
-          <label class="custom-field__label" for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
-        {%- endif -%}
-
-        {%- if layout_type == 'inside_label' -%}
-          <label class="custom-field__label-wrap" for="ContactForm-phone">
-            <span class="custom-field__label-text">{{ 'templates.contact.form.phone' | t }}</span>
-            <input type="tel" id="ContactForm-phone" class="custom-field__input" autocomplete="tel" name="contact[{{ 'templates.contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'templates.contact.form.phone' | t }}">
-          </label>
-        {%- else -%}
-          <input type="tel" id="ContactForm-phone" class="{% if layout_type == 'default_dawn' %}field__input{% else %}custom-field__input{% endif %}" autocomplete="tel" name="contact[{{ 'templates.contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'templates.contact.form.phone' | t }}">
-          {%- if layout_type == 'default_dawn' -%}
-            <label class="field__label" for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
-          {%- endif -%}
-        {%- endif -%}
+      <div class="field">
+        <input
+          type="tel"
+          id="ContactForm-phone"
+          class="field__input"
+          autocomplete="tel"
+          name="contact[{{ 'templates.contact.form.phone' | t }}]"
+          pattern="[0-9\-]*"
+          value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          placeholder="{{ 'templates.contact.form.phone' | t }}"
+        >
+        <label class="field__label" for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
       </div>
-
-      {%- comment -%} COMMENT FIELD {%- endcomment -%}
-      <div class="{{ field_class }}">
-        {%- if layout_type == 'top_bottom' -%}
-          <label class="custom-field__label" for="ContactForm-body">{{ 'templates.contact.form.comment' | t }}</label>
-        {%- endif -%}
-
-        {%- if layout_type == 'inside_label' -%}
-          <label class="custom-field__label-wrap" for="ContactForm-body">
-            <span class="custom-field__label-text">{{ 'templates.contact.form.comment' | t }}</span>
-            <textarea rows="6" id="ContactForm-body" class="text-area custom-field__input" name="contact[{{ 'templates.contact.form.comment' | t }}]" placeholder="{{ 'templates.contact.form.comment' | t }}">{{- form.body -}}</textarea>
-          </label>
-        {%- else -%}
-          <textarea rows="6" id="ContactForm-body" class="text-area {% if layout_type == 'default_dawn' %}field__input{% else %}custom-field__input{% endif %}" name="contact[{{ 'templates.contact.form.comment' | t }}]" placeholder="{{ 'templates.contact.form.comment' | t }}">{{- form.body -}}</textarea>
-          {%- if layout_type == 'default_dawn' -%}
-            <label class="form__label field__label" for="ContactForm-body">{{ 'templates.contact.form.comment' | t }}</label>
-          {%- endif -%}
-        {%- endif -%}
+      <div class="field">
+        <textarea
+          rows="10"
+          id="ContactForm-body"
+          class="text-area field__input"
+          name="contact[{{ 'templates.contact.form.comment' | t }}]"
+          placeholder="{{ 'templates.contact.form.comment' | t }}"
+        >
+          {{- form.body -}}
+        </textarea>
+        <label class="form__label field__label" for="ContactForm-body">
+          {{- 'templates.contact.form.comment' | t -}}
+        </label>
       </div>
-
       <div class="contact__button">
-        <button type="submit" class="button">{{ 'templates.contact.form.send' | t }}</button>
+        <button type="submit" class="button">
+          {{ 'templates.contact.form.send' | t }}
+        </button>
       </div>
     {%- endform -%}
   </div>
@@ -170,24 +154,29 @@
       "type": "select",
       "id": "heading_size",
       "options": [
-        { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
-        { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
-        { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "hxl",
+          "label": "t:sections.all.heading_size.options__4.label"
+        },
+        {
+          "value": "hxxl",
+          "label": "t:sections.all.heading_size.options__5.label"
+        }
       ],
       "default": "h1",
       "label": "t:sections.all.heading_size.label"
-    },
-    {
-      "type": "select",
-      "id": "label_layout",
-      "label": "Form Labels Style",
-      "options": [
-        { "value": "top_bottom", "label": "Top Label & Bottom Input" },
-        { "value": "placeholder_only", "label": "Placeholder Only (No Labels)" },
-        { "value": "inside_label", "label": "Input Inside Label" },
-        { "value": "default_dawn", "label": "Standard Dawn Float Dynamic Style" }
-      ],
-      "default": "top_bottom"
     },
     {
       "type": "color_scheme",
@@ -218,16 +207,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
-    },
-    {
-      "type": "header",
-      "content": "Custom CSS"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper."
     }
   ],
   "presets": [

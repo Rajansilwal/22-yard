@@ -20,8 +20,6 @@
   assign sort_by = results.sort_by | default: results.default_sort_by
   assign total_active_values = 0
   assign default_presentation = 'text'
-  # Default state of the vertical sidebar filter groups: open_all | close_all | open_first
-  assign filter_open_state = filter_open_state | default: 'open_first'
   if results.url
     assign results_url = results.url
   else
@@ -30,12 +28,17 @@
   endif
 -%}
 
-<div class="facets-container{% if filter_type == 'drawer' %} facets-container-drawer{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+<div
+  class="facets-container{% if filter_type == 'drawer' %} facets-container-drawer{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  data-collection-id="{{ results.id }}"
+  data-collection-handle="{{ results.handle }}"
+  data-template="{{ template.name }}"
+>
   {%- if filter_type == 'vertical' or filter_type == 'horizontal' -%}
     <facet-filters-form class="facets small-hide">
       <form
         id="FacetFiltersForm"
-        class="{% if filter_type == 'horizontal' %}facets__form{% else %} {% if collection.products_count > 0 %}  facets__form-vertical{%endif%}{% endif %}"
+        class="{% if filter_type == 'horizontal' %}facets__form{% else %}facets__form-vertical{% endif %}"
       >
         {%- if results.terms -%}
           <input type="hidden" name="q" value="{{ results.terms | escape }}">
@@ -59,15 +62,15 @@
             {%- if filter_type == 'vertical' -%}
               <div class="active-facets active-facets-desktop">
                 <div class="active-facets-vertical-filter">
-                    {%- unless results.filters == empty -%}
-                      <h2
-                        class="facets__heading facets__heading--vertical caption-large text-body"
-                        id="verticalTitle"
-                        tabindex="-1"
-                      >
-                        {{ 'products.facets.filter_by_label' | t }}
-                      </h2>
-                    {%- endunless -%}
+                  {%- unless results.filters == empty -%}
+                    <h2
+                      class="facets__heading facets__heading--vertical caption-large text-body"
+                      id="verticalTitle"
+                      tabindex="-1"
+                    >
+                      {{ 'products.facets.filter_by_label' | t }}
+                    </h2>
+                  {%- endunless -%}
                   <facet-remove class="active-facets__button-wrapper">
                     <a href="{{ results_url }}" class="active-facets__button-remove underlined-link">
                       <span>{{ 'products.facets.clear_all' | t }}</span>
@@ -131,13 +134,7 @@
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    {% if filter_type == 'vertical' %}
-                      {%- if filter_open_state == 'open_all' -%}
-                        open
-                      {%- elsif filter_open_state == 'open_first' and forloop.index == 1 -%}
-                        open
-                      {%- endif -%}
-                    {% else %}
+                    {% if filter_type == 'vertical' and forloop.index == 1 %}
                       open
                     {% endif %}
                   >
@@ -303,25 +300,18 @@
                       {%- endif %}
                     </div>
                   </details>
-
                 {% when 'price_range' %}
                   <details
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    {% if filter_type == 'vertical' %}
-                      {%- if filter_open_state == 'open_all' -%}
-                        open
-                      {%- elsif filter_open_state == 'open_first' and forloop.index == 1 -%}
-                        open
-                      {%- endif -%}
-                    {% else %}
+                    {% if filter_type == 'vertical' and forloop.index == 1 %}
                       open
                     {% endif %}
                   >
                     <summary class="facets__summary caption-large focus-offset">
                       <div>
-                        <span class="facets__summary-label">{{ filter.label | escape }}</span>
+                        <span>{{ filter.label | escape }}</span>
                         {{- 'icon-caret.svg' | inline_asset_content -}}
                       </div>
                     </summary>
@@ -329,7 +319,19 @@
                       id="Facet-{{ forloop.index }}-{{ section.id }}"
                       class="{% if filter_type == 'horizontal' %}facets__display{% else %}facets__display-vertical{% endif %}"
                     >
-             
+                      <div class="{% if filter_type == 'horizontal' %}facets__header{% else %}facets__header-vertical{% endif %}">
+                        {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+                        <span class="facets__selected">
+                          {{- 'products.facets.max_price' | t: price: max_price_amount -}}
+                        </span>
+                        {%- if filter_type != 'vertical' -%}
+                          <facet-remove>
+                            <a href="{{ filter.url_to_remove }}" class="facets__reset link underlined-link">
+                              {{ 'products.facets.reset' | t }}
+                            </a>
+                          </facet-remove>
+                        {%- endif -%}
+                      </div>
                       <price-range class="facets__price">
                         {% render 'price-facet', filter: filter, id_prefix: 'Filter-', filter_type: filter_type %}
                       </price-range>
@@ -422,39 +424,17 @@
           {%- endif -%}
           <div class="product-count light" role="status">
             <h2 class="product-count__text text-body">
-                <span id="ProductCountDesktop">
-                  {%- if results.results_count -%}
-                    {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
-                  {%- elsif results.products_count == results.all_products_count -%}
-                    {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
-                  {%- else -%}
-                    {{
-                      'products.facets.product_count'
-                      | t: product_count: results.products_count, count: results.all_products_count
-                    }}
-                  {%- endif -%}
-                </span>
-                <span id="ProductCountDesktop">
-                  {% if results.products_count > 0 %}
-                    {% assign start_index = paginate.current_offset | plus: 1 %}
-                    {% assign end_index = paginate.current_offset | plus: results.products.size %}
-
-                    Showing {{ start_index }}–{{ end_index }} of {{ results.all_products_count }} results
-                  {% else %}
-                    0 products
-                  {% endif %}
-                </span>
-
               <span id="ProductCountDesktop">
-                {% if collection.products_count == 0 %}
-                  0 products
-                {% elsif collection.products_count == 1 %}
-                  Showing 1 result
-                {% else %}
-                  {% assign start_index = paginate.current_offset | plus: 1 %}
-                  {% assign end_index = paginate.current_offset | plus: collection.products.size %}
-                  Showing {{ start_index }}–{{ end_index }} of {{ collection.products_count }} results
-                {% endif %}
+                {%- if results.results_count -%}
+                  {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                {%- elsif results.products_count == results.all_products_count -%}
+                  {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+                {%- else -%}
+                  {{
+                    'products.facets.product_count'
+                    | t: product_count: results.products_count, count: results.all_products_count
+                  }}
+                {%- endif -%}
               </span>
             </h2>
             {%- render 'loading-spinner' -%}
@@ -719,7 +699,7 @@
                           </p>
 
                           <price-range class="facets__price">
-                          {% render 'price-facet', filter: filter, id_prefix: 'Mobile-Filter-' %}
+                            {% render 'price-facet', filter: filter, id_prefix: 'Mobile-Filter-' %}
                           </price-range>
                           <div class="mobile-facets__footer">
                             <facet-remove class="mobile-facets__clear-wrapper">
@@ -898,39 +878,21 @@
     role="status"
   >
     <h2 class="product-count__text text-body">
-        <span id="ProductCount">
-          {%- if results.results_count -%}
-            {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
-          {%- elsif results.products_count == results.all_products_count -%}
-            {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
-          {%- else -%}
-            {{
-              'products.facets.product_count'
-              | t: product_count: results.products_count, count: results.all_products_count
-            }}
-          {%- endif -%}
-        </span>
-        <span id="ProductCount">
-          {% if results.products_count > 0 %}
-            {% assign start_index = paginate.current_offset | plus: 1 %}
-            {% assign end_index = paginate.current_offset | plus: results.products.size %}
-
-            Showing {{ start_index }}–{{ end_index }} of {{ results.all_products_count }} results
-          {% else %}
-            0 products
-          {% endif %}
-        </span>
-
-      <span id="ProductCount">
-        {% if results.products_count == 0 %}
-          0 products
-        {% elsif results.products_count == 1 %}
-          Showing 1 result
-        {% else %}
-          {% assign start_index = paginate.current_offset | plus: 1 %}
-          {% assign end_index = paginate.current_offset | plus: results.products.size %}
-          Showing {{ start_index }}–{{ end_index }} of {{ results.products_count }} results
-        {% endif %}
+      <span
+        id="ProductCount"
+        data-product-count="{{ results.products_count | default: results.results_count }}"
+        data-total-count="{{ results.all_products_count | default: results.products_count | default: results.results_count }}"
+      >
+        {%- if results.results_count -%}
+          {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+        {%- elsif results.products_count == results.all_products_count -%}
+          {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+        {%- else -%}
+          {{
+            'products.facets.product_count'
+            | t: product_count: results.products_count, count: results.all_products_count
+          }}
+        {%- endif -%}
       </span>
     </h2>
     {%- render 'loading-spinner' -%}

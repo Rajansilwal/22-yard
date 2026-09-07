@@ -1,19 +1,14 @@
 {% comment %}
-  Renders a header search modal.
+  Renders a header search modal. Should be used with 'header.liquid'
 
   Accepts:
   - input_id: {String} Id for the search input element (required)
 
   Usage:
-  {% render 'header-search', input_id: 'My-Id' %}
+  {% render 'header-search', input_id: 'My-Id'%}
 {% endcomment %}
 
-{%- liquid
-  assign search_open = section.settings.search_open_by_default | default: false
-  assign search_max_width = section.settings.search_max_width | default: 720
--%}
-
-<details-modal class="header__search"{% if search_open %} data-auto-open{% endif %}>
+<details-modal class="header__search">
   <details>
     <summary
       class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle"
@@ -39,7 +34,6 @@
       <div
         class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
         tabindex="-1"
-        style="--search-max-width: {{ search_max_width }}px;"
       >
         {%- if settings.predictive_search_enabled -%}
           <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
@@ -90,6 +84,7 @@
             <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
               {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
             </div>
+
             <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
           {%- endif -%}
         </form>
@@ -111,42 +106,3 @@
     </div>
   </details>
 </details-modal>
-
-{%- if search_open -%}
-<script>
-  (function () {
-    function openSearchModal(el) {
-      var details = el.querySelector('details');
-      var focusTarget = details.querySelector('[tabindex="-1"]');
-      var inputTarget = details.querySelector('input:not([type="hidden"])');
-
-      details.setAttribute('open', true);
-      document.body.classList.add('overflow-hidden');
-
-      if (window.trapFocus && focusTarget) {
-        trapFocus(focusTarget, inputTarget);
-      }
-
-      // register body-click-to-close listener the same way DetailsModal does
-      function onBodyClick(event) {
-        if (!el.contains(event.target) || event.target.classList.contains('modal-overlay')) {
-          details.removeAttribute('open');
-          document.body.classList.remove('overflow-hidden');
-          document.body.removeEventListener('click', onBodyClick);
-        }
-      }
-      // small delay so this doesn't fire immediately on the same tick
-      setTimeout(function () {
-        document.body.addEventListener('click', onBodyClick);
-      }, 0);
-    }
-
-    customElements.whenDefined('details-modal').then(function () {
-      var searchModals = document.querySelectorAll('details-modal[data-auto-open]');
-      searchModals.forEach(function (el) {
-        openSearchModal(el);
-      });
-    });
-  })();
-</script>
-{%- endif -%}

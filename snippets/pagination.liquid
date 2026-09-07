@@ -17,29 +17,19 @@
   <div class="pagination-wrapper" data-page="{{ paginate.current_page }}">
     <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
       <ul class="pagination__list list-unstyled" role="list">
-        <li>
-          {%- if paginate.previous -%}
+        {%- if paginate.previous -%}
+          <li>
             <a
               href="{{ paginate.previous.url }}{{ anchor }}"
-              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
               aria-label="{{ 'general.pagination.previous' | t }}"
             >
               <span class="svg-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
               </span>
             </a>
-          {%- else -%}
-            <span
-              class="pagination__item pagination__item--prev pagination__item-arrow pagination__item--disabled"
-              aria-disabled="true"
-              aria-label="{{ 'general.pagination.previous' | t }}"
-            >
-              <span class="svg-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
-              </span>
-            </span>
-          {%- endif -%}
-        </li>
+          </li>
+        {%- endif -%}
 
         {%- for part in paginate.parts -%}
           <li>
@@ -69,29 +59,19 @@
           </li>
         {%- endfor -%}
 
-        <li>
-          {%- if paginate.next -%}
+        {%- if paginate.next -%}
+          <li>
             <a
               href="{{ paginate.next.url }}{{ anchor }}"
-              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
               aria-label="{{ 'general.pagination.next' | t }}"
             >
               <span class="svg-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
               </span>
             </a>
-          {%- else -%}
-            <span
-              class="pagination__item pagination__item--next pagination__item-arrow pagination__item--disabled"
-              aria-disabled="true"
-              aria-label="{{ 'general.pagination.next' | t }}"
-            >
-              <span class="svg-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </span>
-            </span>
-          {%- endif -%}
-        </li>
+          </li>
+        {%- endif -%}
       </ul>
     </nav>
   </div>

@@ -50,7 +50,6 @@
   {% endif %}
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
-  data-thumbnail-position="{{ section.settings.thumbnail_position | default: 'horizontal' }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
   <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
@@ -103,12 +102,8 @@
           >
             {%- liquid
               assign media_position = media_position | default: 0 | plus: 1
-              # 22 Yard: eager-load the first few main images so switching from a
-              # thumbnail is instant (items are display:none until active, and lazy
-              # images would otherwise only fetch on click). Beyond the first 6,
-              # fall back to lazy to keep the initial page load reasonable.
               assign lazy_load = false
-              if media_position > 6
+              if media_position > 1
                 assign lazy_load = true
               endif
             -%}
@@ -188,7 +183,7 @@
   -%}
     <slider-component
       id="GalleryThumbnails-{{ section.id }}"
-      class="thumbnail-slider slider-mobile-gutter quick-add-hidden{% unless section.settings.gallery_layout contains 'thumbnail' %} medium-hide large-up-hide{% endunless %}{% if section.settings.mobile_thumbnails != 'show' %} small-hide{% endif %}{% if media_count <= 3 %} thumbnail-slider--no-slide{% endif %}{% if section.settings.thumbnail_position == 'vertical' %} thumbnail-slider--vertical{% endif %}"
+      class="thumbnail-slider slider-mobile-gutter quick-add-hidden{% unless section.settings.gallery_layout contains 'thumbnail' %} medium-hide large-up-hide{% endunless %}{% if section.settings.mobile_thumbnails != 'show' %} small-hide{% endif %}{% if media_count <= 3 %} thumbnail-slider--no-slide{% endif %}"
     >
       <button
         type="button"

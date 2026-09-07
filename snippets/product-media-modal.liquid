@@ -26,75 +26,32 @@
       {{ 'icon-close.svg' | inline_asset_content }}
     </button>
 
-    <slider-component
-      id="GalleryViewerModal-{{ section.id }}"
+    <div
       class="product-media-modal__content color-{{ section.settings.color_scheme }} gradient"
       role="document"
       aria-label="{{ 'products.modal.label' | t }}"
       tabindex="0"
     >
-      <ul
-        id="Slider-Modal-{{ section.id }}"
-        class="product-media-modal__list list-unstyled slider slider--desktop slider--mobile"
-        role="list"
-      >
+      {%- liquid
+        if product.selected_or_first_available_variant.featured_media != null
+          assign media = product.selected_or_first_available_variant.featured_media
+          render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants
+        endif
+      -%}
+
+      {%- for media in product.media -%}
         {%- liquid
-          assign media_count = 0
-          if product.selected_or_first_available_variant.featured_media != null
-            assign media = product.selected_or_first_available_variant.featured_media
-            assign media_count = media_count | plus: 1
-            echo '<li id="Slide-Modal-' | append: section.id | append: '-' | append: media.id | append: '" class="product-media-modal__item slider__slide" data-media-id="' | append: media.id | append: '">'
-            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants
-            echo '</li>'
+          if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+            assign variant_image = true
+          else
+            assign variant_image = false
           endif
+
+          unless media.id == product.selected_or_first_available_variant.featured_media.id
+            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_image
+          endunless
         -%}
-
-        {%- for media in product.media -%}
-          {%- liquid
-            if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
-              assign variant_image = true
-            else
-              assign variant_image = false
-            endif
-
-            unless media.id == product.selected_or_first_available_variant.featured_media.id
-              assign media_count = media_count | plus: 1
-              echo '<li id="Slide-Modal-' | append: section.id | append: '-' | append: media.id | append: '" class="product-media-modal__item slider__slide" data-media-id="' | append: media.id | append: '">'
-              render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_image
-              echo '</li>'
-            endunless
-          -%}
-        {%- endfor -%}
-      </ul>
-      
-      <div class="slider-buttons no-js-hidden">
-        <button
-          type="button"
-          class="slider-button slider-button--prev"
-          name="previous"
-          aria-label="{{ 'general.slider.previous_slide' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-caret.svg' | inline_asset_content -}}
-          </span>
-        </button>
-        <div class="slider-counter caption">
-          <span class="slider-counter--current">1</span>
-          <span aria-hidden="true"> / </span>
-          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-          <span class="slider-counter--total">{{ media_count }}</span>
-        </div>
-        <button
-          type="button"
-          class="slider-button slider-button--next"
-          name="next"
-          aria-label="{{ 'general.slider.next_slide' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-caret.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      </div>
-    </slider-component>
+      {%- endfor -%}
+    </div>
   </div>
 </product-modal>

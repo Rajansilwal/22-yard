@@ -1,230 +1,61 @@
-/* Core Flex Grid Structure Override */
-.collection-list.grid-layout {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0;
+.collection-list {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.collection-list-title {
   margin: 0;
-  list-style: none;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-list:not(.slider) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section-collection-list .page-width {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section-collection-list .collection-list:not(.slider) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.collection-list__item:only-child {
+  max-width: 100%;
   width: 100%;
 }
 
-.collection-list__item {
-  box-sizing: border-box;
-  flex-grow: 0;
-  flex-shrink: 0;
-}
-
-/* Responsive Grid Columns Framework */
 @media screen and (max-width: 749px) {
-  .mobile-cols-1 > .collection-list__item { width: 100%; }
-  .mobile-cols-2 > .collection-list__item { 
-    width: calc((100% - 12px) / 2); 
+  .slider.collection-list--1-items {
+    padding-bottom: 0;
   }
 }
 
 @media screen and (min-width: 750px) and (max-width: 989px) {
-  .tablet-cols-1 > .collection-list__item { width: 100%; }
-  .tablet-cols-2 > .collection-list__item { width: calc((100% - 16px) / 2); }
-  .tablet-cols-3 > .collection-list__item { width: calc((100% - (2 * 16px)) / 3); }
-  .tablet-cols-4 > .collection-list__item { width: calc((100% - (3 * 16px)) / 4); }
+  .slider.collection-list--1-items,
+  .slider.collection-list--2-items,
+  .slider.collection-list--3-items,
+  .slider.collection-list--4-items {
+    padding-bottom: 0;
+  }
 }
 
-@media screen and (min-width: 990px) {
-  .desktop-cols-1 > .collection-list__item { width: 100%; }
-  .desktop-cols-2 > .collection-list__item { width: calc((100% - 24px) / 2); }
-  .desktop-cols-3 > .collection-list__item { width: calc((100% - (2 * 24px)) / 3); }
-  .desktop-cols-4 > .collection-list__item { width: calc((100% - (3 * 24px)) / 4); }
-  .desktop-cols-5 > .collection-list__item { width: calc((100% - (4 * 24px)) / 5); }
-  .desktop-cols-6 > .collection-list__item { width: calc((100% - (5 * 24px)) / 6); }
+@media screen and (min-width: 750px) {
+  .collection-list__item a:hover {
+    box-shadow: none;
+  }
 }
 
-/* Base Custom Card Layout */
-.custom-collection-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
+@media screen and (max-width: 989px) {
+  .collection-list.slider .collection-list__item {
+    max-width: 100%;
+  }
 }
 
-/* Aspect Ratio Processing Blocks */
-.custom-collection-card.ratio-square .custom-card__image-wrapper {
-  aspect-ratio: 1 / 1;
-}
-.custom-collection-card.ratio-portrait .custom-card__image-wrapper {
-  aspect-ratio: 3 / 4;
-}
-.custom-collection-card.ratio-adapt .custom-card__image-wrapper {
-  min-height: 280px;
-}
-
-/* Image Wrapper Layout Frame */
-.custom-card__image-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  display: block;
-}
-
-.custom-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-
-.custom-collection-card:hover .custom-card__img {
-  transform: scale(1.03);
-}
-
-/* Fallback Structural Component for Missing Images */
-.custom-card__fallback-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle, rgba(243,243,243,1) 0%, rgba(225,225,225,1) 100%);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.placeholder-svg-graphic {
-  width: 70%;
-  height: 70%;
-  fill: #8c8c8c;
-  opacity: 0.6;
-  display: block;
-}
-
-/* Standard Meta Details Layout (Classic) */
-.custom-card__meta-details {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.custom-card__title-heading {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.custom-card__title-link {
-  text-decoration: none;
-  color: rgb(var(--color-foreground, 0, 0, 0));
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.custom-card__title-link .inline-icon-arrow {
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-
-.custom-card__title-link:hover .inline-icon-arrow {
-  transform: translateX(4px);
-}
-
-/* Interactive Layout Action Button Styles */
-.custom-card__action-container {
-  margin-top: 1.5rem;
-  width: 100%;
-}
-
-.custom-action__anchor-link {
-  font-size: 1.4rem;
-  font-weight: bold;
-  text-decoration: underline;
-  color: rgb(var(--color-foreground));
-  display: inline-block;
-}
-
-.btn-ui {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1.2rem 2rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: opacity 0.2s ease;
-  border: 1px solid transparent;
-  min-height: 44px;
-  box-sizing: border-box;
-}
-
-.btn-ui--primary {
-  background-color: rgb(var(--color-button));
-  color: rgb(var(--color-button-text));
-}
-
-.btn-ui--secondary {
-  background-color: transparent;
-  border-color: rgb(var(--color-button));
-  color: rgb(var(--color-button));
-}
-
-/* Modern Image Background Overlay Mechanics */
-.card-render--overlay {
-  position: relative;
-}
-
-.card-render--overlay .custom-card__image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.card-render--overlay .custom-card__img,
-.card-render--overlay .custom-card__fallback-placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.card-render--overlay .custom-card__global-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-}
-
-/* Fixed Multi-Axis Overlay Layout Panel */
-.card-render--overlay .custom-card__overlay-data {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  padding: 2.5rem;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column; /* Force precise vertical alignment flow calculation */
-}
-
-.custom-card__title-heading-overlay {
-  margin: 0;
-  font-size: 2.2rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.45);
-  width: 100%;
-  box-sizing: border-box;
+.collection-list-view-all {
+  margin-top: 2rem;
 }

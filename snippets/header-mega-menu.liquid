@@ -1,469 +1,93 @@
 {% comment %}
-  Renders the desktop mega/dropdown nav.
-  Per-item overrides are set via "menu_item_override" blocks in the header section.
+  Renders a megamenu for the header.
 
-  Accepts:
-  - blocks: section.blocks
-
-  Match strategy: compare link.title | handleize  OR  link.url last path segment
-  against block.settings.menu_item_handle (entered by merchant).
+  Usage:
+  {% render 'header-mega-menu' %}
 {% endcomment %}
-
-{%- liquid
-  assign default_type = section.settings.menu_type_desktop | default: 'mega'
--%}
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
-
     {%- for link in section.settings.menu.links -%}
-
-      {%- liquid
-        # ── Resolve override block for this link ──────────────────────────
-        assign item_type              = default_type
-        assign item_mega_layout       = nil
-        assign item_mega_columns      = 3
-        assign item_mega_image        = nil
-        assign item_mega_heading      = nil
-        assign item_mega_link         = nil
-        assign item_show_desc         = false
-        assign item_icon_image        = nil
-        assign item_icon_show         = false
-        assign item_collection_handle = nil
-        assign item_product_handle    = nil
-        assign item_slider_enable     = false
-        assign item_promo_image       = nil
-        assign item_promo_heading     = nil
-        assign item_promo_text        = nil
-        assign item_promo_link        = nil
-        assign item_block_matched     = false
-
-        # Build candidates: title handleized + last URL segment
-        assign link_handle_title = link.title | handleize
-        assign link_url_parts    = link.url | split: '/'
-        assign link_handle_url   = link_url_parts | last | downcase
-
-        for block in blocks
-          if block.type == 'menu_item_override'
-            assign bh = block.settings.menu_item_handle | strip | downcase
-            assign bh_match = false
-            if bh != blank
-              if bh == link_handle_title
-                assign bh_match = true
-              endif
-              if bh == link_handle_url
-                assign bh_match = true
-              endif
-              if bh == link.handle
-                assign bh_match = true
-              endif
-            endif
-            if bh_match
-              assign item_block_matched = true
-              if block.settings.menu_type != 'default'
-                assign item_type = block.settings.menu_type
-              endif
-              assign item_mega_layout       = block.settings.mega_layout       | default: 'columns-with-image'
-              assign item_mega_columns      = block.settings.mega_columns       | default: 3
-              assign item_mega_image        = block.settings.mega_featured_image
-              assign item_mega_heading      = block.settings.mega_featured_heading
-              assign item_mega_link         = block.settings.promo_link
-              assign item_show_desc         = block.settings.mega_show_description
-              assign item_icon_image        = block.settings.item_icon_image
-              assign item_icon_show         = block.settings.item_show_icon
-              assign item_collection_handle = block.settings.mega_collection_handle
-              assign item_product_handle    = nil
-              assign item_slider_enable     = false
-              assign item_promo_image       = block.settings.mega_featured_image
-              assign item_promo_heading     = block.settings.promo_heading
-              assign item_promo_text        = block.settings.promo_text
-              assign item_promo_link        = block.settings.promo_link
-              break
-            endif
-          endif
-        endfor
-
-        # If no override block matched, use the section default layout
-        unless item_block_matched
-          assign item_mega_layout = 'columns-with-image'
-        endunless
-
-        # Resolve collection object
-        assign mega_collection = nil
-        if item_collection_handle != blank
-          assign mega_collection = collections[item_collection_handle]
-        endif
-      -%}
-
-      <li class="header__nav-item">
-
-        {%- comment -%} ── Nav item trigger label ── {%- endcomment -%}
-        {%- comment -%}
-          Show a mega/dropdown if:
-          a) the nav item has child links (standard case), OR
-          b) a content-producing override block is configured
-        {%- endcomment -%}
-        {%- liquid
-          assign has_content_override = false
-          if item_type != 'none' and item_block_matched
-            if mega_collection != blank
-              assign has_content_override = true
-            endif
-            if item_mega_image != blank or item_promo_image != blank
-              assign has_content_override = true
-            endif
-            if item_mega_layout != blank
-              assign has_content_override = true
-            endif
-          endif
-          assign show_expandable = false
-          if link.links != blank and item_type != 'none'
-            assign show_expandable = true
-          endif
-          if has_content_override
-            assign show_expandable = true
-          endif
-        -%}
-        {%- if show_expandable -%}
-
-          {%- if item_type == 'dropdown' and link.links != blank -%}
-            {%- comment -%}════════════════ DROPDOWN ════════════════{%- endcomment -%}
-            <header-menu>
-              <details id="Details-HeaderMenu-{{ forloop.index }}">
-                <summary
-                  id="HeaderMenu-{{ link.handle }}"
-                  class="header__menu-item list-menu__item link focus-inset"
+      <li>
+        {%- if link.links != blank -%}
+          <header-menu>
+            <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
+              <summary
+                id="HeaderMenu-{{ link.handle }}"
+                class="header__menu-item list-menu__item link focus-inset"
+              >
+                <span
+                  {%- if link.child_active %}
+                    class="header__active-menu-item"
+                  {% endif %}
                 >
-                  {%- if item_icon_show and item_icon_image != blank -%}
-                    <span class="header__menu-icon">
-                      {{- item_icon_image | image_url: width: 24 | image_tag: width: 24, height: 24, loading: 'lazy' -}}
-                    </span>
-                  {%- endif -%}
-                  <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>
-                    {{- link.title | escape -}}
-                  </span>
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </summary>
+                  {{- link.title | escape -}}
+                </span>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </summary>
+              <div
+                id="MegaMenu-Content-{{ forloop.index }}"
+                class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+                tabindex="-1"
+              >
                 <ul
-                  id="HeaderMenu-MenuList-{{ forloop.index }}"
-                  class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
+                  class="mega-menu__list page-width{% if link.levels == 1 %} mega-menu__list--condensed{% endif %}"
                   role="list"
-                  tabindex="-1"
                 >
                   {%- for childlink in link.links -%}
                     <li>
-                      {%- if childlink.links == blank -%}
-                        <a
-                          id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                          href="{{ childlink.url }}"
-                          class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"
-                          {% if childlink.current %}aria-current="page"{% endif %}
-                        >{{ childlink.title | escape }}</a>
-                      {%- else -%}
-                        <details id="Details-HeaderSubMenu-{{ link.handle }}-{{ childlink.handle }}">
-                          <summary
-                            id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                            class="header__menu-item link link--text list-menu__item focus-inset caption-large"
-                          >
-                            <span>{{ childlink.title | escape }}</span>
-                            {{- 'icon-caret.svg' | inline_asset_content -}}
-                          </summary>
-                          <ul class="header__submenu list-menu motion-reduce">
-                            {%- for grandchildlink in childlink.links -%}
-                              <li>
-                                <a
-                                  href="{{ grandchildlink.url }}"
-                                  class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if grandchildlink.current %} list-menu__item--active{% endif %}"
-                                  {% if grandchildlink.current %}aria-current="page"{% endif %}
-                                >{{ grandchildlink.title | escape }}</a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
-                        </details>
+                      <a
+                        id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                        href="{{ childlink.url }}"
+                        class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="list-unstyled" role="list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a
+                                id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                href="{{ grandchildlink.url }}"
+                                class="mega-menu__link link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"
+                                {% if grandchildlink.current %}
+                                  aria-current="page"
+                                {% endif %}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
                       {%- endif -%}
                     </li>
                   {%- endfor -%}
                 </ul>
-              </details>
-            </header-menu>
-
-          {%- else -%}
-            {%- comment -%}════════════════ MEGA MENU ════════════════{%- endcomment -%}
-            <header-menu>
-              <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
-                <summary
-                  id="HeaderMenu-{{ link.handle }}"
-                  class="header__menu-item list-menu__item link focus-inset"
-                >
-                  {%- if item_icon_show and item_icon_image != blank -%}
-                    <span class="header__menu-icon">
-                      {{- item_icon_image | image_url: width: 24 | image_tag: width: 24, height: 24, loading: 'lazy' -}}
-                    </span>
-                  {%- endif -%}
-                  <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>
-                    {{- link.title | escape -}}
-                  </span>
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </summary>
-
-                <div
-                  id="MegaMenu-Content-{{ forloop.index }}"
-                  class="mega-menu__content mega-menu__content--{{ item_mega_layout }} color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
-                  tabindex="-1"
-                >
-                  <div class="mega-menu__inner page-width">
-
-                    {%- comment -%}──────────────────────────────────────────────────────────
-                      LAYOUT 1: columns-with-products
-                      Left: grouped column nav links (childlink as heading, grandchildren as links)
-                      Right: up to 2 product cards from mega_collection + View All button
-                    ──────────────────────────────────────────────────────────{%- endcomment -%}
-                    {%- if item_mega_layout == 'columns-with-products' -%}
-                      <div class="mega-menu__split">
-
-                        {%- comment -%} LEFT: link column groups {%- endcomment -%}
-                        <div class="mega-menu__links-area">
-                          {%- for childlink in link.links -%}
-                            {%- if childlink.links != blank -%}
-                              <div class="mega-menu__col-group">
-                                <p class="mega-menu__col-heading">{{ childlink.title | escape }}</p>
-                                <ul class="mega-menu__col-links" role="list">
-                                  {%- for grandchildlink in childlink.links -%}
-                                    <li>
-                                      <a
-                                        href="{{ grandchildlink.url }}"
-                                        class="mega-menu__col-link{% if grandchildlink.current %} mega-menu__col-link--active{% endif %}"
-                                        {% if grandchildlink.current %}aria-current="page"{% endif %}
-                                      >{{ grandchildlink.title | escape }}</a>
-                                    </li>
-                                  {%- endfor -%}
-                                </ul>
-                              </div>
-                            {%- else -%}
-                              <div class="mega-menu__col-group">
-                                <ul class="mega-menu__col-links" role="list">
-                                  <li>
-                                    <a
-                                      href="{{ childlink.url }}"
-                                      class="mega-menu__col-link{% if childlink.current %} mega-menu__col-link--active{% endif %}"
-                                      {% if childlink.current %}aria-current="page"{% endif %}
-                                    >{{ childlink.title | escape }}</a>
-                                  </li>
-                                </ul>
-                              </div>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        </div>
-
-                        {%- comment -%} RIGHT: product cards + view all {%- endcomment -%}
-                        {%- if mega_collection != blank -%}
-                          <div class="mega-menu__right-panel">
-                            <div class="mega-menu__products-panel">
-                              {%- for product in mega_collection.products limit: 2 -%}
-                                <a href="{{ product.url }}" class="mega-menu__product-row link">
-                                  {%- if product.featured_image != blank -%}
-                                    {{ product.featured_image | image_url: width: 128 | image_tag: class: 'mega-menu__product-row-img', loading: 'lazy', width: 64, height: 64 }}
-                                  {%- else -%}
-                                    <div class="mega-menu__product-row-img"></div>
-                                  {%- endif -%}
-                                  <div class="mega-menu__product-row-info">
-                                    {%- if product.compare_at_price > product.price -%}
-                                      <span class="mega-menu__product-row-badge mega-menu__product-row-badge--sale">Sale</span>
-                                    {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
-                                      <span class="mega-menu__product-row-badge mega-menu__product-row-badge--new">New</span>
-                                    {%- endif -%}
-                                    <div class="mega-menu__product-row-title">{{ product.title | escape }}</div>
-                                    <div class="mega-menu__product-row-price">{{ product.price | money }}</div>
-                                  </div>
-                                </a>
-                              {%- endfor -%}
-                              <a href="{{ mega_collection.url }}" class="mega-menu__view-all-btn">
-                                View All {{ mega_collection.title | escape }} &rarr;
-                              </a>
-                            </div>
-                          </div>
-                        {%- endif -%}
-
-                      </div>
-
-                    {%- comment -%}──────────────────────────────────────────────────────────
-                      LAYOUT 2: columns-with-promo
-                      Left: flat nav links with optional description
-                      Centre: flash deals product list from mega_collection (up to 6)
-                      Right: full-bleed promo image panel with eyebrow, heading, CTA
-                    ──────────────────────────────────────────────────────────{%- endcomment -%}
-                    {%- elsif item_mega_layout == 'columns-with-promo' -%}
-                      <div class="mega-menu__split">
-
-                        {%- comment -%} LEFT: flat deal links {%- endcomment -%}
-                        <div class="mega-menu__links-area" style="flex: 0 0 auto; min-width: 180px; max-width: 220px; padding-right: 0; border-right: none;">
-                          <ul class="mega-menu__deal-links" role="list">
-                            {%- for childlink in link.links -%}
-                              <li>
-                                <a
-                                  href="{{ childlink.url }}"
-                                  class="mega-menu__deal-link{% if childlink.current %} mega-menu__link--active{% endif %}"
-                                  {% if childlink.current %}aria-current="page"{% endif %}
-                                >
-                                  <svg class="mega-menu__deal-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                  <span>{{ childlink.title | escape }}</span>
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
-                        </div>
-
-                        {%- comment -%} CENTRE: flash deals product list {%- endcomment -%}
-                        {%- if mega_collection != blank -%}
-                          <div class="mega-menu__flash-panel">
-                            <p class="mega-menu__flash-heading">
-                              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                              Flash Deals Today
-                            </p>
-                            <ul class="mega-menu__flash-list" role="list">
-                              {%- for product in mega_collection.products limit: 6 -%}
-                                <li>
-                                  <a href="{{ product.url }}" class="mega-menu__flash-item link">
-                                    {%- if product.featured_image != blank -%}
-                                      {{ product.featured_image | image_url: width: 88 | image_tag: class: 'mega-menu__flash-img', loading: 'lazy', width: 44, height: 44 }}
-                                    {%- else -%}
-                                      <div class="mega-menu__flash-img"></div>
-                                    {%- endif -%}
-                                    <div class="mega-menu__flash-info">
-                                      <div class="mega-menu__flash-title">{{ product.title | escape }}</div>
-                                      <div class="mega-menu__flash-prices">
-                                        <span class="mega-menu__flash-price">{{ product.price | money }}</span>
-                                        {%- if product.compare_at_price > product.price -%}
-                                          <span class="mega-menu__flash-compare">{{ product.compare_at_price | money }}</span>
-                                        {%- endif -%}
-                                      </div>
-                                    </div>
-                                  </a>
-                                </li>
-                              {%- endfor -%}
-                            </ul>
-                          </div>
-                        {%- endif -%}
-
-                        {%- comment -%} RIGHT: promo image panel {%- endcomment -%}
-                        {%- if item_mega_image != blank -%}
-                          <div class="mega-menu__right-panel">
-                            <div class="mega-menu__promo-panel" style="min-height: 260px;">
-                              {{ item_mega_image | image_url: width: 680 | image_tag: class: 'mega-menu__promo-bg', loading: 'lazy' }}
-                              <div class="mega-menu__promo-overlay"></div>
-                              <div class="mega-menu__promo-body">
-                                {%- if item_mega_heading != blank -%}
-                                  <span class="mega-menu__promo-eyebrow">{{ item_mega_heading | escape }}</span>
-                                {%- endif -%}
-                                {%- if item_promo_heading != blank -%}
-                                  <p class="mega-menu__promo-heading">{{ item_promo_heading | escape }}</p>
-                                {%- endif -%}
-                                {%- if item_promo_link != blank -%}
-                                  <a href="{{ item_promo_link }}" class="mega-menu__promo-cta">
-                                    {{ item_promo_text | default: 'Shop Now →' | escape }}
-                                  </a>
-                                {%- endif -%}
-                              </div>
-                            </div>
-                          </div>
-                        {%- endif -%}
-
-                      </div>
-
-                    {%- comment -%}──────────────────────────────────────────────────────────
-                      LAYOUT 3: columns-with-image  (default fallback)
-                      Left: grouped column nav links (childlink as heading, grandchildren as links)
-                      Right: full-bleed promo image with eyebrow, heading, CTA
-                    ──────────────────────────────────────────────────────────{%- endcomment -%}
-                    {%- else -%}
-                      <div class="mega-menu__split">
-
-                        {%- comment -%} LEFT: link column groups {%- endcomment -%}
-                        <div class="mega-menu__links-area">
-                          {%- for childlink in link.links -%}
-                            {%- if childlink.links != blank -%}
-                              <div class="mega-menu__col-group">
-                                <p class="mega-menu__col-heading">{{ childlink.title | escape }}</p>
-                                <ul class="mega-menu__col-links" role="list">
-                                  {%- for grandchildlink in childlink.links -%}
-                                    <li>
-                                      <a
-                                        href="{{ grandchildlink.url }}"
-                                        class="mega-menu__col-link{% if grandchildlink.current %} mega-menu__col-link--active{% endif %}"
-                                        {% if grandchildlink.current %}aria-current="page"{% endif %}
-                                      >{{ grandchildlink.title | escape }}</a>
-                                    </li>
-                                  {%- endfor -%}
-                                </ul>
-                              </div>
-                            {%- else -%}
-                              <div class="mega-menu__col-group">
-                                <ul class="mega-menu__col-links" role="list">
-                                  <li>
-                                    <a
-                                      href="{{ childlink.url }}"
-                                      class="mega-menu__col-link{% if childlink.current %} mega-menu__col-link--active{% endif %}"
-                                      {% if childlink.current %}aria-current="page"{% endif %}
-                                    >{{ childlink.title | escape }}</a>
-                                  </li>
-                                </ul>
-                              </div>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        </div>
-
-                        {%- comment -%} RIGHT: promo image panel (only when image is set) {%- endcomment -%}
-                        {%- if item_mega_image != blank -%}
-                          <div class="mega-menu__right-panel">
-                            <div class="mega-menu__promo-panel" style="min-height: 260px;">
-                              {{ item_mega_image | image_url: width: 680 | image_tag: class: 'mega-menu__promo-bg', loading: 'lazy' }}
-                              <div class="mega-menu__promo-overlay"></div>
-                              <div class="mega-menu__promo-body">
-                                {%- if item_mega_heading != blank -%}
-                                  <span class="mega-menu__promo-eyebrow">{{ item_mega_heading | escape }}</span>
-                                {%- endif -%}
-                                {%- if item_promo_heading != blank -%}
-                                  <p class="mega-menu__promo-heading">{{ item_promo_heading | escape }}</p>
-                                {%- endif -%}
-                                {%- if item_promo_link != blank -%}
-                                  <a href="{{ item_promo_link }}" class="mega-menu__promo-cta">
-                                    {{ item_promo_text | default: 'Shop Now →' | escape }}
-                                  </a>
-                                {%- endif -%}
-                              </div>
-                            </div>
-                          </div>
-                        {%- endif -%}
-
-                      </div>
-                    {%- endif -%}{%- comment -%} end layout cases {%- endcomment -%}
-
-                  </div>{%- comment -%} /.mega-menu__inner {%- endcomment -%}
-                </div>{%- comment -%} /.mega-menu__content {%- endcomment -%}
-              </details>
-            </header-menu>
-
-          {%- endif -%}{%- comment -%} end mega vs dropdown {%- endcomment -%}
-
+              </div>
+            </details>
+          </header-menu>
         {%- else -%}
-          {%- comment -%}═══ Plain link (no children or type=none) ═══{%- endcomment -%}
           <a
             id="HeaderMenu-{{ link.handle }}"
             href="{{ link.url }}"
             class="header__menu-item list-menu__item link link--text focus-inset"
-            {% if link.current %}aria-current="page"{% endif %}
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
           >
-            {%- if item_icon_show and item_icon_image != blank -%}
-              <span class="header__menu-icon">
-                {{- item_icon_image | image_url: width: 24 | image_tag: width: 24, height: 24, loading: 'lazy' -}}
-              </span>
-            {%- endif -%}
-            <span {%- if link.current %} class="header__active-menu-item"{% endif %}>
+            <span
+              {%- if link.current %}
+                class="header__active-menu-item"
+              {% endif %}
+            >
               {{- link.title | escape -}}
             </span>
           </a>
         {%- endif -%}
-
       </li>
     {%- endfor -%}
   </ul>

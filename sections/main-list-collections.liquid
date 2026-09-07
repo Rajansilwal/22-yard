@@ -1,72 +1,10 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
 
-{%- style -%}
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top_mobile }}px;
-    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top_tablet }}px;
-      padding-bottom: {{ section.settings.padding_bottom_tablet }}px;
-    }
-  }
-
-  @media screen and (min-width: 990px) {
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top_desktop }}px;
-      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
-    }
-  }
-
-  /* Grid Layout Gaps */
-  .section-{{ section.id }}-padding .collection-list {
-    gap: {{ section.settings.card_gap_mobile }}px;
-  }
-  @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding .collection-list {
-      gap: {{ section.settings.card_gap_tablet }}px;
-    }
-  }
-  @media screen and (min-width: 990px) {
-    .section-{{ section.id }}-padding .collection-list {
-      gap: {{ section.settings.card_gap_desktop }}px;
-    }
-  }
-
-  /* Structural Card Frame Customizations */
-  .section-{{ section.id }}-padding .custom-collection-card {
-    background-color: {{ section.settings.card_bg_color }};
-    border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
-    border-radius: {{ section.settings.card_border_radius }}px;
-  }
-
-  /* Safe RGBA Extraction Engine for Overlay Stability */
-  {%- assign r = section.settings.overlay_color.red -%}
-  {%- assign g = section.settings.overlay_color.green -%}
-  {%- assign b = section.settings.overlay_color.blue -%}
-  {%- assign alpha = section.settings.overlay_opacity | divided_by: 100.0 -%}
-
-  .section-{{ section.id }}-padding .custom-card__overlay-data {
-    background: rgba({{ r }}, {{ g }}, {{ b }}, {{ alpha }}) !important;
-    justify-content: {{ section.settings.content_alignment_vertical }} !important;
-    align-items: {{ section.settings.content_alignment_horizontal }} !important;
-  }
-
-  .section-{{ section.id }}-padding .custom-card__title-heading-overlay {
-    text-align: {{ section.settings.text_alignment_inline }} !important;
-  }
-{%- endstyle -%}
-
-<div class="page-width section-{{ section.id }}-padding {{ section.settings.custom_class }}">
-  {%- if section.settings.title != blank -%}
-    <h1 class="title title--primary inline-richtext collection-list-title{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-      {{ section.settings.title }}
-    </h1>
-  {%- endif -%}
-
+<div class="page-width">
+  <h1 class="title title--primary inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+    {{ section.settings.title }}
+  </h1>
   {%- liquid
     case section.settings.sort
       when 'products_high', 'products_low'
@@ -85,85 +23,30 @@
       assign paginate_by = 28
     endif
   -%}
-
   {%- paginate collections by paginate_by -%}
     <ul
-      class="collection-list grid-layout desktop-cols-{{ section.settings.columns_desktop }} tablet-cols-{{ section.settings.columns_tablet }} mobile-cols-{{ section.settings.columns_mobile }}"
+      class="collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
       role="list"
     >
       {%- for collection in collections -%}
-        <li class="collection-list__item {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+        <li
+          class="collection-list__item grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           {% if settings.animations_reveal_on_scroll %}
             data-cascade
             style="--animation-order: {{ forloop.index }};"
           {% endif %}
         >
-          <div class="custom-collection-card card-render--{{ section.settings.card_style }} ratio-{{ section.settings.image_ratio }}">
-            
-            <div class="custom-card__image-wrapper">
-              {%- if collection.featured_image != blank -%}
-                <img
-                  srcset="
-                    {%- if collection.featured_image.width >= 165 -%}{{ collection.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
-                    {%- if collection.featured_image.width >= 360 -%}{{ collection.featured_image | image_url: width: 360 }} 360w,{%- endif -%}
-                    {%- if collection.featured_image.width >= 533 -%}{{ collection.featured_image | image_url: width: 533 }} 533w,{%- endif -%}
-                    {%- if collection.featured_image.width >= 720 -%}{{ collection.featured_image | image_url: width: 720 }} 720w,{%- endif -%}
-                    {{ collection.featured_image | image_url }} {{ collection.featured_image.width }}w
-                  "
-                  src="{{ collection.featured_image | image_url: width: 533 }}"
-                  sizes="(min-width: 990px) calc((100vw - 130px) / {{ section.settings.columns_desktop }}), (min-width: 750px) calc((100vw - 120px) / {{ section.settings.columns_tablet }}), calc((100vw - 35px) / {{ section.settings.columns_mobile }})"
-                  alt="{{ collection.title | escape }}"
-                  height="{{ collection.featured_image.height }}"
-                  width="{{ collection.featured_image.width }}"
-                  loading="lazy"
-                  class="custom-card__img"
-                >
-              {%- else -%}
-                <div class="custom-card__fallback-placeholder">
-                  {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg-graphic' }}
-                </div>
-              {%- endif -%}
-
-              {%- if section.settings.card_style == 'overlay' -%}
-                <a href="{{ collection.url }}" class="custom-card__global-link"><span class="visually-hidden">{{ collection.title }}</span></a>
-                <div class="custom-card__overlay-data">
-                  <h3 class="custom-card__title-heading-overlay">{{ collection.title | escape }}</h3>
-                </div>
-              {%- endif -%}
-            </div>
-
-            {%- if section.settings.card_style != 'overlay' -%}
-              <div class="custom-card__meta-details">
-                <h3 class="custom-card__title-heading">
-                  <a href="{{ collection.url }}" class="custom-card__title-link">
-                    {{ collection.title | escape }}
-                  </a>
-                </h3>
-
-                {%- if section.settings.card_style == 'interactive' -%}
-                  <div class="custom-card__action-container">
-                    {%- if section.settings.button_style == 'link' -%}
-                      <a href="{{ collection.url }}" class="custom-action__anchor-link">
-                        {{ 'sections.collection_list.view_all' | t | default: 'View all' }}
-                      </a>
-                    {%- else -%}
-                      <a href="{{ collection.url }}" class="btn btn--{{ section.settings.button_style }}">
-                        {{ 'sections.collection_list.view_all' | t | default: 'View all' }}
-                      </a>
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
-
-          </div>
+          {% render 'card-collection',
+            card_collection: collection,
+            media_aspect_ratio: section.settings.image_ratio,
+            columns: 3
+          %}
         </li>
       {%- endfor -%}
     </ul>
     {% render 'pagination', paginate: paginate %}
   {%- endpaginate -%}
 </div>
-
 {% schema %}
 {
   "name": "t:sections.main-list-collections.name",
@@ -179,147 +62,53 @@
       "type": "select",
       "id": "sort",
       "options": [
-        { "value": "alphabetical", "label": "t:sections.main-list-collections.settings.sort.options__1.label" },
-        { "value": "alphabetical_reversed", "label": "t:sections.main-list-collections.settings.sort.options__2.label" },
-        { "value": "date_reversed", "label": "t:sections.main-list-collections.settings.sort.options__3.label" },
-        { "value": "date", "label": "t:sections.main-list-collections.settings.sort.options__4.label" },
-        { "value": "products_high", "label": "t:sections.main-list-collections.settings.sort.options__5.label" },
-        { "value": "products_low", "label": "t:sections.main-list-collections.settings.sort.options__6.label" }
+        {
+          "value": "alphabetical",
+          "label": "t:sections.main-list-collections.settings.sort.options__1.label"
+        },
+        {
+          "value": "alphabetical_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__2.label"
+        },
+        {
+          "value": "date_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__3.label"
+        },
+        {
+          "value": "date",
+          "label": "t:sections.main-list-collections.settings.sort.options__4.label"
+        },
+        {
+          "value": "products_high",
+          "label": "t:sections.main-list-collections.settings.sort.options__5.label"
+        },
+        {
+          "value": "products_low",
+          "label": "t:sections.main-list-collections.settings.sort.options__6.label"
+        }
       ],
       "default": "alphabetical",
       "label": "t:sections.main-list-collections.settings.sort.label"
     },
     {
-      "type": "header",
-      "content": "Card Styling Engine"
-    },
-    {
-      "type": "select",
-      "id": "card_style",
-      "label": "Card Render Type",
-      "options": [
-        { "value": "classic", "label": "Standard (Below Image)" },
-        { "value": "interactive", "label": "Action Core (With Button)" },
-        { "value": "overlay", "label": "Modern Overlay (On Image)" }
-      ],
-      "default": "classic"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "Action Button Variant",
-      "options": [
-        { "value": "primary", "label": "Primary Theme Button" },
-        { "value": "secondary", "label": "Secondary Theme Button" },
-        { "value": "primary-outline", "label": "Primary Outline Button" },
-        { "value": "secondary-outline", "label": "Secondary Outline Button" },
-        { "value": "link", "label": "Plain Anchor Link Only" }
-      ],
-      "default": "primary"
-    },
-    {
       "type": "select",
       "id": "image_ratio",
       "options": [
-        { "value": "adapt", "label": "Adapt to Image Scaling" },
-        { "value": "portrait", "label": "Portrait (3:4)" },
-        { "value": "square", "label": "Square (1:1)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__3.label"
+        }
       ],
-      "default": "square",
-      "label": "Card Layout Aspect Ratio"
-    },
-    {
-      "type": "header",
-      "content": "Modern Overlay Configs"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment_vertical",
-      "label": "Vertical Position",
-      "options": [
-        { "value": "flex-start", "label": "Top" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Bottom" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment_horizontal",
-      "label": "Horizontal Position",
-      "options": [
-        { "value": "flex-start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment_inline",
-      "label": "Text Alignment",
-      "options": [
-        { "value": "left", "label": "Left Align" },
-        { "value": "center", "label": "Center Align" },
-        { "value": "right", "label": "Right Align" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "color",
-      "id": "overlay_color",
-      "label": "Overlay Tint Color",
-      "default": "#000000"
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 40,
-      "label": "Overlay Tint Opacity"
-    },
-    {
-      "type": "header",
-      "content": "Card Frame Base Accents"
-    },
-    {
-      "type": "color",
-      "id": "card_bg_color",
-      "label": "Card Box Background Color",
-      "default": "#f5f5f5"
-    },
-    {
-      "type": "color",
-      "id": "card_border_color",
-      "label": "Card Border Line Color",
-      "default": "#e2e2e2"
-    },
-    {
-      "type": "range",
-      "id": "card_border_width",
-      "min": 0,
-      "max": 4,
-      "step": 1,
-      "unit": "px",
-      "default": 1,
-      "label": "Border Thickness"
-    },
-    {
-      "type": "range",
-      "id": "card_border_radius",
-      "min": 0,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 8,
-      "label": "Corner Radius Curve"
-    },
-    {
-      "type": "header",
-      "content": "Responsive Columns Layout"
+      "default": "adapt",
+      "label": "t:sections.main-list-collections.settings.image_ratio.label"
     },
     {
       "type": "range",
@@ -328,133 +117,23 @@
       "max": 6,
       "step": 1,
       "default": 3,
-      "label": "Desktop View Columns"
-    },
-    {
-      "type": "range",
-      "id": "columns_tablet",
-      "min": 1,
-      "max": 4,
-      "step": 1,
-      "default": 2,
-      "label": "Tablet View Columns"
+      "label": "t:sections.main-list-collections.settings.columns_desktop.label"
     },
     {
       "type": "select",
       "id": "columns_mobile",
       "options": [
-        { "value": "1", "label": "1 Column Layout" },
-        { "value": "2", "label": "2 Columns Layout" }
+        {
+          "value": "1",
+          "label": "t:sections.main-list-collections.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-list-collections.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "2",
-      "label": "Mobile View Columns"
-    },
-    {
-      "type": "header",
-      "content": "Card Container Spacing Gaps"
-    },
-    {
-      "type": "range",
-      "id": "card_gap_desktop",
-      "min": 0,
-      "max": 60,
-      "step": 2,
-      "unit": "px",
-      "default": 24,
-      "label": "Desktop View Gap"
-    },
-    {
-      "type": "range",
-      "id": "card_gap_tablet",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 16,
-      "label": "Tablet View Gap"
-    },
-    {
-      "type": "range",
-      "id": "card_gap_mobile",
-      "min": 0,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "default": 12,
-      "label": "Mobile View Gap"
-    },
-    {
-      "type": "header",
-      "content": "Section Padding Fields"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_desktop",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 40,
-      "label": "Desktop Padding Top"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom_desktop",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 40,
-      "label": "Desktop Padding Bottom"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_tablet",
-      "min": 0,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "default": 32,
-      "label": "Tablet Padding Top"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom_tablet",
-      "min": 0,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "default": 32,
-      "label": "Tablet Padding Bottom"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_mobile",
-      "min": 0,
-      "max": 60,
-      "step": 4,
-      "unit": "px",
-      "default": 24,
-      "label": "Mobile Padding Top"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom_mobile",
-      "min": 0,
-      "max": 60,
-      "step": 4,
-      "unit": "px",
-      "default": 24,
-      "label": "Mobile Padding Bottom"
-    }    ,{
-      "type": "header",
-      "content": "Custom CSS class"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper. Useful for custom styling."
+      "label": "t:sections.main-list-collections.settings.columns_mobile.label"
     }
   ]
 }

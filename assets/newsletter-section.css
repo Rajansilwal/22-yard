@@ -48,12 +48,3 @@
     margin: 0 0 0 1rem;
   }
 }
-/* Handles container block flow adjustments for decoupled layout nodes */
-.newsletter__wrapper > * + .newsletter-form {
-  margin-top: 2rem;
-}
-
-.newsletter-form__field-wrapper .custom-form-field {
-  max-width: 36rem;
-  margin: 0 auto;
-}

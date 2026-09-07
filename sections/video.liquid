@@ -38,7 +38,7 @@
   {%- endif %}
 {%- endcapture -%}
 
-<div class="color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+<div class="color-{{ section.settings.color_scheme }} gradient">
   <div class="video-section isolate{% unless section.settings.full_width %} page-width{% endunless %} section-{{ section.id }}-padding">
     <div
       {% if section.settings.full_width %}
@@ -221,16 +221,6 @@
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
     },
-     {
-      "type": "header",
-      "content": "Custom CSS class"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper. Useful for custom styling."
-    },
     {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
@@ -259,7 +249,7 @@
   "presets": [
     {
       "name": "t:sections.video.presets.name"
-    }   
+    }
   ]
 }
 {% endschema %}

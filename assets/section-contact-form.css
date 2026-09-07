@@ -10,15 +10,12 @@
   margin-top: 0.2rem;
 }
 
-/* Base structural layout handles grid alignment */
-.contact .field, 
-.contact .custom-form-field {
+.contact .field {
   margin-bottom: 1.5rem;
 }
 
 @media screen and (min-width: 750px) {
-  .contact .field,
-  .contact .custom-form-field {
+  .contact .field {
     margin-bottom: 2rem;
   }
 }
@@ -31,70 +28,12 @@
   .contact__button {
     margin-top: 4rem;
   }
+}
+
+@media screen and (min-width: 750px) {
   .contact__fields {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 2rem;
   }
-}
-
-/* ==========================================================================
-   Clean Styles for Custom Clean Layout Configurations (Skips Global Overrides)
-   ========================================================================== */
-.custom-form-field {
-  display: flex;
-  flex-direction: column;
-}
-
-.custom-field__input {
-  width: 100%;
-  font-family: inherit;
-  font-size: 1.6rem;
-  color: rgb(var(--color-foreground));
-  background-color: rgb(var(--color-background));
-  border: 0.1rem solid rgba(var(--color-foreground), 0.2);
-  border-radius: var(--inputs-radius);
-  padding: 1.5rem;
-  box-sizing: border-box;
-  appearance: none;
-}
-
-.custom-field__input:focus {
-  outline: 0.2rem solid rgb(var(--color-foreground));
-  outline-offset: -0.2rem;
-}
-
-textarea.custom-field__input {
-  min-height: 12rem;
-  resize: vertical;
-}
-
-/* Layout 1 Specifics: Top Label & Bottom Input Structure (Fixes image_f0fbbf.png) */
-.contact--top_bottom .custom-field__label {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.6rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Layout 2 Specifics: Input Layered Nesting Structure (Fixes image_f0fc1d.png) */
-.contact--inside_label .custom-field__label-wrap {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.contact--inside_label .custom-field__label-text {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.6rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Layout 3 Specifics: Placeholder Only Form Logic */
-.contact--placeholder_only .custom-field__input::placeholder {
-  opacity: 1;
-  color: rgba(var(--color-foreground), 0.6);
 }

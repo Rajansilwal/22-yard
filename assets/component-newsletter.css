@@ -9,8 +9,9 @@
 
 @media screen and (min-width: 750px) {
   .newsletter-form {
-    align-items: center;
+    align-items: flex-start;
     margin: 0 auto;
+    max-width: 36rem;
   }
 }
 
@@ -35,6 +36,12 @@
   margin-top: 2rem;
 }
 
+@media screen and (min-width: 750px) {
+  .newsletter-form__message {
+    justify-content: flex-start;
+  }
+}
+
 .newsletter-form__button {
   width: 4.4rem;
   margin: 0;
@@ -44,191 +51,21 @@
   z-index: 2;
 }
 
-.newsletter-form__button:focus-visible,
+.newsletter-form__button:focus-visible {
+  box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.4rem rgba(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+}
+
 .newsletter-form__button:focus {
   box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.4rem rgba(var(--color-foreground));
   background-color: rgb(var(--color-background));
 }
 
+.newsletter-form__button:not(:focus-visible):not(.focused) {
+  box-shadow: inherit;
+  background-color: inherit;
+}
+
 .newsletter-form__button .icon {
   width: 1.5rem;
-}
-
-/* ==========================================================================
-   Decoupled Sandboxed Custom Rules (No Overlapping Conflicts)
-   ========================================================================== */
-.custom-form-field {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  position: relative;
-  text-align: left;
-}
-
-.custom-input-button-container {
-  position: relative;
-  width: 100%;
-  display: block;
-}
-
-.custom-field__input {
-  width: 100%;
-  font-family: inherit;
-  font-size: 1.6rem;
-  color: rgb(var(--color-foreground));
-  background-color: rgb(var(--color-background));
-  border: 0.1rem solid rgba(var(--color-foreground), 0.2);
-  border-radius: var(--inputs-radius);
-  padding: 1.5rem 5rem 1.5rem 1.5rem;
-  box-sizing: border-box;
-  appearance: none;
-  height: auto;
-}
-
-.custom-field__input:focus {
-  outline: 0.2rem solid rgb(var(--color-foreground));
-  outline-offset: -0.2rem;
-}
-
-.custom-field__button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 4.4rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgb(var(--color-foreground));
-  z-index: 2;
-}
-
-/* Variant Layout 1: Top Label & Bottom Input spacing */
-.newsletter--top_bottom .custom-field__label {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Variant Layout 2: Input Nested Inside Label Field Wrap */
-.newsletter--inside_label .custom-field__label-wrap {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.newsletter--inside_label .custom-field__label-text {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Variant Layout 3: Clean Placeholder view style rule */
-.newsletter--placeholder_only .custom-field__input::placeholder {
-  opacity: 1;
-  color: rgba(var(--color-foreground), 0.6);
-}
-
-/* ==========================================================================
-   Decoupled Sandboxed Custom Rules (Button Separated Variant)
-   ========================================================================== */
-.custom-form-field {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  position: relative;
-  text-align: left;
-}
-
-/* The row container that splits input and button side-by-side */
-.custom-input-button-row {
-  display: flex;
-  align-items: stretch;
-  width: 100%;
-  gap: 1rem; /* Adjust this value for more or less separate spacing */
-}
-
-.custom-field__input {
-  flex: 1; /* Allows input field to take up all remaining left-side space */
-  font-family: inherit;
-  font-size: 1.6rem;
-  color: rgb(var(--color-foreground));
-  background-color: rgb(var(--color-background));
-  border: 0.1rem solid rgba(var(--color-foreground), 0.2);
-  border-radius: var(--inputs-radius);
-  padding: 1.5rem; /* Reduced right-padding since button isn't overlapping anymore */
-  box-sizing: border-box;
-  appearance: none;
-  height: auto;
-}
-
-.custom-field__input:focus {
-  outline: 0.2rem solid rgb(var(--color-foreground));
-  outline-offset: -0.2rem;
-}
-
-/* Transformed button configuration into a standalone element */
-.custom-field__button {
-  position: relative; /* Disabled absolute behavior */
-  height: auto;
-  width: 5rem;
-  background-color: rgb(var(--color-foreground)); /* Dark solid background match */
-  color: rgb(var(--color-background)); /* Light contrast arrow match */
-  border: none;
-  border-radius: var(--inputs-radius);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
-  flex-shrink: 0;
-}
-
-.custom-field__button:hover {
-  opacity: 0.9;
-}
-
-.custom-field__button .svg-wrapper {
-  width: 1.8rem;
-  height: 1.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Variant Layout 1: Top Label & Bottom Input spacing */
-.newsletter--top_bottom .custom-field__label {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Variant Layout 2: Input Nested Inside Label Field Wrap */
-.newsletter--inside_label .custom-field__label-wrap {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.newsletter--inside_label .custom-field__label-text {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  color: rgb(var(--color-foreground));
-}
-
-/* Variant Layout 3: Clean Placeholder view style rule */
-.newsletter--placeholder_only .custom-field__input::placeholder {
-  opacity: 1;
-  color: rgba(var(--color-foreground), 0.6);
 }

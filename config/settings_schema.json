@@ -1,11 +1,11 @@
 [
-    {
+  {
     "name": "theme_info",
-    "theme_name": "22 Yard",
-    "theme_version": "1.0.0",
-    "theme_author": "Rajan Silwal",
-    "theme_documentation_url": "https://rajansilwal.com.np/",
-    "theme_support_url": "https://rajansilwal.com.np/"
+    "theme_name": "Dawn",
+    "theme_version": "16.0.0",
+    "theme_author": "Shopify",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
   },
   {
     "name": "t:settings_schema.logo.name",
@@ -152,12 +152,50 @@
       {
         "type": "range",
         "id": "page_width",
-        "min": 1200,
-        "max": 1400,
-        "step": 4,
+        "min": 1000,
+        "max": 1600,
+        "step": 100,
         "default": 1200,
         "unit": "px",
         "label": "t:settings_schema.layout.settings.page_width.label"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:settings_schema.layout.settings.spacing_sections.label",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.layout.settings.header__grid.content"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:settings_schema.layout.settings.paragraph__grid.content"
+      },
+      {
+        "type": "range",
+        "id": "spacing_grid_horizontal",
+        "min": 4,
+        "max": 40,
+        "step": 4,
+        "default": 8,
+        "unit": "px",
+        "label": "t:settings_schema.layout.settings.spacing_grid_horizontal.label"
+      },
+      {
+        "type": "range",
+        "id": "spacing_grid_vertical",
+        "min": 4,
+        "max": 40,
+        "step": 4,
+        "default": 8,
+        "unit": "px",
+        "label": "t:settings_schema.layout.settings.spacing_grid_vertical.label"
       }
     ]
   },
@@ -196,272 +234,6 @@
   {
     "name": "t:settings_schema.buttons.name",
     "settings": [
-      {
-        "type": "paragraph",
-        "content": "t:settings_schema.buttons.paragraph"
-      },
-
-      {
-        "type": "header",
-        "content": "t:settings_schema.buttons.settings.header__primary.content"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_bg",
-        "label": "t:settings_schema.buttons.settings.btn_primary_bg.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_label",
-        "label": "t:settings_schema.buttons.settings.btn_primary_label.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_border",
-        "label": "t:settings_schema.buttons.settings.btn_primary_border.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_hover_bg",
-        "label": "t:settings_schema.buttons.settings.btn_primary_hover_bg.label",
-        "default": "#333333"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_hover_label",
-        "label": "t:settings_schema.buttons.settings.btn_primary_hover_label.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_hover_border",
-        "label": "t:settings_schema.buttons.settings.btn_primary_hover_border.label",
-        "default": "#333333"
-      },
-      {
-        "type": "range",
-        "id": "btn_primary_border_thickness",
-        "min": 0,
-        "max": 6,
-        "step": 1,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.thickness.label",
-        "default": 2
-      },
-      {
-        "type": "range",
-        "id": "btn_primary_radius",
-        "min": 0,
-        "max": 40,
-        "step": 2,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.corner_radius.label",
-        "default": 0
-      },
-
-      {
-        "type": "header",
-        "content": "t:settings_schema.buttons.settings.header__secondary.content"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_bg",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_bg.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_label",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_label.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_border",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_border.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_hover_bg",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_hover_bg.label",
-        "default": "#F5F5F5"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_hover_label",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_hover_label.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_hover_border",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_hover_border.label",
-        "default": "#F5F5F5"
-      },
-      {
-        "type": "range",
-        "id": "btn_secondary_border_thickness",
-        "min": 0,
-        "max": 6,
-        "step": 1,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.thickness.label",
-        "default": 2
-      },
-      {
-        "type": "range",
-        "id": "btn_secondary_radius",
-        "min": 0,
-        "max": 40,
-        "step": 2,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.corner_radius.label",
-        "default": 0
-      },
-
-      {
-        "type": "header",
-        "content": "t:settings_schema.buttons.settings.header__primary_outline.content"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_bg",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_bg.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_label",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_label.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_border",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_border.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_hover_bg",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_hover_bg.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_hover_label",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_hover_label.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_primary_outline_hover_border",
-        "label": "t:settings_schema.buttons.settings.btn_primary_outline_hover_border.label",
-        "default": "#121212"
-      },
-      {
-        "type": "range",
-        "id": "btn_primary_outline_radius",
-        "min": 0,
-        "max": 40,
-        "step": 2,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.corner_radius.label",
-        "default": 0
-      },
-      {
-        "type": "range",
-        "id": "btn_primary_outline_thickness",
-        "min": 1,
-        "max": 6,
-        "step": 1,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.thickness.label",
-        "default": 1
-      },
-
-      {
-        "type": "header",
-        "content": "t:settings_schema.buttons.settings.header__secondary_outline.content"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_bg",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_bg.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_label",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_label.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_border",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_border.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_hover_bg",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_hover_bg.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_hover_label",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_hover_label.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_secondary_outline_hover_border",
-        "label": "t:settings_schema.buttons.settings.btn_secondary_outline_hover_border.label",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "range",
-        "id": "btn_secondary_outline_radius",
-        "min": 0,
-        "max": 40,
-        "step": 2,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.corner_radius.label",
-        "default": 0
-      },
-      {
-        "type": "range",
-        "id": "btn_secondary_outline_thickness",
-        "min": 1,
-        "max": 6,
-        "step": 1,
-        "unit": "px",
-        "label": "t:settings_schema.global.settings.thickness.label",
-        "default": 1
-      },
-
-      {
-        "type": "header",
-        "content": "t:settings_schema.buttons.settings.header__link.content"
-      },
-      {
-        "type": "color",
-        "id": "btn_link_label",
-        "label": "t:settings_schema.buttons.settings.btn_link_label.label",
-        "default": "#121212"
-      },
-      {
-        "type": "color",
-        "id": "btn_link_hover_label",
-        "label": "t:settings_schema.buttons.settings.btn_link_hover_label.label",
-        "default": "#595959"
-      },
-
       {
         "type": "header",
         "content": "t:settings_schema.global.settings.header__border.content"
@@ -1563,12 +1335,6 @@
       },
       {
         "type": "text",
-        "id": "social_linkedin_link",
-        "label": "LinkedIn",
-        "info": "https://linkedin.com/company/your-page"
-      },
-      {
-        "type": "text",
         "id": "social_snapchat_link",
         "label": "t:settings_schema.social-media.settings.social_snapchat_link.label",
         "placeholder": "t:settings_schema.social-media.settings.social_snapchat_link.info"
@@ -1683,6 +1449,21 @@
         "id": "cart_color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "scheme-1"
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.customer_accounts.name",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:settings_schema.customer_accounts.settings.paragraph.content"
+      },
+      {
+        "type": "link_list",
+        "id": "customer_account_menu",
+        "default": "customer-account-main-menu",
+        "label": "t:settings_schema.customer_accounts.settings.customer_account_menu.label"
       }
     ]
   }

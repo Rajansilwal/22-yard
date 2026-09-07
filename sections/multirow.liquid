@@ -1,4 +1,4 @@
-﻿{{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
+{{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -42,7 +42,7 @@
   endunless
 -%}
 
-<div class="multirow section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }} {{ section.settings.custom_class }}">
+<div class="multirow section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }}">
   <div class="multirow__inner page-width">
     {%- for block in section.blocks -%}
       <div
@@ -94,7 +94,7 @@
                   {% else %}
                     href="{{ block.settings.button_link }}"
                   {% endif %}
-                  class="btn btn--{{ section.settings.button_style }}"
+                  class="button button--{{ section.settings.button_style }}"
                 >
                   {{ block.settings.button_label | escape }}
                 </a>
@@ -246,18 +246,6 @@
         {
           "value": "secondary",
           "label": "t:sections.multirow.settings.button_style.options__2.label"
-        },
-        {
-          "value": "primary-outline",
-          "label": "Primary outline"
-        },
-        {
-          "value": "secondary-outline",
-          "label": "Secondary outline"
-        },
-        {
-          "value": "link",
-          "label": "Link"
         }
       ],
       "default": "secondary",
@@ -338,16 +326,6 @@
       "id": "row_color_scheme",
       "label": "t:sections.multirow.settings.container_color_scheme.label",
       "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "Custom CSS class"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom CSS class(es)",
-      "info": "Add one or more space-separated CSS classes to the section wrapper. Useful for custom styling."
     },
     {
       "type": "header",

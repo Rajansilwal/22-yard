@@ -1,224 +1,45 @@
-{%- liquid
-  assign min_value = filter.min_value.value | default: 0 | money_without_currency | replace: ',', '' | ceil
-  assign max_value = filter.max_value.value | default: filter.range_max | money_without_currency | replace: ',', '' | ceil
-  assign range_max = filter.range_max | money_without_currency | replace: ',', '' | ceil
-  assign currency_symbol = cart.currency.symbol
--%}
+<span class="field-currency">{{ cart.currency.symbol }}</span>
 
-<price-range class="price-slider-wrapper">
-  <div class="range-container">
-    <div class="range-track"></div>
-    <div class="range-track-active"></div>
+<div class="field">
+  <input
+    class="field__input"
+    name="{{ filter.min_value.param_name }}"
+    id="{{ id_prefix }}{{ filter.label | escape }}-GTE"
+    {%- if filter.min_value.value -%}
+      value="{{ filter.min_value.value | money_without_currency }}"
+    {%- endif -%}
+    type="text"
+    inputmode="decimal"
+    placeholder="0"
+    data-pattern="\d| |,|\."
+    data-min="0"
+    data-max="{{ filter.range_max | money_without_currency }}"
+  >
+  <label class="field__label" for="{{ id_prefix }}{{ filter.label | escape }}-GTE">
+    {{- 'products.facets.from' | t -}}
+  </label>
+</div>
 
-    <input
-      type="range"
-      class="range-slider-input"
-      min="0"
-      max="{{ range_max }}"
-      value="{{ min_value }}"
-      step="1"
-      aria-label="{{ 'products.facets.from' | t | default: 'From' }}"
-    >
+{%- if filter_type != 'vertical' -%}
+  <span class="field-currency">{{ cart.currency.symbol }}</span>
+{%- endif -%}
 
-    <input
-      type="range"
-      class="range-slider-input"
-      min="0"
-      max="{{ range_max }}"
-      value="{{ max_value }}"
-      step="1"
-      aria-label="{{ 'products.facets.to' | t | default: 'To' }}"
-    >
-  </div>
-
-  <div class="price-inputs-display">
-    <div class="price-field">
-      <span class="price-field__currency">{{ currency_symbol }}</span>
-      <input
-        class="field__input"
-        type="number"
-        inputmode="numeric"
-        name="{{ filter.min_value.param_name }}"
-        value="{{ min_value }}"
-        min="0"
-        max="{{ range_max }}"
-        aria-label="{{ 'products.facets.from' | t | default: 'Minimum price' }}"
-      >
-    </div>
-    <span class="price-field__sep" aria-hidden="true">–</span>
-    <div class="price-field">
-      <span class="price-field__currency">{{ currency_symbol }}</span>
-      <input
-        class="field__input"
-        type="number"
-        inputmode="numeric"
-        name="{{ filter.max_value.param_name }}"
-        value="{{ max_value }}"
-        min="0"
-        max="{{ range_max }}"
-        aria-label="{{ 'products.facets.to' | t | default: 'Maximum price' }}"
-      >
-    </div>
-  </div>
-</price-range>
-
-<style>
-  /* =============================================================
-     22 Yard — Sidebar price filter
-     Brand maroon #8a2b2b accent, ink #16161a, clean bordered
-     number fields. Matches the home-page design system.
-     ============================================================= */
-  .price-slider-wrapper {
-    width: 100%;
-    display: block;
-    padding-top: 0.6rem;
-  }
-
-  .price-slider-wrapper .range-track,
-  .price-slider-wrapper .range-track-active {
-    display: block;
-  }
-
-  .range-container {
-    position: relative;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.6rem;
-  }
-
-  /* Gray base track */
-  .range-track {
-    position: absolute;
-    height: 0.4rem;
-    width: 100%;
-    background: rgba(22, 22, 26, 0.12);
-    border-radius: 2px;
-    z-index: 1;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  /* Active fill — brand maroon */
-  .range-track-active {
-    position: absolute;
-    height: 0.4rem;
-    background: #8a2b2b;
-    border-radius: 2px;
-    z-index: 1;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: left 0.15s ease, width 0.15s ease;
-  }
-
-  .range-slider-input {
-    position: absolute;
-    width: 100%;
-    background: none;
-    appearance: none;
-    -webkit-appearance: none;
-    pointer-events: none;
-    z-index: 2;
-    margin: 0;
-  }
-
-  /* Slider thumb — Webkit */
-  .range-slider-input::-webkit-slider-thumb {
-    height: 1.6rem;
-    width: 1.6rem;
-    border-radius: 50%;
-    background: #ffffff;
-    cursor: pointer;
-    pointer-events: auto;
-    appearance: none;
-    -webkit-appearance: none;
-    border: 0.4rem solid #8a2b2b;
-    box-shadow: 0 1px 4px rgba(22, 22, 26, 0.25);
-    transition: transform 0.12s ease;
-  }
-
-  .range-slider-input::-webkit-slider-thumb:hover,
-  .range-slider-input::-webkit-slider-thumb:active {
-    transform: scale(1.12);
-  }
-
-  /* Slider thumb — Firefox */
-  .range-slider-input::-moz-range-thumb {
-    height: 1.6rem;
-    width: 1.6rem;
-    border-radius: 50%;
-    background: #ffffff;
-    cursor: pointer;
-    pointer-events: auto;
-    appearance: none;
-    -webkit-appearance: none;
-    border: 0.4rem solid #8a2b2b;
-    box-shadow: 0 1px 4px rgba(22, 22, 26, 0.25);
-  }
-
-  /* ── Number input fields ── */
-  .price-inputs-display {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .price-field {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    min-width: 0;
-    background: #ffffff;
-    border: 1.5px solid rgba(22, 22, 26, 0.2);
-    border-radius: 2px;
-    padding: 0 1rem;
-    height: 4rem;
-    transition: border-color 0.15s ease;
-  }
-
-  .price-field:focus-within {
-    border-color: #8a2b2b;
-  }
-
-  .price-field__currency {
-    color: rgba(22, 22, 26, 0.55);
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-right: 0.4rem;
-    flex-shrink: 0;
-  }
-
-  .price-inputs-display .price-field .field__input {
-    border: 0;
-    background: transparent;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    min-width: 0;
-    min-height: auto;
-    height: auto;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #16161a;
-    box-shadow: none;
-    -moz-appearance: textfield;
-  }
-
-  .price-inputs-display .price-field .field__input:focus,
-  .price-inputs-display .price-field .field__input:focus-visible {
-    outline: 0;
-    box-shadow: none;
-  }
-
-  .price-inputs-display .price-field .field__input::-webkit-outer-spin-button,
-  .price-inputs-display .price-field .field__input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  .price-field__sep {
-    flex-shrink: 0;
-    color: rgba(22, 22, 26, 0.5);
-    font-weight: 600;
-  }
-</style>
+<div class="field">
+  <input
+    class="field__input"
+    name="{{ filter.max_value.param_name }}"
+    id="{{ id_prefix }}{{ filter.label | escape }}-LTE"
+    {%- if filter.max_value.value -%}
+      value="{{ filter.max_value.value | money_without_currency }}"
+    {%- endif -%}
+    type="text"
+    inputmode="decimal"
+    placeholder="{{ filter.range_max | money_without_currency }}"
+    data-pattern="\d| |,|\."
+    data-min="0"
+    data-max="{{ filter.range_max | money_without_currency }}"
+  >
+  <label class="field__label" for="{{ id_prefix }}{{ filter.label | escape }}-LTE">
+    {{- 'products.facets.to' | t -}}
+  </label>
+</div>

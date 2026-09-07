@@ -28,21 +28,42 @@
 
     {% render 'meta-tags' %}
 
+    <script type="module">
+      import * as StandardEvents from 'https://cdn.shopify.com/storefront/standard-events.js';
+
+      window.StandardEvents = StandardEvents;
+
+      customElements.define('collection-component', StandardEvents.createViewEventElement());
+      customElements.define(
+        'product-component',
+        StandardEvents.createViewEventElement(HTMLElement, { defaultTrigger: 'intersect' }),
+      );
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const template = document.querySelector('main[data-template]')?.dataset.template || '';
+        document.dispatchEvent(
+          new StandardEvents.PageViewEvent({
+            page: { template, title: document.title, url: window.location.href },
+          })
+        );
+      }, { once: true });
+    </script>
+
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'cart-disclosure-modal.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'cart-disclosure-tooltip.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'standard-actions-override.js' | asset_url }}" defer="defer"></script>
 
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
     {{ content_for_header }}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
 
     {%- liquid
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
@@ -108,9 +129,9 @@
         --font-body-weight: {{ settings.type_body_font.weight }};
         --font-body-weight-bold: {{ settings.type_body_font.weight | plus: 300 | at_most: 1000 }};
 
-        --font-heading-family: "Special Gothic Expanded One", sans-serif, {{ settings.type_header_font.fallback_families }};
-        --font-heading-style: normal;
-        --font-heading-weight: 400;
+        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+        --font-heading-style: {{ settings.type_header_font.style }};
+        --font-heading-weight: {{ settings.type_header_font.weight }};
 
         --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
         --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
@@ -206,46 +227,6 @@
         --buttons-shadow-blur-radius: {{ settings.buttons_shadow_blur }}px;
         --buttons-border-offset: {% if settings.buttons_radius > 0 or settings.buttons_shadow_opacity > 0 %}0.3{% else %}0{% endif %}px;
 
-        /* Per-button-type CSS variables */
-        --btn-primary-bg: {{ settings.btn_primary_bg }};
-        --btn-primary-label: {{ settings.btn_primary_label }};
-        --btn-primary-border: {{ settings.btn_primary_border }};
-        --btn-primary-hover-bg: {{ settings.btn_primary_hover_bg }};
-        --btn-primary-hover-label: {{ settings.btn_primary_hover_label }};
-        --btn-primary-hover-border: {{ settings.btn_primary_hover_border }};
-        --btn-primary-border-thickness: {{ settings.btn_primary_border_thickness }}px;
-        --btn-primary-radius: {{ settings.btn_primary_radius }}px;
-
-        --btn-secondary-bg: {{ settings.btn_secondary_bg }};
-        --btn-secondary-label: {{ settings.btn_secondary_label }};
-        --btn-secondary-border: {{ settings.btn_secondary_border }};
-        --btn-secondary-hover-bg: {{ settings.btn_secondary_hover_bg }};
-        --btn-secondary-hover-label: {{ settings.btn_secondary_hover_label }};
-        --btn-secondary-hover-border: {{ settings.btn_secondary_hover_border }};
-        --btn-secondary-border-thickness: {{ settings.btn_secondary_border_thickness }}px;
-        --btn-secondary-radius: {{ settings.btn_secondary_radius }}px;
-
-        --btn-primary-outline-bg: {{ settings.btn_primary_outline_bg }};
-        --btn-primary-outline-label: {{ settings.btn_primary_outline_label }};
-        --btn-primary-outline-border: {{ settings.btn_primary_outline_border }};
-        --btn-primary-outline-hover-bg: {{ settings.btn_primary_outline_hover_bg }};
-        --btn-primary-outline-hover-label: {{ settings.btn_primary_outline_hover_label }};
-        --btn-primary-outline-hover-border: {{ settings.btn_primary_outline_hover_border }};
-        --btn-primary-outline-radius: {{ settings.btn_primary_outline_radius }}px;
-        --btn-primary-outline-thickness: {{ settings.btn_primary_outline_thickness }}px;
-
-        --btn-secondary-outline-bg: {{ settings.btn_secondary_outline_bg }};
-        --btn-secondary-outline-label: {{ settings.btn_secondary_outline_label }};
-        --btn-secondary-outline-border: {{ settings.btn_secondary_outline_border }};
-        --btn-secondary-outline-hover-bg: {{ settings.btn_secondary_outline_hover_bg }};
-        --btn-secondary-outline-hover-label: {{ settings.btn_secondary_outline_hover_label }};
-        --btn-secondary-outline-hover-border: {{ settings.btn_secondary_outline_hover_border }};
-        --btn-secondary-outline-radius: {{ settings.btn_secondary_outline_radius }}px;
-        --btn-secondary-outline-thickness: {{ settings.btn_secondary_outline_thickness }}px;
-
-        --btn-link-label: {{ settings.btn_link_label }};
-        --btn-link-hover-label: {{ settings.btn_link_hover_label }};
-
         --inputs-radius: {{ settings.inputs_radius }}px;
         --inputs-border-width: {{ settings.inputs_border_thickness }}px;
         --inputs-border-opacity: {{ settings.inputs_border_opacity | divided_by: 100.0 }};
@@ -278,9 +259,8 @@
       }
 
       body {
-        display: grid;
-        grid-template-rows: auto auto 1fr auto;
-        grid-template-columns: 100%;
+        display: flex;
+        flex-direction: column;
         min-height: 100%;
         margin: 0;
         font-size: 1.5rem;
@@ -299,8 +279,6 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'yard-globals.css' | asset_url | stylesheet_tag }}
-    {{ 'yard-pages.css' | asset_url | stylesheet_tag }}
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
@@ -354,7 +332,13 @@
 
     {% sections 'header-group' %}
 
-    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    <main
+      id="MainContent"
+      class="content-for-layout focus-none"
+      role="main"
+      tabindex="-1"
+      data-template="{{ template.name }}"
+    >
       {{ content_for_layout }}
     </main>
 
