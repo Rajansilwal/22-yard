@@ -584,6 +584,7 @@
   .grid__item:nth-child(5n) .product-card-wrapper:hover .shape--blob {
     clip-path: polygon(var(--shape--blob-3));
   }
+  
 
   .grid__item:nth-child(7n) .product-card-wrapper:hover .shape--blob {
     clip-path: polygon(var(--shape--blob-4));
